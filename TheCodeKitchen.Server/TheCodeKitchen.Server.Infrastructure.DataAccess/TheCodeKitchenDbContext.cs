@@ -1,8 +1,16 @@
 using Microsoft.EntityFrameworkCore;
+using TheCodeKitchen.Server.Core.Domain;
 
 namespace TheCodeKitchen.Server.Infrastructure.DataAccess;
 
-public class TheCodeKitchenDbContext : DbContext
+internal sealed class TheCodeKitchenDbContext : DbContext
 {
+    public DbSet<Cook> Cooks { get; set; }
+    public DbSet<Game> Games { get; set; }
+    public DbSet<Kitchen> Kitchens { get; set; }
     
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(TheCodeKitchenDbContext).Assembly);
+    }
 }
