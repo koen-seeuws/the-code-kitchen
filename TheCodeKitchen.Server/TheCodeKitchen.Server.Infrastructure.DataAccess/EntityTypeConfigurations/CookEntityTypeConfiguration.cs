@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TheCodeKitchen.Server.Core.Domain;
+using TheCodeKitchen.Server.Core.Domain.Entities;
 
 namespace TheCodeKitchen.Server.Infrastructure.DataAccess.EntityTypeConfigurations;
 

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TheCodeKitchen.Server.Core.Domain;
+using TheCodeKitchen.Server.Core.Domain.Entities;
 
 namespace TheCodeKitchen.Server.Infrastructure.DataAccess;
 

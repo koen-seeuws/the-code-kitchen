@@ -1,4 +1,4 @@
-namespace TheCodeKitchen.Server.Core.Domain;
+namespace TheCodeKitchen.Server.Core.Domain.Entities;
 
 public class Cook
 {

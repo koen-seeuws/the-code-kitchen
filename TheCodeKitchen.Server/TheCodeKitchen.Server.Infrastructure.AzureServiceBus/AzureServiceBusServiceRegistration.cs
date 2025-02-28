@@ -1,6 +1,7 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TheCodeKitchen.Server.Application.Contracts.Interfaces.Queueing;
 
 namespace TheCodeKitchen.Server.Infrastructure.AzureServiceBus;
 
@@ -13,7 +14,8 @@ public static class AzureServiceBusServiceRegistration
         if (string.IsNullOrWhiteSpace(connectionString))
             throw new InvalidOperationException($"The ConnectionString {connectionStringKey} cannot be empty for AzureServiceBus services");
         
-        services.AddScoped(_ => new ServiceBusClient(connectionString));
+        services.AddSingleton(_ => new ServiceBusClient(connectionString));
+        services.AddSingleton<IMessagePublisher, AzureServiceBusMessagePublisher>();
         
         return services;
     }
