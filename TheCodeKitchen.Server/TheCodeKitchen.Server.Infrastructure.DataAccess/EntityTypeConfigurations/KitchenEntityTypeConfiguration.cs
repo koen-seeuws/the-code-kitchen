@@ -17,6 +17,7 @@ internal sealed class KitchenEntityTypeConfiguration : IEntityTypeConfiguration<
 
         builder.HasOne(k => k.Game)
             .WithMany(g => g.Kitchens)
-            .HasForeignKey(k => k.GameId);
+            .HasForeignKey(k => k.GameId)
+            .IsRequired();
     }
 }

@@ -1,0 +1,23 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using TheCodeKitchen.Server.Core.Domain.Entities;
+
+namespace TheCodeKitchen.Server.Infrastructure.DataAccess.EntityTypeConfigurations;
+
+public class KitchenOrderEntityTypeConfiguration : IEntityTypeConfiguration<KitchenOrder>
+{
+    public void Configure(EntityTypeBuilder<KitchenOrder> builder)
+    {
+        builder.HasKey(ko => new {ko.KitchenId, ko.OrderId});
+        
+        builder.HasOne(ko => ko.Kitchen)
+            .WithMany(k => k.KitchenOrders)
+            .HasForeignKey(ko => ko.KitchenId)
+            .IsRequired();
+        
+        builder.HasOne(ko => ko.Order)
+            .WithMany(o => o.KitchenOrders)
+            .HasForeignKey(ko => ko.OrderId)
+            .IsRequired();
+    }
+}

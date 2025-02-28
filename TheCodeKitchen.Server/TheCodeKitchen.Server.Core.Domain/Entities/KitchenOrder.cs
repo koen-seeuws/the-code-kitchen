@@ -1,11 +1,10 @@
 namespace TheCodeKitchen.Server.Core.Domain.Entities;
 
-public class Cook
+public class KitchenOrder
 {
-    public string Username { get; set; }
-    public string PasswordHash { get; set; }
-
-    //Navigation properties
     public long KitchenId { get; set; }
     public Kitchen Kitchen { get; set; }
+    
+    public long OrderId { get; set; }
+    public Order Order { get; set; }
 }

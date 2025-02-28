@@ -10,5 +10,7 @@ internal sealed class GameEntityTypeConfiguration : IEntityTypeConfiguration<Gam
     public void Configure(EntityTypeBuilder<Game> builder)
     {
         builder.HasKey(g => g.Id);
+
+        builder.Property(g => g.Created).IsRequired();
     }
 }

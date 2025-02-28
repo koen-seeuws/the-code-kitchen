@@ -14,10 +14,12 @@ internal sealed class CookEntityTypeConfiguration : IEntityTypeConfiguration<Coo
         builder.Property(c => c.Username)
             .IsRequired()
             .HasMaxLength(100);
+        
         builder.Property(c => c.PasswordHash).IsRequired();
         
         builder.HasOne(c => c.Kitchen)
             .WithMany(k => k.Cooks)
-            .HasForeignKey(c => c.KitchenId);
+            .HasForeignKey(c => c.KitchenId)
+            .IsRequired();
     }
 }

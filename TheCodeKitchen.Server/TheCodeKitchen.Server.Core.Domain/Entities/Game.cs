@@ -2,8 +2,12 @@ namespace TheCodeKitchen.Server.Core.Domain.Entities;
 
 public class Game
 {
-    public int Id { get; set; }
+    public long Id { get; set; }
+    public DateTimeOffset Created { get; set; }
+    public DateTimeOffset? Started { get; set; }
+    public DateTimeOffset? Paused { get; set; }
 
     //Navigation properties
     public ICollection<Kitchen> Kitchens { get; set; }
+    public ICollection<Table> Tables { get; set; }
 }
