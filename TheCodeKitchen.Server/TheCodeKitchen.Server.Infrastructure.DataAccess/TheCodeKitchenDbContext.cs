@@ -1,10 +1,11 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using TheCodeKitchen.Server.Core.Domain;
 using TheCodeKitchen.Server.Core.Domain.Entities;
 
 namespace TheCodeKitchen.Server.Infrastructure.DataAccess;
 
-internal sealed class TheCodeKitchenDbContext : DbContext
+internal sealed class TheCodeKitchenDbContext(DbContextOptions<TheCodeKitchenDbContext> options) : DbContext(options)
 {
     public DbSet<Cook> Cooks { get; set; }
     public DbSet<Game> Games { get; set; }

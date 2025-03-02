@@ -4,7 +4,7 @@ using TheCodeKitchen.Server.Core.Domain.Entities;
 
 namespace TheCodeKitchen.Server.Infrastructure.DataAccess.EntityTypeConfigurations;
 
-public class OrderEntityTypeConfiguration : IEntityTypeConfiguration<Order>
+internal sealed class OrderEntityTypeConfiguration : IEntityTypeConfiguration<Order>
 {
     public void Configure(EntityTypeBuilder<Order> builder)
     {

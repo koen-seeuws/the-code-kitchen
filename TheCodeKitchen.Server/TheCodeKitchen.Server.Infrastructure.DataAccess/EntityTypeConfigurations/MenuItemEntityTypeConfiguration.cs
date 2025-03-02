@@ -4,7 +4,7 @@ using TheCodeKitchen.Server.Core.Domain.Entities;
 
 namespace TheCodeKitchen.Server.Infrastructure.DataAccess.EntityTypeConfigurations;
 
-public class MenuItemEntityTypeConfiguration : IEntityTypeConfiguration<MenuItem>
+internal sealed class MenuItemEntityTypeConfiguration : IEntityTypeConfiguration<MenuItem>
 {
     public void Configure(EntityTypeBuilder<MenuItem> builder)
     {

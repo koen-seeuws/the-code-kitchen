@@ -6,6 +6,6 @@ public class Cook
     public string PasswordHash { get; set; }
 
     //Navigation properties
-    public long KitchenId { get; set; }
-    public Kitchen Kitchen { get; set; }
+    public ICollection<KitchenCook> KitchenCooks { get; set; }
+
 }

@@ -4,7 +4,7 @@ using TheCodeKitchen.Server.Core.Domain.Entities;
 
 namespace TheCodeKitchen.Server.Infrastructure.DataAccess.EntityTypeConfigurations;
 
-public class ItemEntityTypeConfiguration : IEntityTypeConfiguration<Item>
+internal sealed class ItemEntityTypeConfiguration : IEntityTypeConfiguration<Item>
 {
     public void Configure(EntityTypeBuilder<Item> builder)
     {

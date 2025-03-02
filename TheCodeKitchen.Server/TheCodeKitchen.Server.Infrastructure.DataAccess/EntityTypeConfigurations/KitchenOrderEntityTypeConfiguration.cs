@@ -4,7 +4,7 @@ using TheCodeKitchen.Server.Core.Domain.Entities;
 
 namespace TheCodeKitchen.Server.Infrastructure.DataAccess.EntityTypeConfigurations;
 
-public class KitchenOrderEntityTypeConfiguration : IEntityTypeConfiguration<KitchenOrder>
+internal sealed class KitchenOrderEntityTypeConfiguration : IEntityTypeConfiguration<KitchenOrder>
 {
     public void Configure(EntityTypeBuilder<KitchenOrder> builder)
     {

@@ -9,6 +9,6 @@ public class Kitchen
     public long GameId { get; set; }
     public Game Game { get; set; }
     
-    public ICollection<Cook> Cooks { get; set; }
+    public ICollection<KitchenCook> KitchenCooks { get; set; }
     public ICollection<KitchenOrder> KitchenOrders { get; set; }
 }

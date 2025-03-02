@@ -16,10 +16,5 @@ internal sealed class CookEntityTypeConfiguration : IEntityTypeConfiguration<Coo
             .HasMaxLength(100);
         
         builder.Property(c => c.PasswordHash).IsRequired();
-        
-        builder.HasOne(c => c.Kitchen)
-            .WithMany(k => k.Cooks)
-            .HasForeignKey(c => c.KitchenId)
-            .IsRequired();
     }
 }
