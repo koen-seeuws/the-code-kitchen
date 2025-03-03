@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TheCodeKitchen.Core.Enums\TheCodeKitchen.Core.Enums.csproj" />
+      <ProjectReference Include="..\TheCodeKitchen.Core.Shared\TheCodeKitchen.Core.Shared.csproj" />
+    </ItemGroup>
+
+</Project>
