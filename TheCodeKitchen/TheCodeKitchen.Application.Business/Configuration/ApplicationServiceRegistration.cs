@@ -1,7 +1,12 @@
-﻿using FluentValidation;
+﻿using System.Reflection;
+using FluentValidation;
+using LanguageExt.Common;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Business.Pipeline;
 using TheCodeKitchen.Application.Business.Pipeline.Validation;
+using TheCodeKitchen.Application.Contracts.Commands;
 
 namespace TheCodeKitchen.Application.Business.Configuration;
 
@@ -11,7 +16,7 @@ public static class ApplicationServiceRegistration
     {
         //FluentValidation
         services.AddValidatorsFromAssemblyContaining(typeof(ApplicationServiceRegistration));
-        
+
         //AutoMapper
         services.AddAutoMapper(typeof(ApplicationServiceRegistration));
 
@@ -22,11 +27,11 @@ public static class ApplicationServiceRegistration
             mediatr.RegisterServicesFromAssemblyContaining(typeof(ApplicationServiceRegistration));
 
             //Pipeline
-            mediatr
-                .AddOpenBehavior(typeof(ValidationBehaviourWithResultSupport<,>))
-                .AddOpenBehavior(typeof(ValidationBehaviourWithoutResultSupport<,>));
+            mediatr.AddBehaviorsWithResultFromAssemblyContaining<CreateGameCommand>(typeof(ValidationBehavior<,>));
         });
-        
+
         return services;
     }
+    
+    
 }

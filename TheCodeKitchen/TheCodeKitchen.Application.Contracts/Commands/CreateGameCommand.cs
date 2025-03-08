@@ -1,14 +1,10 @@
+using LanguageExt.Common;
 using MediatR;
-using TheCodeKitchen.Core.Shared.Monads;
+using TheCodeKitchen.Application.Contracts.Response;
+
 
 namespace TheCodeKitchen.Application.Contracts.Commands;
 
-public class CreateGameCommand : IRequest<Result<CreateGameRequestResult>>;
-
-public class CreateGameRequestResult
-{
-    public long Id { get; set; }
-    public DateTimeOffset Created { get; set; }
-    public DateTimeOffset? Started { get; set; }
-    public DateTimeOffset? Paused { get; set; }
-}
+public record CreateGameCommand(
+    string? Name = null
+) : IRequest<Result<CreateGameResponse>>;

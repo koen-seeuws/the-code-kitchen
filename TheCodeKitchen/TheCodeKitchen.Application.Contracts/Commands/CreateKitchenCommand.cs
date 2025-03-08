@@ -1,19 +1,10 @@
+using LanguageExt.Common;
 using MediatR;
-using TheCodeKitchen.Core.Shared.Monads;
+using TheCodeKitchen.Application.Contracts.Response;
 
 namespace TheCodeKitchen.Application.Contracts.Commands;
 
-public class CreateKitchenCommand : IRequest<Result<CreateKitchenRequestResult>>
-{
-    public string Name { get; set; }
-    public string Code { get; set; }
-    public long GameId { get; set; }
-}
-
-public class CreateKitchenRequestResult
-{
-    public long Id { get; set; }
-    public string Name { get; set; }
-    public string Code { get; set; }
-    public long GameId { get; set; }
-}
+public record CreateKitchenCommand(
+    long GameId,
+    string? Name = null
+) : IRequest<Result<CreateKitchenResponse>>;

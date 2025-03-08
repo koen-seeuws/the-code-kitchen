@@ -1,15 +1,9 @@
-﻿namespace TheCodeKitchen.Core.Domain;
+﻿using System.Security.AccessControl;
 
-public class Kitchen
-{
-    public long Id { get; set; }
-    public string Name { get; set; }
-    public string Code { get; set; }
+namespace TheCodeKitchen.Core.Domain;
 
-    //Navigation properties
-    public long GameId { get; set; }
-    public Game Game { get; set; }
-    
-    public ICollection<KitchenCook> KitchenCooks { get; set; }
-    public ICollection<KitchenOrder> KitchenOrders { get; set; }
-}
+public partial record Kitchen(
+    long? Id,
+    string Name,
+    string Code
+);

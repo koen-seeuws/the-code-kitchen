@@ -2,8 +2,8 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Contracts.Commands;
+using TheCodeKitchen.Application.Contracts.Requests;
 using TheCodeKitchen.Presentation.API.Management.Models.Kitchen;
-using TheCodeKitchen.Presentation.API.Management.Requests;
 
 namespace TheCodeKitchen.Presentation.API.Management.Controllers;
 
@@ -12,10 +12,10 @@ namespace TheCodeKitchen.Presentation.API.Management.Controllers;
 public class KitchenController(IMediator mediator, IMapper mapper) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<CreateKitchenRequestResult>> Create([FromBody] CreateKitchenRequest kitchen)
+    public async Task<IActionResult> Create([FromBody] CreateKitchenRequest createKitchenRequest)
     {
-        var request = mapper.Map<CreateKitchenCommand>(kitchen);
+        var request = mapper.Map<CreateKitchenCommand>(createKitchenRequest);
         var result = await mediator.Send(request);
-        return this.MatchToAnActionResult(result);
+        return this.MatchActionResult(result);
     }
 }

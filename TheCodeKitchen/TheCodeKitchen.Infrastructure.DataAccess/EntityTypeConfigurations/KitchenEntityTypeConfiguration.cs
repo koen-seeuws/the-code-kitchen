@@ -1,22 +1,26 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TheCodeKitchen.Core.Domain;
+using TheCodeKitchen.Infrastructure.DataAccess.Entities;
 
 namespace TheCodeKitchen.Infrastructure.DataAccess.EntityTypeConfigurations;
 
-internal sealed class KitchenEntityTypeConfiguration : IEntityTypeConfiguration<Kitchen>
+internal sealed class KitchenEntityTypeConfiguration : IEntityTypeConfiguration<KitchenModel>
 {
-    public void Configure(EntityTypeBuilder<Kitchen> builder)
+    public void Configure(EntityTypeBuilder<KitchenModel> builder)
     {
-        builder.HasKey(k => k.Id);
+        builder.HasKey(kitchen => kitchen.Id);
         
-        builder.Property(k => k.Name)
+        builder.Property(kitchen => kitchen.Name)
             .IsRequired()
             .HasMaxLength(100);
 
-        builder.HasOne(k => k.Game)
-            .WithMany(g => g.Kitchens)
-            .HasForeignKey(k => k.GameId)
+        builder.Property(kitchen => kitchen.Code)
+            .IsRequired()
+            .HasMaxLength(100);
+
+        builder.HasOne(kitchen => kitchen.Game)
+            .WithMany(game => game.Kitchens)
+            .HasForeignKey(kitchen => kitchen.GameId)
             .IsRequired();
     }
 }

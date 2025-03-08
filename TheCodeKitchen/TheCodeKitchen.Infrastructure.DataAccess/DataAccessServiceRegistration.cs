@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TheCodeKitchen.Application.Contracts.Interfaces.DataAccess;
+using TheCodeKitchen.Infrastructure.DataAccess.Repositories;
 
 namespace TheCodeKitchen.Infrastructure.DataAccess;
 
@@ -15,6 +17,11 @@ public static class DataAccessServiceRegistration
         
         services.AddDbContext<TheCodeKitchenDbContext>(options => options.UseSqlServer(connectionString));
 
+        services.AddAutoMapper(typeof(DataAccessServiceRegistration));
+
+        services.AddScoped<IGameRepository, GameRepository>();
+        services.AddScoped<IKitchenRepository, KitchenRepository>();
+        
         return services;
     }
 }
