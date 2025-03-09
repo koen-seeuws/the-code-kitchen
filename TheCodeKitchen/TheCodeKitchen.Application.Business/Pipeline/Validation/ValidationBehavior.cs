@@ -1,8 +1,4 @@
-﻿using FluentValidation;
-using LanguageExt.Common;
-using MediatR;
-
-namespace TheCodeKitchen.Application.Business.Pipeline.Validation;
+﻿namespace TheCodeKitchen.Application.Business.Pipeline.Validation;
 
 public class ValidationBehavior<TRequest, TResponse>(
     IEnumerable<IValidator<TRequest>> validators

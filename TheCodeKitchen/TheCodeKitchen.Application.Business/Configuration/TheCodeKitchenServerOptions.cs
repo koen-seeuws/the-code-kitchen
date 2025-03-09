@@ -1,5 +1,3 @@
-using FluentValidation;
-
 namespace TheCodeKitchen.Application.Business.Configuration;
 
 public sealed class TheCodeKitchenServerOptions

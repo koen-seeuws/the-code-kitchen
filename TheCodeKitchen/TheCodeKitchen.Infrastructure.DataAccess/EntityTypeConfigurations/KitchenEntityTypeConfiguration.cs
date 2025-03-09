@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using TheCodeKitchen.Core.Domain;
 
 namespace TheCodeKitchen.Infrastructure.DataAccess.EntityTypeConfigurations;
 

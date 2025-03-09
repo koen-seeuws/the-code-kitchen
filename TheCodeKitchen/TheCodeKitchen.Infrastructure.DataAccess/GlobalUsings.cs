@@ -1,6 +1,11 @@
+// Core
 global using TheCodeKitchen.Core.Domain;
 
-//LanguageExt
+// Application
+global using TheCodeKitchen.Application.Contracts.Interfaces.DataAccess;
+global using TheCodeKitchen.Infrastructure.DataAccess.Abstractions;
+
+// LanguageExt
 global using LanguageExt;
 global using LanguageExt.Common;
 global using static LanguageExt.Prelude;

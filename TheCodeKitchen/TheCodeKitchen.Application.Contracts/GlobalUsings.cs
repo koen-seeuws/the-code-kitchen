@@ -1,6 +1,6 @@
 global using TheCodeKitchen.Core.Domain;
 
-//LanguageExt
+// LanguageExt
 global using LanguageExt;
 global using LanguageExt.Common;
 global using static LanguageExt.Prelude;

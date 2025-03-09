@@ -10,11 +10,14 @@ namespace TheCodeKitchen.Presentation.API.Management.Controllers;
 [Route("[controller]")]
 public class GameController(IMediator mediator, IMapper mapper) : ControllerBase
 {
-    [HttpPost("[action]")]
-    public async Task<IActionResult> Create([FromBody] CreateGameRequest createGameRequest, CancellationToken cancellationToken = default)
+    [HttpPost]
+    public async Task<IActionResult> Create(
+        [FromBody] CreateGameRequest createGameRequest,
+        CancellationToken cancellationToken = default
+    )
     {
         var request = mapper.Map<CreateGameCommand>(createGameRequest);
-        var result = await mediator.Send(request, cancellationToken = default);
+        var result = await mediator.Send(request, cancellationToken);
         return this.MatchActionResult(result);
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TheCodeKitchen.Application.Contracts.Interfaces.DataAccess;
 using TheCodeKitchen.Infrastructure.DataAccess.Repositories;
 
 namespace TheCodeKitchen.Infrastructure.DataAccess;

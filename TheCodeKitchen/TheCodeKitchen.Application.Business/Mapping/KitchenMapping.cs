@@ -1,7 +1,4 @@
-using AutoMapper;
-using TheCodeKitchen.Application.Contracts.Commands;
 using TheCodeKitchen.Application.Contracts.Requests;
-using TheCodeKitchen.Application.Contracts.Response;
 
 namespace TheCodeKitchen.Application.Business.Mapping;
 

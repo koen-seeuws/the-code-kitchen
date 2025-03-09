@@ -1,6 +1,4 @@
 using System.Reflection;
-using LanguageExt.Common;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace TheCodeKitchen.Application.Business.Extensions;

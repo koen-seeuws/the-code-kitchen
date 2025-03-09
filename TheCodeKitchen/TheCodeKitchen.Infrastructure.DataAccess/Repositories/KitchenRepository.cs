@@ -1,8 +1,4 @@
-using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
-using TheCodeKitchen.Application.Contracts.Interfaces.DataAccess;
-using TheCodeKitchen.Core.Domain;
-using TheCodeKitchen.Infrastructure.DataAccess.Abstractions;
 
 namespace TheCodeKitchen.Infrastructure.DataAccess.Repositories;
 
