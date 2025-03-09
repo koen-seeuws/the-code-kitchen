@@ -2,13 +2,13 @@ using TheCodeKitchen.Core.Domain.Events;
 
 namespace TheCodeKitchen.Core.Domain;
 
-public partial record Game
+public partial class Game
 {
     private const short CodeGenerationAttemptsPerLength = 10;
     private static readonly char[] ValidCodeCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
     private const short MinimumCodeLength = 4;
     
-    public Game AddKitchen(ICollection<string> existingCodes, string? name = null)
+    public Kitchen AddKitchen(ICollection<string> existingCodes, string? name = null)
     {
         // Make sure the kitchen has a name
         name = name?.Trim();
@@ -39,15 +39,11 @@ public partial record Game
         } while (existingCodes.Contains(code));
 
         // Create a new Kitchen instance
-        var kitchen = new Kitchen(null, name, code);
-        var updatedKitchens = Kitchens.ToList();
-        updatedKitchens.Add(kitchen);
-
-        // Create the KitchenCreated event
-        var kitchenCreatedEvent = new KitchenCreatedEvent(kitchen.Id, kitchen.Name, kitchen.Code);
-        var updatedEvents = Events.ToList();
-        updatedEvents.Add(kitchenCreatedEvent);
-
-        return this with { Kitchens = updatedKitchens, Events = updatedEvents };
+        var kitchen = new Kitchen(name, code, Id);
+        Kitchens.Add(kitchen);
+        
+        RaiseEvent(new KitchenCreatedEvent(kitchen.Id, kitchen.Name, kitchen.Code));
+        
+        return kitchen;
     }
 }

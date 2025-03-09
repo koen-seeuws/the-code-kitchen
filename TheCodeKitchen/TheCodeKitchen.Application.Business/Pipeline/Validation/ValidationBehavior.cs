@@ -20,7 +20,7 @@ public class ValidationBehavior<TRequest, TResponse>(
 
         var context = new ValidationContext<TRequest>(request);
 
-        var validationTasks = validators.Select(validator => validator.ValidateAsync(context, cancellationToken));
+        var validationTasks = validators.Select(validator => validator.ValidateAsync(context, cancellationToken = default));
 
         var validationResults = await Task.WhenAll(validationTasks);
 

@@ -1,16 +1,20 @@
-using AutoMapper;
+using LanguageExt.Common;
 using Microsoft.EntityFrameworkCore;
 using TheCodeKitchen.Application.Contracts.Interfaces.DataAccess;
 using TheCodeKitchen.Core.Domain;
 using TheCodeKitchen.Infrastructure.DataAccess.Abstractions;
-using TheCodeKitchen.Infrastructure.DataAccess.Entities;
 
 namespace TheCodeKitchen.Infrastructure.DataAccess.Repositories;
 
-public class KitchenRepository(DbContext context, IMapper mapper) : Repository<Kitchen, KitchenModel>(context, mapper), IKitchenRepository
+public class KitchenRepository(TheCodeKitchenDbContext context)
+    : Repository<Kitchen>(context), IKitchenRepository
 {
-    public async Task<IEnumerable<string>> GetAllCodes(CancellationToken cancellationToken)
-    {
-        return await DbSet.Select(kitchen => kitchen.Code).ToListAsync(cancellationToken: cancellationToken);
-    }
+    public TryAsync<Seq<string>> GetAllCodes(CancellationToken cancellationToken = default)
+        => TryAsync(async () =>
+        {
+            var codes = await DbSet
+                .Select(kitchen => kitchen.Code)
+                .ToListAsync(cancellationToken);
+            return codes.ToSeq();
+        });
 }

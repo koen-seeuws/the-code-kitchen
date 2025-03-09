@@ -42,9 +42,9 @@ internal sealed class AzureServiceBusMessagePublisher(ServiceBusClient client) :
         }
 
         if (delay.HasValue)
-            return await sender.ScheduleMessageAsync(serviceBusMessage, delay.Value, cancellationToken);
+            return await sender.ScheduleMessageAsync(serviceBusMessage, delay.Value, cancellationToken = default);
 
-        await sender.SendMessageAsync(serviceBusMessage, cancellationToken);
+        await sender.SendMessageAsync(serviceBusMessage, cancellationToken = default);
         return null;
     }
 }

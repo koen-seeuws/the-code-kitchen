@@ -17,8 +17,6 @@ public static class DataAccessServiceRegistration
         
         services.AddDbContext<TheCodeKitchenDbContext>(options => options.UseSqlServer(connectionString));
 
-        services.AddAutoMapper(typeof(DataAccessServiceRegistration));
-
         services.AddScoped<IGameRepository, GameRepository>();
         services.AddScoped<IKitchenRepository, KitchenRepository>();
         

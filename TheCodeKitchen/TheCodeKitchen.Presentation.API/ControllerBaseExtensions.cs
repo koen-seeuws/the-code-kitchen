@@ -20,7 +20,7 @@ public static class ControllerBaseExtensions
             Fail: exception => Fail(controllerBase, exception)
         );
 
-    public static ActionResult MatchActionResult<T>(
+    public static IActionResult MatchActionResult<T>(
         this ControllerBase controllerBase,
         Result<T> result,
         Func<ControllerBase, T, ActionResult> onSuccess
@@ -30,7 +30,7 @@ public static class ControllerBaseExtensions
             Fail: exception => Fail(controllerBase, exception)
         );
 
-    public static ActionResult MatchActionResult(
+    public static IActionResult MatchActionResult(
         this ControllerBase controllerBase,
         Result<TheCodeKitchenUnit> result
     )
@@ -39,12 +39,12 @@ public static class ControllerBaseExtensions
             Fail: exception => Fail(controllerBase, exception)
         );
 
-    private static ActionResult Fail(ControllerBase controllerBase, Exception exception)
+    private static IActionResult Fail(ControllerBase controllerBase, Exception exception)
     {
         switch (exception)
         {
             case NotFoundException:
-                return controllerBase.NotFound();
+                return controllerBase.NotFound(exception.Message);
             case DomainException:
                 return controllerBase.BadRequest(new
                 {
@@ -58,11 +58,12 @@ public static class ControllerBaseExtensions
                 {
                     modelStateDictionary.AddModelError(error.PropertyName, error.ErrorMessage);
                 }
-
                 return controllerBase.ValidationProblem(modelStateDictionary);
             }
+            case NotImplementedException:
+                return controllerBase.StatusCode((int) HttpStatusCode.NotImplemented, "This operation has not been implemented yet.");
             default:
-                throw exception;
+                return controllerBase.StatusCode((int) HttpStatusCode.InternalServerError, "An unexpected error occurred.");
         }
     }
 }

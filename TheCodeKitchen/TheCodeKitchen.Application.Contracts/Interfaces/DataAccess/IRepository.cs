@@ -1,13 +1,18 @@
 using System.Linq.Expressions;
+using LanguageExt;
+using LanguageExt.Common;
+using TheCodeKitchen.Core.Domain.Abstractions;
+using TheCodeKitchen.Core.Shared;
 
 namespace TheCodeKitchen.Application.Contracts.Interfaces.DataAccess;
 
-public interface IRepository<TDomain> where TDomain : class
+public interface IRepository<TEntity> where TEntity : DomainObject
 {
-    Task<TDomain?> GetByIdAsync(object id, CancellationToken cancellationToken);
-    Task<IEnumerable<TDomain>> GetAllAsync(CancellationToken cancellationToken);
-    Task<TDomain> AddAsync(TDomain domainEntity, CancellationToken cancellationToken);
-    Task UpdateAsync(TDomain domainEntity, CancellationToken cancellationToken);
-    Task DeleteAsync(object id, CancellationToken cancellationToken);
-    Task<long> CountAllAsync(CancellationToken cancellationToken);
+    TryOptionAsync<TEntity> FindByIdAsync(object id, CancellationToken cancellationToken = default);
+    TryAsync<TEntity> GetByIdAsync(object id, CancellationToken cancellationToken = default);
+    TryAsync<Seq<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
+    TryAsync<TEntity> AddAsync(TEntity domainEntity, CancellationToken cancellationToken = default);
+    TryAsync<TheCodeKitchenUnit> UpdateAsync(TEntity domainEntity, CancellationToken cancellationToken = default);
+    TryAsync<TheCodeKitchenUnit> DeleteAsync(object id, CancellationToken cancellationToken = default);
+    TryAsync<int> CountAllAsync(CancellationToken cancellationToken = default);
 }

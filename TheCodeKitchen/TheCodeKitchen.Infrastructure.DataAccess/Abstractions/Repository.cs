@@ -1,59 +1,67 @@
-﻿using System.Linq.Expressions;
-using AutoMapper;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TheCodeKitchen.Application.Contracts.Interfaces.DataAccess;
+using TheCodeKitchen.Core.Domain.Abstractions;
+using TheCodeKitchen.Core.Domain.Exceptions;
+using TheCodeKitchen.Core.Shared;
 
 namespace TheCodeKitchen.Infrastructure.DataAccess.Abstractions;
 
-public abstract class Repository<TDomain, TEntity>(DbContext context, IMapper mapper) : IRepository<TDomain>
-    where TDomain : class
-    where TEntity : BaseEntity
+public abstract class Repository<TEntity>(TheCodeKitchenDbContext context) : IRepository<TEntity>
+    where TEntity : DomainObject
 {
     protected readonly DbSet<TEntity> DbSet = context.Set<TEntity>();
 
-    public async Task<TDomain?> GetByIdAsync(object id, CancellationToken cancellationToken)
-    {
-        var entity = await DbSet.FindAsync(id, cancellationToken);
-        return entity != null ? mapper.Map<TDomain>(entity) : null;
-    }
-
-    public async Task<IEnumerable<TDomain>> GetAllAsync(CancellationToken cancellationToken)
-    {
-        var entities = await DbSet.ToListAsync(cancellationToken: cancellationToken);
-        return mapper.Map<IEnumerable<TDomain>>(entities);
-    }
-
-    public async Task<TDomain> AddAsync(TDomain domainEntity, CancellationToken cancellationToken)
-    {
-        var entity = mapper.Map<TEntity>(domainEntity);
-        DbSet.Add(entity);
-        await context.SaveChangesAsync(cancellationToken);
-        return mapper.Map<TDomain>(entity);
-    }
-
-    public async Task UpdateAsync(TDomain domainEntity, CancellationToken cancellationToken)
-    {
-        var entity = mapper.Map<TEntity>(domainEntity);
-        
-        DbSet.Attach(entity);
-        context.Entry(entity).State = EntityState.Modified;
-        
-        DbSet.Update(entity);
-        await context.SaveChangesAsync(cancellationToken);
-    }
-
-    public async Task DeleteAsync(object id, CancellationToken cancellationToken)
-    {
-        var entity = await DbSet.FindAsync(id);
-        if (entity != null)
+    public TryOptionAsync<TEntity> FindByIdAsync(object id, CancellationToken cancellationToken = default)
+        => TryOptionAsync(async () =>
         {
-            DbSet.Remove(entity);
-            await context.SaveChangesAsync(cancellationToken);
-        }
-    }
+            var entity = await DbSet.FindAsync([id], cancellationToken);
+            return entity != null ? Some(entity) : None;
+        });
 
-    public async Task<long> CountAllAsync(CancellationToken cancellationToken)
-    {
-        return await DbSet.CountAsync(cancellationToken: cancellationToken);
-    }
+
+    public TryAsync<TEntity> GetByIdAsync(object id, CancellationToken cancellationToken = default)
+        => TryAsync(async () =>
+        {
+            var entity = await DbSet.FindAsync([id], cancellationToken);
+            if (entity == null)
+                throw new NotFoundException($"{typeof(TEntity).Name} was not found using id {id}");
+            return entity;
+        });
+
+
+    public TryAsync<Seq<TEntity>> GetAllAsync(CancellationToken cancellationToken = default)
+        => TryAsync(async () =>
+        {
+            var entities = await DbSet.ToListAsync(cancellationToken);
+            return entities.ToSeq();
+        });
+
+    public TryAsync<TEntity> AddAsync(TEntity entity, CancellationToken cancellationToken = default)
+        => TryAsync(async () =>
+        {
+            DbSet.Add(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
+        });
+
+
+    public TryAsync<TheCodeKitchenUnit> UpdateAsync(TEntity entity, CancellationToken cancellationToken = default)
+        => TryAsync(async () =>
+        {
+            DbSet.Update(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return TheCodeKitchenUnit.Value;
+        });
+
+    public TryAsync<TheCodeKitchenUnit> DeleteAsync(object id, CancellationToken cancellationToken = default)
+        => GetByIdAsync(id, cancellationToken)
+            .Bind(entity => TryAsync(async () =>
+            {
+                DbSet.Remove(entity);
+                await context.SaveChangesAsync(cancellationToken);
+                return TheCodeKitchenUnit.Value;
+            }));
+
+    public TryAsync<int> CountAllAsync(CancellationToken cancellationToken = default)
+        => TryAsync(async () => await DbSet.CountAsync(cancellationToken));
 }
