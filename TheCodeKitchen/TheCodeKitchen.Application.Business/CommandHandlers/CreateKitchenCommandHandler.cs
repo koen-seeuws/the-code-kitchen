@@ -4,7 +4,10 @@ public sealed class CreateKitchenCommandValidator : AbstractValidator<CreateKitc
 {
     public CreateKitchenCommandValidator()
     {
-        RuleFor(kitchen => kitchen.Name).MaximumLength(100);
+        RuleFor(kitchen => kitchen.Name)
+            .MinimumLength(3)
+            .MaximumLength(100);
+        RuleFor(kitchen => kitchen.GameId).NotEmpty();
     }
 }
 
@@ -16,15 +19,12 @@ public sealed class CreateKitchenCommandHandler(
 {
     public async Task<Result<CreateKitchenResponse>> Handle(CreateKitchenCommand request,
         CancellationToken cancellationToken = default)
-    {
-        return await gameRepository
-            .GetGameWithKitchensById(request.GameId, cancellationToken)
-            .Bind(game => kitchenRepository
-                .GetAllCodes(cancellationToken)
-                .Map(codes => game.AddKitchen(codes.ToList(), request.Name))
-                .Bind(kitchen => kitchenRepository.AddAsync(kitchen, cancellationToken))
+        => await TryAsync(gameRepository.GetGameWithKitchensById(request.GameId, cancellationToken))
+            .Bind<Game, Kitchen>(game =>
+                TryAsync(kitchenRepository.GetAllCodes(cancellationToken))
+                    .Map(codes => game.AddKitchen(codes, request.Name))
             )
+            .Bind<Kitchen, Kitchen>(kitchen => TryAsync(kitchenRepository.AddAsync(kitchen, cancellationToken)))
             .Map(mapper.Map<CreateKitchenResponse>)
             .Invoke();
-    }
 }

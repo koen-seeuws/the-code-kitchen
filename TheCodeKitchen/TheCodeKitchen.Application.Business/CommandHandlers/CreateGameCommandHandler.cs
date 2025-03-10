@@ -4,7 +4,9 @@ public sealed class CreateGameCommandValidator : AbstractValidator<CreateGameCom
 {
     public CreateGameCommandValidator()
     {
-        RuleFor(game => game.Name).MaximumLength(100);
+        RuleFor(game => game.Name)
+            .MinimumLength(3)
+            .MaximumLength(100);
     }
 }
 
@@ -15,13 +17,10 @@ public sealed class CreateGameCommandHandler(
 {
     public async Task<Result<CreateGameResponse>> Handle(CreateGameCommand request,
         CancellationToken cancellationToken = default)
-    {
-        
-        return await gameRepository
-            .CountAllAsync(cancellationToken)
-            .Map(count => Game.Create(count, request.Name))
-            .Bind(game => gameRepository.AddAsync(game, cancellationToken))
-            .Map(mapper.Map<CreateGameResponse>)
-            .Invoke();
-    }
+        => await
+            TryAsync(gameRepository.CountAllAsync(cancellationToken))
+                .Map(count => Game.Create(count, request.Name))
+                .Bind(game => TryAsync(gameRepository.AddAsync(game, cancellationToken)))
+                .Map(mapper.Map<CreateGameResponse>)
+                .Invoke();
 }
