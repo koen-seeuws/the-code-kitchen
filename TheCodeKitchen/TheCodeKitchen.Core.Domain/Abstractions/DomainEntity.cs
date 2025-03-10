@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Core.Domain.Abstractions;
 
-public abstract class DomainObject
+public abstract class DomainEntity
 {
     public DateTimeOffset Created { get; set; }
     public DateTimeOffset Modified { get; set; }

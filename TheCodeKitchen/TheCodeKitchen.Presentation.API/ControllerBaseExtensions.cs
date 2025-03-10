@@ -63,7 +63,7 @@ public static class ControllerBaseExtensions
             case NotImplementedException:
                 return controllerBase.StatusCode((int) HttpStatusCode.NotImplemented, "This operation has not been implemented yet.");
             default:
-                return controllerBase.StatusCode((int) HttpStatusCode.InternalServerError, "An unexpected error occurred.");
+                return controllerBase.StatusCode((int) HttpStatusCode.InternalServerError, exception.Message);
         }
     }
 }

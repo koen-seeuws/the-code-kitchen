@@ -18,13 +18,13 @@ public sealed class CreateKitchenCommandHandler(
         CancellationToken cancellationToken = default)
     {
         return await gameRepository
-            .GetByIdAsync(request.GameId, cancellationToken)
+            .GetGameWithKitchensById(request.GameId, cancellationToken)
             .Bind(game => kitchenRepository
                 .GetAllCodes(cancellationToken)
                 .Map(codes => game.AddKitchen(codes.ToList(), request.Name))
                 .Bind(kitchen => kitchenRepository.AddAsync(kitchen, cancellationToken))
-                .Map(mapper.Map<CreateKitchenResponse>)
             )
+            .Map(mapper.Map<CreateKitchenResponse>)
             .Invoke();
     }
 }

@@ -3,7 +3,7 @@ using TheCodeKitchen.Core.Shared;
 
 namespace TheCodeKitchen.Application.Contracts.Interfaces.DataAccess;
 
-public interface IRepository<TEntity> where TEntity : DomainObject
+public interface IRepository<TEntity> where TEntity : DomainEntity
 {
     TryOptionAsync<TEntity> FindByIdAsync(object id, CancellationToken cancellationToken = default);
     TryAsync<TEntity> GetByIdAsync(object id, CancellationToken cancellationToken = default);

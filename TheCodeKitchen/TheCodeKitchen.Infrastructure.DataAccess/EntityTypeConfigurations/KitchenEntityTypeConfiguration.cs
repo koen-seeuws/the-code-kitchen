@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using TheCodeKitchen.Infrastructure.DataAccess.Extensions;
 
 namespace TheCodeKitchen.Infrastructure.DataAccess.EntityTypeConfigurations;
 
@@ -8,8 +9,7 @@ internal sealed class KitchenEntityTypeConfiguration : IEntityTypeConfiguration<
     public void Configure(EntityTypeBuilder<Kitchen> builder)
     {
         builder.ToTable("Kitchens");
-        
-        builder.HasKey(kitchen => kitchen.Id);
+        builder.HasGuidId();
         
         builder.Property(kitchen => kitchen.Name)
             .IsRequired()

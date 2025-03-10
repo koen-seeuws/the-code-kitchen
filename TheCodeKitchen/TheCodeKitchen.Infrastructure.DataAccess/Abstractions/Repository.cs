@@ -6,7 +6,7 @@ using TheCodeKitchen.Core.Shared;
 namespace TheCodeKitchen.Infrastructure.DataAccess.Abstractions;
 
 public abstract class Repository<TEntity>(TheCodeKitchenDbContext context) : IRepository<TEntity>
-    where TEntity : DomainObject
+    where TEntity : DomainEntity
 {
     protected readonly DbSet<TEntity> DbSet = context.Set<TEntity>();
 

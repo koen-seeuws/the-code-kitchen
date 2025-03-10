@@ -1,7 +1,7 @@
 namespace TheCodeKitchen.Application.Contracts.Response;
 
 public record CreateKitchenResponse(
-    long Id,
+    Guid Id,
     string Name,
     string Code
 );

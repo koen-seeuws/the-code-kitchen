@@ -4,6 +4,6 @@ using TheCodeKitchen.Application.Contracts.Response;
 namespace TheCodeKitchen.Application.Contracts.Commands;
 
 public record CreateKitchenCommand(
-    long GameId,
+    Guid GameId,
     string? Name = null
 ) : IRequest<Result<CreateKitchenResponse>>;

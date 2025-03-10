@@ -28,16 +28,17 @@ public sealed class TheCodeKitchenDbContext(DbContextOptions<TheCodeKitchenDbCon
     private void SetBaseEntityProperties()
     {
         var createdEntities = ChangeTracker.GetEntities(entry => entry.State == EntityState.Added);
+        var updatedEntities = ChangeTracker.GetEntities(entry => entry.State == EntityState.Modified);
+        var now = DateTimeOffset.UtcNow;
+        
         foreach (var entity in createdEntities)
         {
-            entity.Modified = DateTimeOffset.UtcNow;
-            entity.Created = DateTimeOffset.UtcNow;
+            entity.Created = entity.Modified = now;
         }
-
-        var updatedEntities = ChangeTracker.GetEntities(entry => entry.State == EntityState.Modified);
+        
         foreach (var entity in updatedEntities)
         {
-            entity.Modified = DateTimeOffset.UtcNow;
+            entity.Modified = now;
         }
     }
 }
