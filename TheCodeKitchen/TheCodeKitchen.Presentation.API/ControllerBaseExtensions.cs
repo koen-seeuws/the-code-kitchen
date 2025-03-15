@@ -17,7 +17,7 @@ public static class ControllerBaseExtensions
     ) where T : notnull
         => result.Match<IActionResult>(
             Succ: value => controllerBase.Ok(value),
-            Fail: exception => Fail(controllerBase, exception)
+            Fail: controllerBase.Fail
         );
 
     public static IActionResult MatchActionResult<T>(
@@ -27,7 +27,7 @@ public static class ControllerBaseExtensions
     ) where T : notnull
         => result.Match(
             Succ: value => onSuccess(controllerBase, value),
-            Fail: exception => Fail(controllerBase, exception)
+            Fail: controllerBase.Fail
         );
 
     public static IActionResult MatchActionResult(
@@ -36,10 +36,10 @@ public static class ControllerBaseExtensions
     )
         => result.Match(
             Succ: _ => controllerBase.NoContent(),
-            Fail: exception => Fail(controllerBase, exception)
+            Fail: controllerBase.Fail
         );
 
-    private static IActionResult Fail(ControllerBase controllerBase, Exception exception)
+    private static IActionResult Fail(this ControllerBase controllerBase, Exception exception)
     {
         switch (exception)
         {

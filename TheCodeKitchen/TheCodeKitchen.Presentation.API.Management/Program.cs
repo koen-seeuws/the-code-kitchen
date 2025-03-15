@@ -1,6 +1,7 @@
-using TheCodeKitchen.Application.Business.Configuration;
+using TheCodeKitchen.Application.Business;
 using TheCodeKitchen.Infrastructure.AzureServiceBus;
 using TheCodeKitchen.Infrastructure.DataAccess;
+using TheCodeKitchen.Infrastructure.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationServices();
 
 //Infrastructure services
-builder.Services.AddDataAccessServices(builder.Configuration);
 builder.Services.AddAzureServiceBusServices(builder.Configuration);
+builder.Services.AddDataAccessServices(builder.Configuration);
+builder.Services.AddSignalRServices();
 
 //Presentation services
 builder.Services.AddControllers();

@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using Azure.Messaging.ServiceBus;
-using TheCodeKitchen.Application.Contracts.Interfaces.Queueing;
+using TheCodeKitchen.Application.Contracts.Interfaces.Messaging;
 
 namespace TheCodeKitchen.Infrastructure.AzureServiceBus;
 

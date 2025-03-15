@@ -1,4 +1,7 @@
+using TheCodeKitchen.Application.Contracts.Events.Game;
+using TheCodeKitchen.Application.Contracts.Notifications;
 using TheCodeKitchen.Application.Contracts.Requests;
+using TheCodeKitchen.Core.Domain.Events;
 
 namespace TheCodeKitchen.Application.Business.Mapping;
 
@@ -9,7 +12,13 @@ public class GameMapping : Profile
         //Request - Command
         CreateMap<CreateGameRequest, CreateGameCommand>();
         
-        //Game - Response
+        //Domain - Response
         CreateMap<Game, CreateGameResponse>();
+        
+        //Event - Notification
+        CreateMap<GameCreatedEvent, GameCreatedNotification>();
+        
+        //Notification - EventDto
+        CreateMap<GameCreatedNotification, GameCreatedEventDto>();
     }
 }

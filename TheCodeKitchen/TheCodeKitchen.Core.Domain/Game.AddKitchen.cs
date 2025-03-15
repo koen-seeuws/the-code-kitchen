@@ -42,7 +42,7 @@ public partial class Game
         var kitchen = new Kitchen(name, code, Id);
         Kitchens.Add(kitchen);
         
-        RaiseEvent(new KitchenCreatedEvent(kitchen.Id, kitchen.Name, kitchen.Code));
+        RaiseEvent(new KitchenCreatedEvent(kitchen.Id, kitchen.Name, kitchen.Code, this.Id));
         
         return kitchen;
     }

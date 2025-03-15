@@ -1,7 +1,7 @@
 ﻿using Azure.Messaging.ServiceBus;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TheCodeKitchen.Application.Contracts.Interfaces.Queueing;
+using TheCodeKitchen.Application.Contracts.Interfaces.Messaging;
 
 namespace TheCodeKitchen.Infrastructure.AzureServiceBus;
 

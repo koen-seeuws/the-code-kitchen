@@ -1,4 +1,4 @@
-namespace TheCodeKitchen.Application.Contracts.Interfaces.Queueing;
+namespace TheCodeKitchen.Application.Contracts.Interfaces.Messaging;
 
 public interface IMessagePublisher
 {

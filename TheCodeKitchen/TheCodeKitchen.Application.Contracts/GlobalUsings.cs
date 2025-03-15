@@ -1,4 +1,5 @@
 global using TheCodeKitchen.Core.Domain;
+global using TheCodeKitchen.Core.Domain.Events;
 
 // LanguageExt
 global using LanguageExt;
