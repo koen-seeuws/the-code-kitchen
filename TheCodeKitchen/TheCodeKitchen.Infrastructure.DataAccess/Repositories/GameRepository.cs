@@ -7,7 +7,6 @@ public class GameRepository(TheCodeKitchenDbContext context)
     : Repository<Game>(context), IGameRepository
 {
     public async Task<Game> GetGameWithKitchensById(Guid gameId, CancellationToken cancellationToken = default)
-
     {
         var game = await DbSet
             .Include(game => game.Kitchens)

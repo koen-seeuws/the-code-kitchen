@@ -2,7 +2,7 @@
 using TheCodeKitchen.Core.Domain.Abstractions;
 using TheCodeKitchen.Core.Domain.Exceptions;
 
-namespace TheCodeKitchen.Infrastructure.DataAccess.Abstractions;
+namespace TheCodeKitchen.Infrastructure.DataAccess;
 
 public abstract class Repository<TEntity>(TheCodeKitchenDbContext context) : IRepository<TEntity>
     where TEntity : DomainEntity
