@@ -1,5 +1,6 @@
-using TheCodeKitchen.Application.Contracts.Interfaces.Events;
+using TheCodeKitchen.Application.Contracts.Notifications;
 using TheCodeKitchen.Core.Domain.Abstractions;
+using TheCodeKitchen.Core.Domain.Events;
 
 namespace TheCodeKitchen.Application.Business.Services;
 
@@ -8,11 +9,22 @@ public class DomainEventDispatcher(
     IMediator mediator
 ) : IDomainEventDispatcher
 {
+    private static readonly Dictionary<Type, Type> NotificationMap = new()
+    {
+        [typeof(GameCreatedEvent)] = typeof(GameCreatedNotification),
+        [typeof(KitchenCreatedEvent)] = typeof(KitchenCreatedNotification)
+    };
+
     public async Task DispatchEvents(IEnumerable<DomainEvent> events)
     {
         foreach (var @event in events)
         {
-            var notification = mapper.Map<INotification>(@event);
+            var eventType = @event.GetType();
+            
+            if (!NotificationMap.TryGetValue(eventType, out var notificationType))
+                throw new NotSupportedException($"Event type {eventType.Name} is not supported.");
+            
+            var notification = mapper.Map(@event, eventType, notificationType);
             await mediator.Publish(notification);
         }
     }

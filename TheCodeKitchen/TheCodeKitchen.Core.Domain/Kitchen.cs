@@ -1,6 +1,4 @@
-﻿using TheCodeKitchen.Core.Domain.Abstractions;
-
-namespace TheCodeKitchen.Core.Domain;
+﻿namespace TheCodeKitchen.Core.Domain;
 
 public partial class Kitchen : DomainEntity, IHasGuidId
 {

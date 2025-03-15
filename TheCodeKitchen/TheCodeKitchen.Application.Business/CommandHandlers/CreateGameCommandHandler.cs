@@ -1,3 +1,5 @@
+
+
 namespace TheCodeKitchen.Application.Business.CommandHandlers;
 
 public sealed class CreateGameCommandValidator : AbstractValidator<CreateGameCommand>
@@ -12,15 +14,19 @@ public sealed class CreateGameCommandValidator : AbstractValidator<CreateGameCom
 
 public sealed class CreateGameCommandHandler(
     IGameRepository gameRepository,
+    IDomainEventDispatcher domainEventDispatcher,
     IMapper mapper
 ) : IRequestHandler<CreateGameCommand, Result<CreateGameResponse>>
 {
-    public async Task<Result<CreateGameResponse>> Handle(CreateGameCommand request,
-        CancellationToken cancellationToken = default)
-        => await
-            TryAsync(gameRepository.CountAllAsync(cancellationToken))
-                .Map(count => Game.Create(count, request.Name))
-                .Bind(game => TryAsync(gameRepository.AddAsync(game, cancellationToken)))
-                .Map(mapper.Map<CreateGameResponse>)
-                .Invoke();
+    public async Task<Result<CreateGameResponse>> Handle(
+        CreateGameCommand request,
+        CancellationToken cancellationToken = default
+    ) => await
+        TryAsync(gameRepository.CountAllAsync(cancellationToken))
+            .Map(count => Game.Create(count, request.Name))
+            .Bind(game => TryAsync(gameRepository.AddAsync(game, cancellationToken)))
+            .Do(game => domainEventDispatcher.DispatchEvents(game.GetEvents()))
+            .Do(game => game.ClearEvents())
+            .Map(mapper.Map<CreateGameResponse>)
+            .Invoke();
 }

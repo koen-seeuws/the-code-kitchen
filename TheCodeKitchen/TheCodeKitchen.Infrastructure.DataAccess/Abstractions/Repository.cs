@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TheCodeKitchen.Core.Domain.Abstractions;
 using TheCodeKitchen.Core.Domain.Exceptions;
-using TheCodeKitchen.Core.Shared;
 
 namespace TheCodeKitchen.Infrastructure.DataAccess.Abstractions;
 

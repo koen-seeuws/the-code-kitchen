@@ -2,7 +2,6 @@
 using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Business.Pipeline.Validation;
 using TheCodeKitchen.Application.Business.Services;
-using TheCodeKitchen.Application.Contracts.Interfaces.Events;
 
 namespace TheCodeKitchen.Application.Business;
 

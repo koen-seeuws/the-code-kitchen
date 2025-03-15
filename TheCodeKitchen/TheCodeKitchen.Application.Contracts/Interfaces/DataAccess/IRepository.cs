@@ -1,5 +1,4 @@
 using TheCodeKitchen.Core.Domain.Abstractions;
-using TheCodeKitchen.Core.Shared;
 
 namespace TheCodeKitchen.Application.Contracts.Interfaces.DataAccess;
 

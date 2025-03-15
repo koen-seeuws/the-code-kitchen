@@ -7,5 +7,5 @@ public class GameManagementSignalRService(
 ) : IRealtimeGameManagementService
 {
     public async Task GameCreated(GameCreatedEventDto gameCreatedEvent)
-        => await gameManagementHub.Clients.All.SendAsync("GameCreated", gameCreatedEvent);
+        => await gameManagementHub.Clients.All.SendAsync(nameof(GameCreated), gameCreatedEvent);
 }

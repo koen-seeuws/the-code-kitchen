@@ -2,5 +2,5 @@ namespace TheCodeKitchen.Application.Contracts.Events;
 
 public abstract record DomainEventDto
 {
-    public DateTimeOffset Occured { get; }
+    public DateTimeOffset Occured { get; } = DateTimeOffset.UtcNow;
 }

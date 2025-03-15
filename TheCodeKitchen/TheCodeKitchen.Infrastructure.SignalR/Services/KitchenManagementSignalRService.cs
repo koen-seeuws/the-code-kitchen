@@ -7,8 +7,9 @@ public class KitchenManagementSignalRService(
 ) : IRealtimeKitchenManagementService
 {
     public async Task KitchenCreated(Guid gameId, KitchenCreatedEventDto kitchenCreatedEvent)
-    => await kitchenManagementHubContext.Clients
+    {
+        await kitchenManagementHubContext.Clients
             .Group($"game-{gameId}")
-            .SendAsync("KitchenCreated", kitchenCreatedEvent);
-    
+            .SendAsync(nameof(KitchenCreated), kitchenCreatedEvent);
+    }
 }

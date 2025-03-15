@@ -1,0 +1,1 @@
+global using TheCodeKitchen.Core.Domain.Abstractions;
