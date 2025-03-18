@@ -1,8 +1,11 @@
+using AutoMapper;
+using MediatR;
+using TheCodeKitchen.Application.Contracts.Interfaces.Common;
 using TheCodeKitchen.Application.Contracts.Notifications;
 using TheCodeKitchen.Core.Domain.Abstractions;
 using TheCodeKitchen.Core.Domain.Events;
 
-namespace TheCodeKitchen.Application.Business.Services;
+namespace TheCodeKitchen.Infrastructure.Common.Services;
 
 public class DomainEventDispatcher(
     IMapper mapper,

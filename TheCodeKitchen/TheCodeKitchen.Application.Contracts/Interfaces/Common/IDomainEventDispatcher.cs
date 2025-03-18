@@ -1,6 +1,6 @@
 using TheCodeKitchen.Core.Domain.Abstractions;
 
-namespace TheCodeKitchen.Application.Contracts.Interfaces.Events;
+namespace TheCodeKitchen.Application.Contracts.Interfaces.Common;
 
 public interface IDomainEventDispatcher
 {

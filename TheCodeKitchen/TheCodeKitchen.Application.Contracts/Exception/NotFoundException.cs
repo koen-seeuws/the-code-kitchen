@@ -1,6 +1,6 @@
-namespace TheCodeKitchen.Core.Domain.Exceptions;
+namespace TheCodeKitchen.Application.Contracts.Exception;
 
-public class NotFoundException : DomainException
+public class NotFoundException : ApplicationException
 {
     public NotFoundException()
     {

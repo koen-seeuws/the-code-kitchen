@@ -1,3 +1,6 @@
+using TheCodeKitchen.Application.Business.Services;
+using TheCodeKitchen.Application.Contracts.Interfaces.Common;
+
 namespace TheCodeKitchen.Application.Business.CommandHandlers;
 
 public sealed class CreateKitchenCommandValidator : AbstractValidator<CreateKitchenCommand>
@@ -13,7 +16,7 @@ public sealed class CreateKitchenCommandValidator : AbstractValidator<CreateKitc
 
 public sealed class CreateKitchenCommandHandler(
     IGameRepository gameRepository,
-    IKitchenRepository kitchenRepository,
+    IKitchenService kitchenService,
     IDomainEventDispatcher domainEventDispatcher,
     IMapper mapper
 ) : IRequestHandler<CreateKitchenCommand, Result<CreateKitchenResponse>>
@@ -24,8 +27,8 @@ public sealed class CreateKitchenCommandHandler(
     ) => await
         TryAsync(() => gameRepository.GetGameWithKitchensById(request.GameId, cancellationToken))
             .Bind(game =>
-                TryAsync(() => kitchenRepository.GetAllCodes(cancellationToken))
-                    .Map(codes => game.AddKitchen(codes, request.Name))
+                TryAsync(() => kitchenService.GenerateUniqueCode(cancellationToken: cancellationToken))
+                    .Map(code => game.AddKitchen(request.Name, code))
                     .Map(kitchen => (game, kitchen))
             )
             .Bind(result =>

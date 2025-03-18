@@ -16,7 +16,6 @@ internal sealed class KitchenEntityTypeConfiguration : IEntityTypeConfiguration<
             .HasMaxLength(100);
 
         builder.Property(kitchen => kitchen.Code)
-            .IsRequired()
             .HasMaxLength(100);
 
         builder.HasIndex(kitchen => kitchen.Code).IsUnique();

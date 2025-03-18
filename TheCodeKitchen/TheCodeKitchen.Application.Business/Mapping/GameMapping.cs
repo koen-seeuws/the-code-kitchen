@@ -15,9 +15,6 @@ public class GameMapping : Profile
         //Domain - Response
         CreateMap<Game, CreateGameResponse>();
         
-        //Event - Notification
-        CreateMap<GameCreatedEvent, GameCreatedNotification>();
-        
         //Notification - EventDto
         CreateMap<GameCreatedNotification, GameCreatedEventDto>();
     }

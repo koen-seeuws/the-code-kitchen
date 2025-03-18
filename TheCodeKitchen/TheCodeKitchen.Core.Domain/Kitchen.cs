@@ -4,7 +4,7 @@ public partial class Kitchen : DomainEntity, IHasGuidId
 {
     public Guid Id { get; }
     public string Name { get; private set; }
-    public string Code { get; private set; }
+    public string? Code { get; private set; }
     
     public Guid GameId { get; private set; }
     public Game Game { get; private set; } = null!;

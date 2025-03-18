@@ -3,6 +3,7 @@ using FluentValidation;
 using LanguageExt.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using TheCodeKitchen.Application.Contracts.Exception;
 using TheCodeKitchen.Core.Domain.Abstractions;
 using TheCodeKitchen.Core.Domain.Exceptions;
 using TheCodeKitchen.Core.Shared;

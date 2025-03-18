@@ -7,7 +7,6 @@ global using FluentValidation;
 global using MediatR;
 global using TheCodeKitchen.Application.Contracts.Commands;
 global using TheCodeKitchen.Application.Contracts.Interfaces.DataAccess;
-global using TheCodeKitchen.Application.Contracts.Interfaces.Events;
 global using TheCodeKitchen.Application.Contracts.Response;
 
 // LanguageExt

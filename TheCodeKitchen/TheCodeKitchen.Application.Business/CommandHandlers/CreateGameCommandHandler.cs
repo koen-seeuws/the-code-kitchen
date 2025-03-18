@@ -1,5 +1,7 @@
 
 
+using TheCodeKitchen.Application.Contracts.Interfaces.Common;
+
 namespace TheCodeKitchen.Application.Business.CommandHandlers;
 
 public sealed class CreateGameCommandValidator : AbstractValidator<CreateGameCommand>

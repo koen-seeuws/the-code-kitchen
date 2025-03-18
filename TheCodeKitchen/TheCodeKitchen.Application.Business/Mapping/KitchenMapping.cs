@@ -15,9 +15,6 @@ public class KitchenMapping : Profile
         //Domain - Response
         CreateMap<Kitchen, CreateKitchenResponse>();
         
-        //Event - Notification
-        CreateMap<KitchenCreatedEvent, KitchenCreatedNotification>();
-        
         //Notification - EventDto
         CreateMap<KitchenCreatedNotification, KitchenCreatedEventDto>();
     }

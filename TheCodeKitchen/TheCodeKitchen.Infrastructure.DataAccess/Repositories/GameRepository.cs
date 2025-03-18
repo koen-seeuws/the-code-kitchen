@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TheCodeKitchen.Application.Contracts.Exception;
 using TheCodeKitchen.Core.Domain.Exceptions;
 
 namespace TheCodeKitchen.Infrastructure.DataAccess.Repositories;
