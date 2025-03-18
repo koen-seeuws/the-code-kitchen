@@ -18,6 +18,7 @@
     <ItemGroup>
       <ProjectReference Include="..\TheCodeKitchen.Application.Business\TheCodeKitchen.Application.Business.csproj" />
       <ProjectReference Include="..\TheCodeKitchen.Infrastructure.AzureServiceBus\TheCodeKitchen.Infrastructure.AzureServiceBus.csproj" />
+      <ProjectReference Include="..\TheCodeKitchen.Infrastructure.Common\TheCodeKitchen.Infrastructure.Common.csproj" />
       <ProjectReference Include="..\TheCodeKitchen.Infrastructure.DataAccess\TheCodeKitchen.Infrastructure.DataAccess.csproj" />
       <ProjectReference Include="..\TheCodeKitchen.Infrastructure.SignalR\TheCodeKitchen.Infrastructure.SignalR.csproj" />
       <ProjectReference Include="..\TheCodeKitchen.Presentation.API\TheCodeKitchen.Presentation.API.csproj" />

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheCodeKitchen.Infrastructure.DataAccess;
 
@@ -11,9 +12,11 @@ using TheCodeKitchen.Infrastructure.DataAccess;
 namespace TheCodeKitchen.Infrastructure.DataAccess.Migrations
 {
     [DbContext(typeof(TheCodeKitchenDbContext))]
-    partial class TheCodeKitchenDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250318214645_NullabmeKitchenCode")]
+    partial class NullabmeKitchenCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

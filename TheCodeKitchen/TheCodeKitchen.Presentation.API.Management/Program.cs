@@ -1,5 +1,6 @@
 using TheCodeKitchen.Application.Business;
 using TheCodeKitchen.Infrastructure.AzureServiceBus;
+using TheCodeKitchen.Infrastructure.Common;
 using TheCodeKitchen.Infrastructure.DataAccess;
 using TheCodeKitchen.Infrastructure.SignalR;
 
@@ -10,6 +11,7 @@ builder.Services.AddApplicationServices();
 
 //Infrastructure services
 builder.Services.AddAzureServiceBusServices(builder.Configuration);
+builder.Services.AddCommonInfrastructure();
 builder.Services.AddDataAccessServices(builder.Configuration);
 builder.Services.AddSignalRServices();
 
