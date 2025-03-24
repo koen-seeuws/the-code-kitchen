@@ -15,7 +15,8 @@ public class DomainEventDispatcher(
     private static readonly Dictionary<Type, Type> NotificationMap = new()
     {
         [typeof(GameCreatedEvent)] = typeof(GameCreatedNotification),
-        [typeof(KitchenCreatedEvent)] = typeof(KitchenCreatedNotification)
+        [typeof(KitchenAddedEvent)] = typeof(KitchenAddedNotification),
+        [typeof(CookJoinedEvent)] = typeof(CookJoinedNotification)
     };
 
     public async Task DispatchEvents(IEnumerable<DomainEvent> events)

@@ -12,10 +12,10 @@ public partial class Game
             name = $"Kitchen {Kitchens.Count + 1}";
 
         // Create a new Kitchen instance
-        var kitchen = new Kitchen(name, code, Id);
+        var kitchen = new Kitchen(name, code, this);
         Kitchens.Add(kitchen);
         
-        RaiseEvent(new KitchenCreatedEvent(kitchen.Id, kitchen.Name, kitchen.Code, this.Id));
+        RaiseEvent(new KitchenAddedEvent(kitchen.Id, kitchen.Name, kitchen.Code, this.Id));
         
         return kitchen;
     }

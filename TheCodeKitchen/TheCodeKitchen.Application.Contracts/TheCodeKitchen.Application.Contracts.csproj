@@ -15,4 +15,8 @@
       <ProjectReference Include="..\TheCodeKitchen.Core.Domain\TheCodeKitchen.Core.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Events\Kitchen\" />
+    </ItemGroup>
+
 </Project>

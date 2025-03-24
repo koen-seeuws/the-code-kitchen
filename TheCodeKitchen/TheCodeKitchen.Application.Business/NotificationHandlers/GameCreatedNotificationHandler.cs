@@ -4,7 +4,7 @@ using TheCodeKitchen.Application.Contracts.Notifications;
 
 namespace TheCodeKitchen.Application.Business.NotificationHandlers;
 
-public class GameCreatedNotificationHandler(
+public sealed class GameCreatedNotificationHandler(
     IMapper mapper,
     IRealtimeGameManagementService realtimeGameManagementService
 ) : INotificationHandler<GameCreatedNotification>

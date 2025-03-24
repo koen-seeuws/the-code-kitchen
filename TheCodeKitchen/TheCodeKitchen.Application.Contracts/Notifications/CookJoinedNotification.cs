@@ -1,9 +1,10 @@
 using MediatR;
-using TheCodeKitchen.Application.Contracts.Events;
 
 namespace TheCodeKitchen.Application.Contracts.Notifications;
 
-public record GameCreatedNotification(
+public record CookJoinedNotification(
     Guid Id,
-    string Name
+    string Username,
+    Guid GameId,
+    Guid KitchenId
 ) : EventNotification, INotification;

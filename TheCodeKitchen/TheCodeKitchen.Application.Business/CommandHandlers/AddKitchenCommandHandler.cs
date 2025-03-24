@@ -3,9 +3,9 @@ using TheCodeKitchen.Application.Contracts.Interfaces.Common;
 
 namespace TheCodeKitchen.Application.Business.CommandHandlers;
 
-public sealed class CreateKitchenCommandValidator : AbstractValidator<CreateKitchenCommand>
+public sealed class AddKitchenCommandValidator : AbstractValidator<AddKitchenCommand>
 {
-    public CreateKitchenCommandValidator()
+    public AddKitchenCommandValidator()
     {
         RuleFor(kitchen => kitchen.Name)
             .MinimumLength(3)
@@ -14,15 +14,15 @@ public sealed class CreateKitchenCommandValidator : AbstractValidator<CreateKitc
     }
 }
 
-public sealed class CreateKitchenCommandHandler(
+public sealed class AddKitchenCommandHandler(
     IGameRepository gameRepository,
     IKitchenService kitchenService,
     IDomainEventDispatcher domainEventDispatcher,
     IMapper mapper
-) : IRequestHandler<CreateKitchenCommand, Result<CreateKitchenResponse>>
+) : IRequestHandler<AddKitchenCommand, Result<AddKitchenResponse>>
 {
-    public async Task<Result<CreateKitchenResponse>> Handle(
-        CreateKitchenCommand request,
+    public async Task<Result<AddKitchenResponse>> Handle(
+        AddKitchenCommand request,
         CancellationToken cancellationToken = default
     ) => await
         TryAsync(() => gameRepository.GetGameWithKitchensById(request.GameId, cancellationToken))
@@ -37,6 +37,6 @@ public sealed class CreateKitchenCommandHandler(
             )
             .Do(result => domainEventDispatcher.DispatchEvents(result.game.GetEvents()))
             .Do(result => result.game.ClearEvents())
-            .Map(result => mapper.Map<CreateKitchenResponse>(result.kitchen))
+            .Map(result => mapper.Map<AddKitchenResponse>(result.kitchen))
             .Invoke();
 }

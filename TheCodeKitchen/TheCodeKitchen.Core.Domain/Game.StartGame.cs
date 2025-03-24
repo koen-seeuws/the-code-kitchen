@@ -6,13 +6,13 @@ public partial class Game
 {
     public void StartGame()
     {
-        if (Started is not null)
-            throw new GameAlreadyStartedException($"The game with id {Id} has already started");
-
         foreach (var kitchen in Kitchens)
         {
-            kitchen.CloseRegistrations();
+            kitchen.RemoveJoinCode();
         }
+        
+        if (Started is not null)
+            throw new GameAlreadyStartedException($"The game with id {Id} has already started");
 
         Started = DateTimeOffset.UtcNow;
         Paused = DateTimeOffset.Now;

@@ -10,7 +10,6 @@ public static class SignalRServiceRegistration
         services.AddSignalR();
 
         services.AddSingleton<IRealtimeGameManagementService, GameManagementSignalRService>();
-        services.AddSingleton<IRealtimeKitchenManagementService, KitchenManagementSignalRService>();
         
         return services;
     }

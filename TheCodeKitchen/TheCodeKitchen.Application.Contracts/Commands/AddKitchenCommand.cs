@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Contracts.Response;
 
 namespace TheCodeKitchen.Application.Contracts.Commands;
 
-public record CreateKitchenCommand(
+public record AddKitchenCommand(
     Guid GameId,
     string? Name = null
-) : IRequest<Result<CreateKitchenResponse>>;
+) : IRequest<Result<AddKitchenResponse>>;

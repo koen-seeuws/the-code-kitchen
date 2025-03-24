@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Core.Domain.Events;
 
-public record KitchenCreatedEvent(
+public record KitchenAddedEvent(
     Guid Id,
     string Name,
     string Code,

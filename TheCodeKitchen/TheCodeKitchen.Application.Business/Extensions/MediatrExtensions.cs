@@ -14,7 +14,7 @@ public static class MediatrExtensions
     {
         var requestsAssembly = typeof(TScanAssembly).Assembly;
 
-        // Get all types implementing IRequest<> (CreateGameRequest, CreateKitchenRequest, etc.)
+        // Get all types implementing IRequest<> (CreateGameRequest, AddKitchenRequest, etc.)
         var openRequestTypes = GetTypesImplementingOpenGenericType(RequestOpenGenericType, requestsAssembly).ToList();
 
         foreach (var openRequestType in openRequestTypes)

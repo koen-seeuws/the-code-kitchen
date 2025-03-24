@@ -11,9 +11,9 @@ namespace TheCodeKitchen.Presentation.API.Management.Controllers;
 public class KitchenController(IMediator mediator, IMapper mapper) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateKitchenRequest createKitchenRequest, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Create([FromBody] AddKitchenRequest AddKitchenRequest, CancellationToken cancellationToken = default)
     {
-        var request = mapper.Map<CreateKitchenCommand>(createKitchenRequest);
+        var request = mapper.Map<AddKitchenCommand>(AddKitchenRequest);
         var result = await mediator.Send(request, cancellationToken);
         return this.MatchActionResult(result);
     }

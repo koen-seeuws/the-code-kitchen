@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Contracts.Response;
 
-public record CreateKitchenResponse(
+public record AddKitchenResponse(
     Guid Id,
     string Name,
     string Code
