@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public class Cook : IHasGuidId
+public class Cook : DomainEntity, IHasGuidId
 {
     public Guid Id { get; init; }
     public string Username { get; private set; }
