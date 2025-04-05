@@ -8,8 +8,9 @@ public static class CommonInfrastructureServiceRegistration
 {
     public static IServiceCollection AddCommonInfrastructure(this IServiceCollection services)
     {
-        services.AddTransient<ICodeGenerator, CodeGenerator>();
+        services.AddAutoMapper(typeof(EventToNotificationMapping));
         
+        services.AddTransient<ICodeGenerator, CodeGenerator>();
         services.AddTransient<IDomainEventDispatcher, DomainEventDispatcher>();
         
         return services;

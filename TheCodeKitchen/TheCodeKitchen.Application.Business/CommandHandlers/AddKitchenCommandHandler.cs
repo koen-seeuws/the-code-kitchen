@@ -16,6 +16,7 @@ public sealed class AddKitchenCommandValidator : AbstractValidator<AddKitchenCom
 
 public sealed class AddKitchenCommandHandler(
     IGameRepository gameRepository,
+    IKitchenRepository kitchenRepository,
     IKitchenService kitchenService,
     IDomainEventDispatcher domainEventDispatcher,
     IMapper mapper
@@ -32,11 +33,10 @@ public sealed class AddKitchenCommandHandler(
                     .Map(kitchen => (game, kitchen))
             )
             .Bind(result =>
-                TryAsync(() => gameRepository.UpdateAsync(result.game, cancellationToken))
+                TryAsync(() => kitchenRepository.AddAsync(result.kitchen, cancellationToken))
                     .Map(_ => (result.game, result.kitchen))
             )
-            .Do(result => domainEventDispatcher.DispatchEvents(result.game.GetEvents()))
-            .Do(result => result.game.ClearEvents())
+            .Do(result => domainEventDispatcher.DispatchAndClearEvents(result.game, cancellationToken))
             .Map(result => mapper.Map<AddKitchenResponse>(result.kitchen))
             .Invoke();
 }

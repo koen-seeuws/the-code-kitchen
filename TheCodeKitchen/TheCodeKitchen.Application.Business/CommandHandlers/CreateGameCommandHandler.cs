@@ -27,8 +27,7 @@ public sealed class CreateGameCommandHandler(
         TryAsync(gameRepository.CountAllAsync(cancellationToken))
             .Map(count => Game.Create(count, request.Name))
             .Bind(game => TryAsync(gameRepository.AddAsync(game, cancellationToken)))
-            .Do(game => domainEventDispatcher.DispatchEvents(game.GetEvents()))
-            .Do(game => game.ClearEvents())
+            .Do(game => domainEventDispatcher.DispatchAndClearEvents(game, cancellationToken))
             .Map(mapper.Map<CreateGameResponse>)
             .Invoke();
 }

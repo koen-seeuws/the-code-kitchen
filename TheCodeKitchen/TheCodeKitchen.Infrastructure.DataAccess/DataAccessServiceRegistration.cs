@@ -18,6 +18,7 @@ public static class DataAccessServiceRegistration
 
         services.AddScoped<IGameRepository, GameRepository>();
         services.AddScoped<IKitchenRepository, KitchenRepository>();
+        services.AddScoped<ICookRepository, CookRepository>();
         
         return services;
     }

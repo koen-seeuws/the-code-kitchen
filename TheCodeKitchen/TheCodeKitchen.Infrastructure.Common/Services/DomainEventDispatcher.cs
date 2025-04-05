@@ -19,7 +19,7 @@ public class DomainEventDispatcher(
         [typeof(CookJoinedEvent)] = typeof(CookJoinedNotification)
     };
 
-    public async Task DispatchEvents(IEnumerable<DomainEvent> events)
+    public async Task DispatchEvents(IEnumerable<DomainEvent> events, CancellationToken cancellationToken = default)
     {
         foreach (var @event in events)
         {
@@ -29,7 +29,13 @@ public class DomainEventDispatcher(
                 throw new NotSupportedException($"Event type {eventType.Name} is not supported.");
             
             var notification = mapper.Map(@event, eventType, notificationType);
-            await mediator.Publish(notification);
+            await mediator.Publish(notification, cancellationToken);
         }
+    }
+
+    public async Task DispatchAndClearEvents(DomainEntity domainEntity, CancellationToken cancellationToken = default)
+    {
+        await DispatchEvents(domainEntity.GetEvents(), cancellationToken);
+        domainEntity.ClearEvents();
     }
 }

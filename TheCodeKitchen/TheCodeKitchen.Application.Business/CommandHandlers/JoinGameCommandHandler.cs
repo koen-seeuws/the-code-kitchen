@@ -1,4 +1,5 @@
 using System.Net;
+using System.Security.Authentication;
 using TheCodeKitchen.Application.Contracts.Interfaces.Authentication;
 using TheCodeKitchen.Application.Contracts.Interfaces.Common;
 
@@ -8,21 +9,32 @@ public class JoinGameCommandHandler(
     IGameRepository gameRepository,
     ICookRepository cookRepository,
     IDomainEventDispatcher domainEventDispatcher,
-    IAuthenticationService authenticationService
+    IPasswordHashingService passwordHashingService,
+    ISecurityTokenService securityTokenService
 ) : IRequestHandler<JoinGameCommand, Result<JoinGameResponse>>
 {
     public async Task<Result<JoinGameResponse>> Handle(JoinGameCommand request, CancellationToken cancellationToken)
-        => await TryAsync(gameRepository.GetGameWithKitchensAndCooksByCode(request.KitchenCode, cancellationToken))
-            .Map(game => (game, passwordHash: authenticationService.HashPassword(request.Password)))
-            .Map(result => (result.game,
-                cook: result.game.JoinGame(request.KitchenCode, request.Username, result.passwordHash)))
-            .Bind(result =>
-                TryAsync(cookRepository.UpdateAsync(result.cook, cancellationToken))
-                    .Map(_ => (result.game,result.cook))
-            )
-            .Do(result => domainEventDispatcher.DispatchEvents(result.game.GetEvents()))
-            .Do(result => result.game.ClearEvents())
-            .Map(result => authenticationService.GeneratePlayerToken(result.cook.KitchenId, result.cook.Username))
-            .Map(token => new JoinGameResponse(token))
-            .Invoke();
+    {
+        var cook = await cookRepository.FindCookByUsernameAndJoinCode(request.Username, request.KitchenCode,
+            cancellationToken);
+        if (cook != null)
+        {
+            if (!passwordHashingService.VerifyHashedPassword(cook.PasswordHash, request.Password))
+            {
+                return new Result<JoinGameResponse>(new AuthenticationException("Invalid password"));
+            }
+        }
+        else
+        {
+            var hashedPassword = passwordHashingService.HashPassword(request.Password);
+            var game = await gameRepository.GetGameWithKitchensAndCooksByCode(request.KitchenCode, cancellationToken);
+            cook = game.JoinGame(request.KitchenCode, request.Username, hashedPassword);
+            await cookRepository.AddAsync(cook, cancellationToken);
+            await domainEventDispatcher.DispatchAndClearEvents(game, cancellationToken);
+        }
+
+        var token = securityTokenService.GeneratePlayerToken(cook.Username, cook.KitchenId);
+        var joinGameResponse = new JoinGameResponse(token);
+        return new Result<JoinGameResponse>(joinGameResponse);
+    }
 }

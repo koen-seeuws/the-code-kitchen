@@ -22,6 +22,36 @@ namespace TheCodeKitchen.Infrastructure.DataAccess.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("TheCodeKitchen.Core.Domain.Cook", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<Guid>("KitchenId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("Modified")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("KitchenId");
+
+                    b.ToTable("Cook");
+                });
+
             modelBuilder.Entity("TheCodeKitchen.Core.Domain.Game", b =>
                 {
                     b.Property<Guid>("Id")
@@ -82,6 +112,17 @@ namespace TheCodeKitchen.Infrastructure.DataAccess.Migrations
                     b.ToTable("Kitchens", (string)null);
                 });
 
+            modelBuilder.Entity("TheCodeKitchen.Core.Domain.Cook", b =>
+                {
+                    b.HasOne("TheCodeKitchen.Core.Domain.Kitchen", "Kitchen")
+                        .WithMany("Cooks")
+                        .HasForeignKey("KitchenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Kitchen");
+                });
+
             modelBuilder.Entity("TheCodeKitchen.Core.Domain.Kitchen", b =>
                 {
                     b.HasOne("TheCodeKitchen.Core.Domain.Game", "Game")
@@ -96,6 +137,11 @@ namespace TheCodeKitchen.Infrastructure.DataAccess.Migrations
             modelBuilder.Entity("TheCodeKitchen.Core.Domain.Game", b =>
                 {
                     b.Navigation("Kitchens");
+                });
+
+            modelBuilder.Entity("TheCodeKitchen.Core.Domain.Kitchen", b =>
+                {
+                    b.Navigation("Cooks");
                 });
 #pragma warning restore 612, 618
         }
