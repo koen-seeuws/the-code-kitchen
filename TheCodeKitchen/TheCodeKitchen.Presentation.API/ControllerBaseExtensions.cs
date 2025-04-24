@@ -46,11 +46,7 @@ public static class ControllerBaseExtensions
             case NotFoundException:
                 return controllerBase.NotFound(exception.Message);
             case DomainException:
-                return controllerBase.BadRequest(new
-                {
-                    IsDomainException = true,
-                    Code = exception.GetType().Name
-                });
+                return controllerBase.BadRequest(exception.Message);
             case ValidationException validationException:
             {
                 var modelStateDictionary = new ModelStateDictionary();
