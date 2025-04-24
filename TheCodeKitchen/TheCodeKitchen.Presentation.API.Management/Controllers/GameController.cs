@@ -37,6 +37,12 @@ public class GameController(IMediator mediator, IMapper mapper) : ControllerBase
         var result = await mediator.Send(command, cancellationToken);
         return this.MatchActionResult(result);
     }
-    
-    
+
+    [HttpPut("{gameId}/[action]")]
+    public async Task<IActionResult> PauseOrUnpause(Guid gameId, CancellationToken cancellationToken = default)
+    {
+        var command = new PauseOrUnpauseGameCommand(gameId);
+        var result = await mediator.Send(command, cancellationToken);
+        return this.MatchActionResult(result);
+    }
 }

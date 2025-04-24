@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Contracts.Notifications;
 
 namespace TheCodeKitchen.Application.Business.NotificationHandlers;
 
-public class GameStartedNotificationHandler(
+public sealed class GameStartedNotificationHandler(
     IRealtimeGameManagementService realtimeGameManagementService
 ) : INotificationHandler<GameStartedNotification>
 {

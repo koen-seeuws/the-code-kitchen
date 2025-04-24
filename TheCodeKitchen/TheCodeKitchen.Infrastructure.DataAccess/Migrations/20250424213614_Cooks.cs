@@ -12,11 +12,11 @@ namespace TheCodeKitchen.Infrastructure.DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Cook",
+                name: "Cooks",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     KitchenId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
@@ -24,9 +24,9 @@ namespace TheCodeKitchen.Infrastructure.DataAccess.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cook", x => x.Id);
+                    table.PrimaryKey("PK_Cooks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Cook_Kitchens_KitchenId",
+                        name: "FK_Cooks_Kitchens_KitchenId",
                         column: x => x.KitchenId,
                         principalTable: "Kitchens",
                         principalColumn: "Id",
@@ -34,8 +34,8 @@ namespace TheCodeKitchen.Infrastructure.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cook_KitchenId",
-                table: "Cook",
+                name: "IX_Cooks_KitchenId",
+                table: "Cooks",
                 column: "KitchenId");
         }
 
@@ -43,7 +43,7 @@ namespace TheCodeKitchen.Infrastructure.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Cook");
+                name: "Cooks");
         }
     }
 }

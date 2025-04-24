@@ -12,7 +12,7 @@ using TheCodeKitchen.Infrastructure.DataAccess;
 namespace TheCodeKitchen.Infrastructure.DataAccess.Migrations
 {
     [DbContext(typeof(TheCodeKitchenDbContext))]
-    [Migration("20250405204504_Cooks")]
+    [Migration("20250424213614_Cooks")]
     partial class Cooks
     {
         /// <inheritdoc />
@@ -28,7 +28,6 @@ namespace TheCodeKitchen.Infrastructure.DataAccess.Migrations
             modelBuilder.Entity("TheCodeKitchen.Core.Domain.Cook", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("Created")
@@ -46,13 +45,14 @@ namespace TheCodeKitchen.Infrastructure.DataAccess.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("KitchenId");
 
-                    b.ToTable("Cook");
+                    b.ToTable("Cooks", (string)null);
                 });
 
             modelBuilder.Entity("TheCodeKitchen.Core.Domain.Game", b =>

@@ -25,7 +25,6 @@ namespace TheCodeKitchen.Infrastructure.DataAccess.Migrations
             modelBuilder.Entity("TheCodeKitchen.Core.Domain.Cook", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTimeOffset>("Created")
@@ -43,13 +42,14 @@ namespace TheCodeKitchen.Infrastructure.DataAccess.Migrations
 
                     b.Property<string>("Username")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("KitchenId");
 
-                    b.ToTable("Cook");
+                    b.ToTable("Cooks", (string)null);
                 });
 
             modelBuilder.Entity("TheCodeKitchen.Core.Domain.Game", b =>

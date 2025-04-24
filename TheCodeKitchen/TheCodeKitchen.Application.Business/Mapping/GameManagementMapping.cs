@@ -16,9 +16,11 @@ public class GameManagementMapping : Profile
         //Domain - Response
         CreateMap<Game, CreateGameResponse>();
         CreateMap<Game, GetGamesResponse>();
+        CreateMap<Game, PauseOrUnpauseGameResponse>();
         
         //Notification - EventDto
         CreateMap<GameCreatedNotification, GameCreatedEventDto>();
         CreateMap<CookJoinedNotification, CookJoinedEventDto>();
+        CreateMap<GamePausedOrUnpausedNotification, GamePausedOrUnpausedEventDto>();
     }
 }

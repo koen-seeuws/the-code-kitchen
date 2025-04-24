@@ -12,5 +12,6 @@ public class EventToNotificationMapping : Profile
         CreateMap<KitchenAddedEvent, KitchenAddedNotification>();
         CreateMap<CookJoinedEvent, CookJoinedNotification>();
         CreateMap<GameStartedEvent, GameStartedNotification>();
+        CreateMap<GamePausedOrUnpausedEvent, GamePausedOrUnpausedNotification>();
     }
 }

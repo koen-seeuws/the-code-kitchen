@@ -7,7 +7,24 @@ using TheCodeKitchen.Application.Contracts.Results;
 
 namespace TheCodeKitchen.Application.Business.CommandHandlers;
 
-public class JoinGameCommandHandler(
+public sealed class JoinGameCommandValidator : AbstractValidator<JoinGameCommand>
+{
+    public JoinGameCommandValidator()
+    {
+        RuleFor(x => x.KitchenCode)
+            .NotEmpty();
+
+        RuleFor(x => x.Username)
+            .NotEmpty()
+            .MaximumLength(50);
+
+        RuleFor(x => x.Password)
+            .NotEmpty()
+            .MinimumLength(6);
+    }
+}
+
+public sealed class JoinGameCommandHandler(
     IGameRepository gameRepository,
     ICookRepository cookRepository,
     IDomainEventDispatcher domainEventDispatcher,
