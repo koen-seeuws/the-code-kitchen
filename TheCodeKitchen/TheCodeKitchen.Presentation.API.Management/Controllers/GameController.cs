@@ -31,13 +31,12 @@ public class GameController(IMediator mediator, IMapper mapper) : ControllerBase
     }
 
     [HttpPut("{gameId}/[action]")]
-    public async Task<IActionResult> Start(CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Start(Guid gameId, CancellationToken cancellationToken = default)
     {
-        /*
-        var command = mapper.Map<Sta>(createGameRequest);
+        var command = new StartGameCommand(gameId);
         var result = await mediator.Send(command, cancellationToken);
         return this.MatchActionResult(result);
-        */
-        return BadRequest();
     }
+    
+    
 }

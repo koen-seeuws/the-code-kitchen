@@ -6,16 +6,21 @@ public class GameManagementSignalRService(
     IHubContext<GameManagementHub> gameManagementHub
 ) : IRealtimeGameManagementService
 {
-    public async Task GameCreated(GameCreatedEventDto gameCreatedEvent)
-        => await gameManagementHub.Clients.All.SendAsync(nameof(GameCreated), gameCreatedEvent);
+    public async Task GameCreated(GameCreatedEventDto gameCreatedEvent, CancellationToken cancellationToken = default)
+        => await gameManagementHub.Clients.All.SendAsync(nameof(GameCreated), gameCreatedEvent, cancellationToken: cancellationToken);
 
-    public async Task KitchenCreated(Guid gameId, KitchenAddedEventDto kitchenAddedEvent)
+    public async Task KitchenCreated(Guid gameId, KitchenAddedEventDto kitchenAddedEvent, CancellationToken cancellationToken = default)
         => await gameManagementHub.Clients
             .Group($"game-{gameId}")
-            .SendAsync(nameof(KitchenCreated), kitchenAddedEvent);
-    
-    public async Task CookJoined(Guid gameId, CookJoinedEventDto cookJoinedEvent)
+            .SendAsync(nameof(KitchenCreated), kitchenAddedEvent, cancellationToken: cancellationToken);
+
+    public async Task CookJoined(Guid gameId, CookJoinedEventDto cookJoinedEvent, CancellationToken cancellationToken = default)
         => await gameManagementHub.Clients
             .Group($"game-{gameId}")
-            .SendAsync(nameof(CookJoined), cookJoinedEvent);
+            .SendAsync(nameof(CookJoined), cookJoinedEvent, cancellationToken: cancellationToken);
+
+    public async Task GameStarted(Guid gameId, CancellationToken cancellationToken = default)
+        => await gameManagementHub.Clients
+            .Group($"game-{gameId}")
+            .SendAsync(nameof(GameStarted), gameId, cancellationToken: cancellationToken);
 }

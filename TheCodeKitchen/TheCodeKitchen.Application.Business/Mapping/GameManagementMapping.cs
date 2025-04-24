@@ -1,6 +1,7 @@
 using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Notifications;
 using TheCodeKitchen.Application.Contracts.Requests;
+using TheCodeKitchen.Core.Domain.Events;
 
 namespace TheCodeKitchen.Application.Business.Mapping;
 
@@ -19,6 +20,5 @@ public class GameManagementMapping : Profile
         //Notification - EventDto
         CreateMap<GameCreatedNotification, GameCreatedEventDto>();
         CreateMap<CookJoinedNotification, CookJoinedEventDto>();
-
     }
 }

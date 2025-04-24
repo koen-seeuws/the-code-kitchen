@@ -16,7 +16,8 @@ public class DomainEventDispatcher(
     {
         [typeof(GameCreatedEvent)] = typeof(GameCreatedNotification),
         [typeof(KitchenAddedEvent)] = typeof(KitchenAddedNotification),
-        [typeof(CookJoinedEvent)] = typeof(CookJoinedNotification)
+        [typeof(CookJoinedEvent)] = typeof(CookJoinedNotification),
+        [typeof(GameStartedEvent)] = typeof(GameStartedNotification)
     };
 
     public async Task DispatchEvents(IEnumerable<DomainEvent> events, CancellationToken cancellationToken = default)

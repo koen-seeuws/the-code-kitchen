@@ -1,3 +1,4 @@
+using TheCodeKitchen.Core.Domain.Events;
 using TheCodeKitchen.Core.Domain.Exceptions;
 
 namespace TheCodeKitchen.Core.Domain;
@@ -15,6 +16,8 @@ public partial class Game
             throw new GameAlreadyStartedException($"The game with id {Id} has already started");
 
         Started = DateTimeOffset.UtcNow;
-        Paused = DateTimeOffset.Now;
+        Paused = DateTimeOffset.UtcNow;
+        
+        RaiseEvent(new GameStartedEvent(Id));
     }
 }

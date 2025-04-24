@@ -4,7 +4,8 @@ namespace TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
 
 public interface IRealtimeGameManagementService
 {
-    Task GameCreated(GameCreatedEventDto gameCreatedEvent);
-    Task KitchenCreated(Guid gameId, KitchenAddedEventDto kitchenAddedEvent);
-    Task CookJoined(Guid gameId, CookJoinedEventDto cookJoinedEvent);
+    Task GameCreated(GameCreatedEventDto gameCreatedEvent, CancellationToken cancellationToken = default);
+    Task KitchenCreated(Guid gameId, KitchenAddedEventDto kitchenAddedEvent, CancellationToken cancellationToken = default);
+    Task CookJoined(Guid gameId, CookJoinedEventDto cookJoinedEvent, CancellationToken cancellationToken = default);
+    Task GameStarted(Guid gameId, CancellationToken cancellationToken = default);
 }
