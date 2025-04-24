@@ -1,6 +1,6 @@
 ﻿using TheCodeKitchen.Application.Contracts.Results;
 
-namespace TheCodeKitchen.Application.Business.Pipeline.Validation;
+namespace TheCodeKitchen.Application.Business.Pipeline;
 
 public class ValidationBehavior<TRequest, TResponse>(
     IEnumerable<IValidator<TRequest>> validators

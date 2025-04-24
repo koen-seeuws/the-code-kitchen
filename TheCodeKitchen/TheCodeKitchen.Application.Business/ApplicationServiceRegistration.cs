@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using TheCodeKitchen.Application.Business.Extensions;
-using TheCodeKitchen.Application.Business.Pipeline.Validation;
+using TheCodeKitchen.Application.Business.Pipeline;
 using TheCodeKitchen.Application.Business.Services;
 using TheCodeKitchen.Application.Contracts.Interfaces.Common;
 
@@ -27,6 +27,7 @@ public static class ApplicationServiceRegistration
 
             //Pipeline
             mediatr.AddBehaviorsWithResultFromAssemblyContaining<CreateGameCommand>(typeof(ValidationBehavior<,>));
+            mediatr.AddBehaviorsWithResultFromAssemblyContaining<CreateGameCommand>(typeof(ExceptionBehavior<,>));
         });
 
         return services;
