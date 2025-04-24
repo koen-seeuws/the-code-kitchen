@@ -1,7 +1,9 @@
 using System.Net;
+using System.Runtime.InteropServices.JavaScript;
 using System.Security.Authentication;
 using TheCodeKitchen.Application.Contracts.Interfaces.Authentication;
 using TheCodeKitchen.Application.Contracts.Interfaces.Common;
+using TheCodeKitchen.Application.Contracts.Results;
 
 namespace TheCodeKitchen.Application.Business.CommandHandlers;
 
@@ -15,14 +17,12 @@ public class JoinGameCommandHandler(
 {
     public async Task<Result<JoinGameResponse>> Handle(JoinGameCommand request, CancellationToken cancellationToken)
     {
-        var cook = await cookRepository.FindCookByUsernameAndJoinCode(request.Username, request.KitchenCode,
-            cancellationToken);
+        var cook = await cookRepository.FindCookByUsernameAndJoinCode(request.Username, request.KitchenCode, cancellationToken);
         if (cook != null)
         {
             if (!passwordHashingService.VerifyHashedPassword(cook.PasswordHash, request.Password))
-            {
-                return new Result<JoinGameResponse>(new AuthenticationException("Invalid password"));
-            }
+                return new AuthenticationException("Invalid password");
+            
         }
         else
         {
@@ -32,9 +32,9 @@ public class JoinGameCommandHandler(
             await cookRepository.AddAsync(cook, cancellationToken);
             await domainEventDispatcher.DispatchAndClearEvents(game, cancellationToken);
         }
-
+        
         var token = securityTokenService.GeneratePlayerToken(cook.Username, cook.KitchenId);
         var joinGameResponse = new JoinGameResponse(token);
-        return new Result<JoinGameResponse>(joinGameResponse);
+        return joinGameResponse;
     }
 }

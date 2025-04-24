@@ -1,11 +1,10 @@
 using System.Net;
 using FluentValidation;
-using LanguageExt.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using TheCodeKitchen.Application.Contracts.Exception;
+using TheCodeKitchen.Application.Contracts.Results;
 using TheCodeKitchen.Core.Domain.Abstractions;
-using TheCodeKitchen.Core.Domain.Exceptions;
 using TheCodeKitchen.Core.Shared;
 
 namespace TheCodeKitchen.Presentation.API;
@@ -17,8 +16,8 @@ public static class ControllerBaseExtensions
         Result<T> result
     ) where T : notnull
         => result.Match<IActionResult>(
-            Succ: value => controllerBase.Ok(value),
-            Fail: controllerBase.Fail
+            onSuccess: value => controllerBase.Ok(value),
+            onFail: controllerBase.Fail
         );
 
     public static IActionResult MatchActionResult<T>(
@@ -27,8 +26,8 @@ public static class ControllerBaseExtensions
         Func<ControllerBase, T, ActionResult> onSuccess
     ) where T : notnull
         => result.Match(
-            Succ: value => onSuccess(controllerBase, value),
-            Fail: controllerBase.Fail
+            onSuccess: value => onSuccess(controllerBase, value),
+            onFail: controllerBase.Fail
         );
 
     public static IActionResult MatchActionResult(
@@ -36,8 +35,8 @@ public static class ControllerBaseExtensions
         Result<TheCodeKitchenUnit> result
     )
         => result.Match(
-            Succ: _ => controllerBase.NoContent(),
-            Fail: controllerBase.Fail
+            onSuccess: _ => controllerBase.NoContent(),
+            onFail: controllerBase.Fail
         );
 
     private static IActionResult Fail(this ControllerBase controllerBase, Exception exception)

@@ -10,16 +10,14 @@ public class GameManagementMapping : Profile
     {
         //Request - Command
         CreateMap<CreateGameRequest, CreateGameCommand>();
-        CreateMap<AddKitchenRequest, AddKitchenCommand>();
         CreateMap<JoinGameRequest, JoinGameCommand>();
         
         //Domain - Response
         CreateMap<Game, CreateGameResponse>();
-        CreateMap<Kitchen, AddKitchenResponse>();
+        CreateMap<Game, GetGamesResponse>();
         
         //Notification - EventDto
         CreateMap<GameCreatedNotification, GameCreatedEventDto>();
-        CreateMap<KitchenAddedNotification, KitchenAddedEventDto>();
         CreateMap<CookJoinedNotification, CookJoinedEventDto>();
 
     }

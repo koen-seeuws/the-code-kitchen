@@ -1,4 +1,6 @@
-﻿namespace TheCodeKitchen.Application.Business.Pipeline.Validation;
+﻿using TheCodeKitchen.Application.Contracts.Results;
+
+namespace TheCodeKitchen.Application.Business.Pipeline.Validation;
 
 public class ValidationBehavior<TRequest, TResponse>(
     IEnumerable<IValidator<TRequest>> validators
@@ -27,7 +29,7 @@ public class ValidationBehavior<TRequest, TResponse>(
 
         if (failures.Count != 0)
         {
-            return new Result<TResponse>(new ValidationException(failures));
+            return new ValidationException(failures);
         }
 
         return await next();

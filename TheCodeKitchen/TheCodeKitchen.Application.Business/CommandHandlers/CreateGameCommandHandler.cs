@@ -1,6 +1,7 @@
 
 
 using TheCodeKitchen.Application.Contracts.Interfaces.Common;
+using TheCodeKitchen.Application.Contracts.Results;
 
 namespace TheCodeKitchen.Application.Business.CommandHandlers;
 
@@ -23,11 +24,13 @@ public sealed class CreateGameCommandHandler(
     public async Task<Result<CreateGameResponse>> Handle(
         CreateGameCommand request,
         CancellationToken cancellationToken = default
-    ) => await
-        TryAsync(gameRepository.CountAllAsync(cancellationToken))
-            .Map(count => Game.Create(count, request.Name))
-            .Bind(game => TryAsync(gameRepository.AddAsync(game, cancellationToken)))
-            .Do(game => domainEventDispatcher.DispatchAndClearEvents(game, cancellationToken))
-            .Map(mapper.Map<CreateGameResponse>)
-            .Invoke();
+    )
+    {
+        var count = await gameRepository.CountAllAsync(cancellationToken);
+        var game = Game.Create(count, request.Name);
+        await gameRepository.AddAsync(game, cancellationToken);
+        await domainEventDispatcher.DispatchAndClearEvents(game, cancellationToken);
+        var createGameResponse = mapper.Map<CreateGameResponse>(game);
+        return createGameResponse;
+    }
 }

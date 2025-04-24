@@ -1,5 +1,6 @@
 using TheCodeKitchen.Application.Business.Services;
 using TheCodeKitchen.Application.Contracts.Interfaces.Common;
+using TheCodeKitchen.Application.Contracts.Results;
 
 namespace TheCodeKitchen.Application.Business.CommandHandlers;
 
@@ -25,18 +26,14 @@ public sealed class AddKitchenCommandHandler(
     public async Task<Result<AddKitchenResponse>> Handle(
         AddKitchenCommand request,
         CancellationToken cancellationToken = default
-    ) => await
-        TryAsync(() => gameRepository.GetGameWithKitchensById(request.GameId, cancellationToken))
-            .Bind(game =>
-                TryAsync(() => kitchenService.GenerateUniqueCode(cancellationToken: cancellationToken))
-                    .Map(code => game.AddKitchen(request.Name, code))
-                    .Map(kitchen => (game, kitchen))
-            )
-            .Bind(result =>
-                TryAsync(() => kitchenRepository.AddAsync(result.kitchen, cancellationToken))
-                    .Map(_ => (result.game, result.kitchen))
-            )
-            .Do(result => domainEventDispatcher.DispatchAndClearEvents(result.game, cancellationToken))
-            .Map(result => mapper.Map<AddKitchenResponse>(result.kitchen))
-            .Invoke();
+    )
+    {
+        var game = await gameRepository.GetGameWithKitchensById(request.GameId, cancellationToken);
+        var code = await kitchenService.GenerateUniqueCode(cancellationToken: cancellationToken);
+        var kitchen = game.AddKitchen(request.Name, code);
+        await kitchenRepository.AddAsync(kitchen, cancellationToken);
+        await domainEventDispatcher.DispatchAndClearEvents(game, cancellationToken);
+        var addKitchenResponse = mapper.Map<AddKitchenResponse>(kitchen);
+        return addKitchenResponse;
+    }
 }
