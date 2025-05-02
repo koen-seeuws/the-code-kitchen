@@ -10,10 +10,8 @@ builder.Services.AddOrleans(silo =>
     {
         silo.UseLocalhostClustering();
         silo.AddMemoryGrainStorageAsDefault();
+        silo.ConfigureLogging(logging => { logging.AddConsole(); });
     }
-        
-
-
 });
 
 var host = builder.Build();

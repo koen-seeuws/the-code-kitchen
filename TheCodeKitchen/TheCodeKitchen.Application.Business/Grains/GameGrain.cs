@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Orleans;
 using Orleans.Runtime;
 using TheCodeKitchen.Application.Contracts.Exceptions;
@@ -10,7 +11,8 @@ namespace TheCodeKitchen.Application.Business.Grains;
 
 public class GameGrain(
     [PersistentState("Game")] IPersistentState<Game> state,
-    IMapper mapper
+    IMapper mapper,
+    ILogger<GameGrain> logger
 ) : Grain, IGameGrain
 {
     public async Task<Result<CreateGameResponse>> Initialize(CreateGameRequest request, int count)
@@ -63,6 +65,18 @@ public class GameGrain(
             state.State.Paused = DateTimeOffset.UtcNow;
 
         await state.WriteStateAsync();
+
+        RegisterTimer(
+            async _ =>
+            {
+                // Do your timer work here
+                DelayDeactivation(TimeSpan.FromMinutes(5)); // extend grain life
+                logger.LogInformation("Now: {0}", DateTime.UtcNow);
+            },
+            null,
+            TimeSpan.Zero,
+            TimeSpan.FromSeconds(1));
+
 
         return mapper.Map<PauseOrUnpauseGameResponse>(state.State);
     }
