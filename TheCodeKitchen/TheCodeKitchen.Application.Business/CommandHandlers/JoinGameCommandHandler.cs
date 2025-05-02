@@ -1,4 +1,3 @@
-using System.Security.Authentication;
 using TheCodeKitchen.Application.Contracts.Interfaces.Authentication;
 using TheCodeKitchen.Application.Contracts.Interfaces.Common;
 using TheCodeKitchen.Application.Contracts.Results;

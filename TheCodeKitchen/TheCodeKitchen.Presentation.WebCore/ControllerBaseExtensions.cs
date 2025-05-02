@@ -1,11 +1,9 @@
 using System.Net;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using TheCodeKitchen.Application.Contracts.Exception;
 using TheCodeKitchen.Application.Contracts.Exceptions;
 using TheCodeKitchen.Application.Contracts.Results;
 using TheCodeKitchen.Core.Domain.Abstractions;
-using TheCodeKitchen.Core.Shared;
 
 namespace TheCodeKitchen.Presentation.WebCore;
 
@@ -39,27 +37,20 @@ public static class ControllerBaseExtensions
             onFail: controllerBase.Fail
         );
 
-    private static IActionResult Fail(this ControllerBase controllerBase, Exception exception)
+    private static IActionResult Fail(this ControllerBase controllerBase, Error error)
     {
-        switch (exception)
+        switch (error)
         {
-            case NotFoundException:
-                return controllerBase.NotFound(exception.Message);
-            case DomainException:
-                return controllerBase.BadRequest(exception.Message);
-            case ValidationException validationException:
-            {
-                var modelStateDictionary = new ModelStateDictionary();
-                foreach (var error in validationException.Errors)
-                {
-                    modelStateDictionary.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
-                return controllerBase.ValidationProblem(modelStateDictionary);
-            }
+            case NotFoundError:
+                return controllerBase.NotFound(error.Message);
+            case BusinessError:
+                return controllerBase.BadRequest(error.Message);
+            /*
             case NotImplementedException:
                 return controllerBase.StatusCode((int) HttpStatusCode.NotImplemented, "This operation has not been implemented yet.");
+                */
             default:
-                return controllerBase.StatusCode((int) HttpStatusCode.InternalServerError, exception.Message);
+                return controllerBase.StatusCode((int) HttpStatusCode.InternalServerError, error.Message);
         }
     }
 }

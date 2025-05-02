@@ -1,4 +1,3 @@
-using TheCodeKitchen.Application.Business;
 using TheCodeKitchen.Infrastructure.AzureServiceBus;
 using TheCodeKitchen.Infrastructure.Security.Configuration;
 using TheCodeKitchen.Infrastructure.SignalR;

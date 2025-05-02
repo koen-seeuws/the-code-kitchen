@@ -5,14 +5,12 @@ using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Interfaces.Authentication;
 using TheCodeKitchen.Application.Contracts.Requests;
 using TheCodeKitchen.Application.Contracts.Results;
-using TheCodeKitchen.Core.Shared;
 
 namespace TheCodeKitchen.Application.Business.Grains;
 
 public class GameGrain(
     [PersistentState("Game")] IPersistentState<Game> state,
-    IMapper mapper,
-    IPasswordHashingService passwordHashingService
+    IMapper mapper
 ) : Grain, IGameGrain
 {
     public async Task<Result<CreateGameResponse>> Initialize(CreateGameRequest request, int count)
@@ -36,7 +34,7 @@ public class GameGrain(
         state.State.Kitchens.Add(id);
         await state.WriteStateAsync();
         var kitchenGrain = GrainFactory.GetGrain<IKitchenGrain>(id);
-        var result = await kitchenGrain.Initialize(request, state.State.Kitchens.Count );
+        var result = await kitchenGrain.Initialize(request, state.State.Kitchens.Count);
         return result;
     }
 
@@ -48,10 +46,9 @@ public class GameGrain(
     public async Task<Result<TheCodeKitchenUnit>> StartGame()
     {
         if (state.State.Started is not null)
-            return new GameAlreadyStartedException($"The game with id {this.GetPrimaryKey()} has already started");
+            return new GameAlreadyStartedError($"The game with id {this.GetPrimaryKey()} has already started");
 
-        state.State.Started = DateTimeOffset.UtcNow;
-        state.State.Paused = DateTimeOffset.UtcNow;
+        state.State.Paused = state.State.Started = DateTimeOffset.UtcNow;
 
         await state.WriteStateAsync();
 
@@ -71,7 +68,12 @@ public class GameGrain(
     }
 
     public Task<Result<GetGameResponse>> GetGame()
-        => Task.FromResult<Result<GetGameResponse>>(mapper.Map<GetGameResponse>(state.State));
+    {
+        Result<GetGameResponse> result = state.RecordExists
+            ? mapper.Map<GetGameResponse>(state.State)
+            : new NotFoundError($"The game with id {this.GetPrimaryKey()} does not exist");
+        return Task.FromResult(result);
+    }
 
     public async Task<Result<IEnumerable<GetKitchenResponse>>> GetKitchens()
     {
@@ -85,6 +87,5 @@ public class GameGrain(
         var results = await Task.WhenAll(tasks);
 
         return Result<GetKitchenResponse>.Combine(results);
-        
     }
 }

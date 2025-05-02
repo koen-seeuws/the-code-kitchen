@@ -17,7 +17,6 @@
 
     <ItemGroup>
       <Folder Include="Events\Kitchen\" />
-      <Folder Include="Exception\" />
     </ItemGroup>
 
 </Project>

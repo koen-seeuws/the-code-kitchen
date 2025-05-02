@@ -1,5 +1,6 @@
 using Orleans;
 using Orleans.Runtime;
+using TheCodeKitchen.Application.Contracts.Exceptions;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests;
 using TheCodeKitchen.Application.Contracts.Results;
@@ -31,5 +32,11 @@ public class KitchenGrain(
     }
 
     public Task<Result<GetKitchenResponse>> GetKitchen()
-        => Task.FromResult<Result<GetKitchenResponse>>(mapper.Map<GetKitchenResponse>(state.State));
+    {
+        Result<GetKitchenResponse> result = state.RecordExists
+            ? mapper.Map<GetKitchenResponse>(state.State)
+            : new NotFoundError($"The kitchen with id {this.GetPrimaryKey()} was not found");
+
+        return Task.FromResult(result);
+    }
 }

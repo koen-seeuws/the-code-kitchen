@@ -2,7 +2,6 @@ using Orleans;
 using TheCodeKitchen.Application.Contracts.Requests;
 using TheCodeKitchen.Application.Contracts.Response;
 using TheCodeKitchen.Application.Contracts.Results;
-using TheCodeKitchen.Core.Shared;
 
 namespace TheCodeKitchen.Application.Contracts.Grains;
 

@@ -1,10 +1,14 @@
+using Orleans;
+using TheCodeKitchen.Application.Contracts.Exceptions;
+
 namespace TheCodeKitchen.Application.Contracts.Results;
 
+[GenerateSerializer]
 public class Result<T>
 {
-    public bool Succeeded { get; init; }
-    public T Data { get; set; }
-    public Error Error { get; set; }
+    [Id(0)] public bool Succeeded { get; init; }
+    [Id(1)] public T Data { get; set; }
+    [Id(2)] public Error Error { get; set; }
 
     public static implicit operator Result<T>(T data)
         => new()
@@ -22,7 +26,7 @@ public class Result<T>
 
     public TMatch Match<TMatch>(Func<T, TMatch> onSuccess, Func<Error, TMatch> onFail)
         => Succeeded ? onSuccess(Data) : onFail(Error);
-    
+
     public static Result<IEnumerable<T>> Combine(IEnumerable<Result<T>> results)
     {
         var values = new List<T>();
@@ -31,20 +35,11 @@ public class Result<T>
         foreach (var result in results)
         {
             if (result.Succeeded)
-            {
                 values.Add(result.Data);
-            }
             else
-            {
                 errors.Add(result.Error);
-            }
         }
 
-        if (errors.Any())
-        {
-            return new Error();
-        }
-
-        return values;
+        return errors.Count == 0 ? values : new AggregateError(errors);
     }
 }
