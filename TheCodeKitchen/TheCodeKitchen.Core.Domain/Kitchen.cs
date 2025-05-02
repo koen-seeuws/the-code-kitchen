@@ -1,6 +1,6 @@
 ﻿namespace TheCodeKitchen.Core.Domain;
 
-public partial class Kitchen : DomainEntity, IHasGuidId
+public partial class Kitchen
 {
     public Guid Id { get; init; }
     public string Name { get; private set; }

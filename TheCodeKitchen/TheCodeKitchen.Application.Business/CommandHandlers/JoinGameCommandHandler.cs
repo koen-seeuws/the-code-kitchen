@@ -1,5 +1,4 @@
 using TheCodeKitchen.Application.Contracts.Interfaces.Authentication;
-using TheCodeKitchen.Application.Contracts.Interfaces.Common;
 using TheCodeKitchen.Application.Contracts.Results;
 
 namespace TheCodeKitchen.Application.Business.CommandHandlers;
@@ -22,7 +21,6 @@ public sealed class JoinGameCommandValidator : AbstractValidator<JoinGameCommand
 }
 
 public sealed class JoinGameCommandHandler(
-    IDomainEventDispatcher domainEventDispatcher,
     IPasswordHashingService passwordHashingService,
     ISecurityTokenService securityTokenService
 ) 

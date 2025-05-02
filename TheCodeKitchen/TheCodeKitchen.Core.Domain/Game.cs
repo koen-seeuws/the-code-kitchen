@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public partial class Game : DomainEntity, IHasGuidId
+public partial class Game
 {
     public Guid Id { get; }
     public string Name { get; set; }
