@@ -4,4 +4,4 @@ using TheCodeKitchen.Application.Contracts.Results;
 
 namespace TheCodeKitchen.Application.Contracts.Queries;
 
-public record GetGamesQuery : IRequest<Result<IEnumerable<GetGamesResponse>>>;
+public record GetGamesQuery : IRequest<Result<IEnumerable<GetGameResponse>>>;

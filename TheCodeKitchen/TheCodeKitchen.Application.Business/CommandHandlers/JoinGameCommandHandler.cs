@@ -1,5 +1,3 @@
-using System.Net;
-using System.Runtime.InteropServices.JavaScript;
 using System.Security.Authentication;
 using TheCodeKitchen.Application.Contracts.Interfaces.Authentication;
 using TheCodeKitchen.Application.Contracts.Interfaces.Common;
@@ -25,15 +23,14 @@ public sealed class JoinGameCommandValidator : AbstractValidator<JoinGameCommand
 }
 
 public sealed class JoinGameCommandHandler(
-    IGameRepository gameRepository,
-    ICookRepository cookRepository,
     IDomainEventDispatcher domainEventDispatcher,
     IPasswordHashingService passwordHashingService,
     ISecurityTokenService securityTokenService
-) : IRequestHandler<JoinGameCommand, Result<JoinGameResponse>>
+) 
 {
     public async Task<Result<JoinGameResponse>> Handle(JoinGameCommand request, CancellationToken cancellationToken)
     {
+        /*
         var cook = await cookRepository.FindCookByUsernameAndJoinCode(request.Username, request.KitchenCode, cancellationToken);
         if (cook != null)
         {
@@ -51,7 +48,8 @@ public sealed class JoinGameCommandHandler(
         }
         
         var token = securityTokenService.GeneratePlayerToken(cook.Username, cook.KitchenId);
-        var joinGameResponse = new JoinGameResponse(token);
+        */
+        var joinGameResponse = new JoinGameResponse("token");
         return joinGameResponse;
     }
 }

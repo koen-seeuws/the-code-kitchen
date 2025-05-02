@@ -2,17 +2,15 @@ namespace TheCodeKitchen.Core.Domain;
 
 public partial class Game : DomainEntity, IHasGuidId
 {
-    public Guid Id { get; init; }
-    public string Name { get; private set; }
+    public Guid Id { get; }
+    public string Name { get; set; }
     public DateTimeOffset? Started { get; set; }
-    public DateTimeOffset? Paused { get; private set; }
-    public ICollection<Kitchen> Kitchens { get; private set; }
-
-    private Game() { }
+    public DateTimeOffset? Paused { get;  set; }
+    public ICollection<Guid> Kitchens { get;  set; }
     
-    public Game(string name)
+    public Game(Guid id, string name)
     {
-        Id = Guid.CreateVersion7();
+        Id = id;
         Name = name;
         Kitchens = [];
     }

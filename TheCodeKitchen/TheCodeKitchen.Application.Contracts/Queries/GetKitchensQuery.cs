@@ -4,4 +4,4 @@ using TheCodeKitchen.Application.Contracts.Results;
 
 namespace TheCodeKitchen.Application.Contracts.Queries;
 
-public record GetKitchensQuery(Guid GameId) : IRequest<Result<IEnumerable<GetKitchensResponse>>>;
+public record GetKitchensQuery(Guid GameId) : IRequest<Result<IEnumerable<GetKitchenResponse>>>;

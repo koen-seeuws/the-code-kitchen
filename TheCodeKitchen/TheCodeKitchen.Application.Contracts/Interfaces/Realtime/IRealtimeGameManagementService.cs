@@ -1,5 +1,4 @@
 using TheCodeKitchen.Application.Contracts.Events.Game;
-using TheCodeKitchen.Application.Contracts.Notifications;
 
 namespace TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
 

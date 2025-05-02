@@ -3,22 +3,16 @@ namespace TheCodeKitchen.Core.Domain;
 public class Cook : DomainEntity, IHasGuidId
 {
     public Guid Id { get; init; }
-    public string Username { get; private set; }
-    public string PasswordHash { get; private set; }
+    public string Username { get; set; }
+    public string PasswordHash { get; set; }
+    public Guid Kitchen { get; set; }
+    
 
-    public Guid KitchenId { get; private set; }
-    public Kitchen Kitchen { get; private set; }
-
-    private Cook()
+    public Cook(Guid id, string username, string passwordHash, Guid kitchen)
     {
-    }
-
-    public Cook(string username, string passwordHash, Kitchen kitchen)
-    {
-        Id = Guid.CreateVersion7();
+        Id = id;
         Username = username;
         PasswordHash = passwordHash;
-        KitchenId = kitchen.Id;
         Kitchen = kitchen;
     }
 }

@@ -1,5 +1,4 @@
-using TheCodeKitchen.Core.Domain.Events;
-using TheCodeKitchen.Core.Domain.Exceptions;
+
 
 namespace TheCodeKitchen.Core.Domain;
 
@@ -7,6 +6,7 @@ public partial class Game
 {
     public Cook JoinGame(string joinCode, string username, string passwordHash)
     {
+        /*
         var cook = Kitchens
             .SelectMany(kitchen => kitchen.Cooks)
             .FirstOrDefault(cook => string.Equals(cook.Username, username, StringComparison.CurrentCultureIgnoreCase));
@@ -26,5 +26,7 @@ public partial class Game
         RaiseEvent(new CookJoinedEvent(cook.Id, cook.Username, Id, kitchen.Id));
         
         return cook;
+        */
+        return new Cook(Guid.Empty, "", "", Guid.Empty);
     }
 }

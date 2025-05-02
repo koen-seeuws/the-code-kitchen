@@ -6,21 +6,16 @@ public partial class Kitchen : DomainEntity, IHasGuidId
     public string Name { get; private set; }
     public string? Code { get; private set; }
 
-    public Guid GameId { get; private set; }
-    public Game Game { get; private set; }
+    public Guid Game { get; private set; }
 
-    public ICollection<Cook> Cooks { get; set; }
+    public ICollection<Guid> Cooks { get; set; }
+    
 
-    private Kitchen()
+    public Kitchen(Guid id, string name, string code, Guid game)
     {
-    }
-
-    public Kitchen(string name, string code, Game game)
-    {
-        Id = Guid.CreateVersion7();
+        Id = id;
         Name = name;
         Code = code;
-        GameId = game.Id;
         Game = game;
         Cooks = [];
     }
