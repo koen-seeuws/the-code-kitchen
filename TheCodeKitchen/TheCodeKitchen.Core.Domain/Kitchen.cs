@@ -3,10 +3,10 @@
 public partial class Kitchen
 {
     public Guid Id { get; init; }
-    public string Name { get; private set; }
-    public string? Code { get; private set; }
+    public string Name { get; set; }
+    public string? Code { get; set; }
 
-    public Guid Game { get; private set; }
+    public Guid Game { get; set; }
 
     public ICollection<Guid> Cooks { get; set; }
     

@@ -1,8 +1,7 @@
 using Orleans;
 using TheCodeKitchen.Application.Contracts.Exception;
-using TheCodeKitchen.Application.Contracts.Results;
 
-namespace TheCodeKitchen.Application.Contracts.Exceptions;
+namespace TheCodeKitchen.Application.Contracts.Errors;
 
 [GenerateSerializer]
 public record InvalidJoinCodeError : BusinessError

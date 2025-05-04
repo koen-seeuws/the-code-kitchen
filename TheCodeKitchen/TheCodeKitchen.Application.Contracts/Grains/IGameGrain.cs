@@ -8,10 +8,10 @@ namespace TheCodeKitchen.Application.Contracts.Grains;
 public interface IGameGrain : IGrainWithGuidKey
 {
     Task<Result<CreateGameResponse>> Initialize(CreateGameRequest request, int count);
-    Task<Result<CreateKitchenResponse>> AddKitchen(CreateKitchenRequest request);
-    Task<Result<JoinGameResponse>> JoinGame(JoinGameRequest request);
+    Task<Result<GetGameResponse>> GetGame();
+    Task<Result<CreateKitchenResponse>> CreateKitchen(CreateKitchenRequest request);
+    Task<Result<IEnumerable<GetKitchenResponse>>> GetKitchens();
     Task<Result<TheCodeKitchenUnit>> StartGame();
     Task<Result<PauseOrUnpauseGameResponse>> PauseOrUnpauseGame();
-    Task<Result<GetGameResponse>> GetGame();
-    Task<Result<IEnumerable<GetKitchenResponse>>> GetKitchens();
+
 }

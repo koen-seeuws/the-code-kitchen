@@ -1,5 +1,5 @@
 using Orleans;
-using TheCodeKitchen.Application.Contracts.Exceptions;
+using TheCodeKitchen.Application.Contracts.Errors;
 
 namespace TheCodeKitchen.Application.Contracts.Results;
 
@@ -7,14 +7,14 @@ namespace TheCodeKitchen.Application.Contracts.Results;
 public class Result<T>
 {
     [Id(0)] public bool Succeeded { get; init; }
-    [Id(1)] public T Data { get; set; }
+    [Id(1)] public T Value { get; set; }
     [Id(2)] public Error Error { get; set; }
 
     public static implicit operator Result<T>(T data)
         => new()
         {
             Succeeded = true,
-            Data = data
+            Value = data
         };
 
     public static implicit operator Result<T>(Error error)
@@ -25,7 +25,7 @@ public class Result<T>
         };
 
     public TMatch Match<TMatch>(Func<T, TMatch> onSuccess, Func<Error, TMatch> onFail)
-        => Succeeded ? onSuccess(Data) : onFail(Error);
+        => Succeeded ? onSuccess(Value) : onFail(Error);
 
     public static Result<IEnumerable<T>> Combine(IEnumerable<Result<T>> results)
     {
@@ -35,7 +35,7 @@ public class Result<T>
         foreach (var result in results)
         {
             if (result.Succeeded)
-                values.Add(result.Data);
+                values.Add(result.Value);
             else
                 errors.Add(result.Error);
         }

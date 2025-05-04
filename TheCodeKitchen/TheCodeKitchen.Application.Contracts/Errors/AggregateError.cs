@@ -1,8 +1,7 @@
-using System.Runtime.InteropServices.JavaScript;
 using Orleans;
 using TheCodeKitchen.Application.Contracts.Results;
 
-namespace TheCodeKitchen.Application.Contracts.Exceptions;
+namespace TheCodeKitchen.Application.Contracts.Errors;
 
 [GenerateSerializer]
 public record AggregateError : Error

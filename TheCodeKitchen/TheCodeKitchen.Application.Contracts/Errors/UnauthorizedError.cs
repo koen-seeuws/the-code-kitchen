@@ -1,0 +1,14 @@
+using TheCodeKitchen.Application.Contracts.Results;
+
+namespace TheCodeKitchen.Application.Contracts.Errors;
+
+public record UnauthorizedError : Error
+{
+    public UnauthorizedError()
+    {
+    }
+
+    public UnauthorizedError(string message) : base(message)
+    {
+    }
+}

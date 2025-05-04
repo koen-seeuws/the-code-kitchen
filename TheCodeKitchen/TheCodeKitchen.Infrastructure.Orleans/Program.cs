@@ -4,7 +4,7 @@ var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddApplicationServices();
 
-builder.Services.AddOrleans(silo =>
+builder.UseOrleans(silo =>
 {
     if (builder.Environment.IsDevelopment())
     {
@@ -12,6 +12,8 @@ builder.Services.AddOrleans(silo =>
         silo.AddMemoryGrainStorageAsDefault();
         silo.ConfigureLogging(logging => { logging.AddConsole(); });
     }
+    
+    silo.UseDashboard();
 });
 
 var host = builder.Build();

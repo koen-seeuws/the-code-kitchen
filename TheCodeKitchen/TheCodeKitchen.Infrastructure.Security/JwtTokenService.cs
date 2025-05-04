@@ -2,10 +2,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using TheCodeKitchen.Application.Contracts.Interfaces.Authentication;
 using TheCodeKitchen.Infrastructure.Security.Configuration;
 
 namespace TheCodeKitchen.Infrastructure.Security;
+
+public interface ISecurityTokenService
+{
+    public string GeneratePlayerToken(string username, Guid kitchenId);
+}
 
 public class JwtTokenService(JwtSecurityOptions jwtSecurityOptions) : ISecurityTokenService
 {

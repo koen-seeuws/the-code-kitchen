@@ -13,7 +13,7 @@ public class KitchenController(IClusterClient client) : ControllerBase
     public async Task<IActionResult> Create([FromBody] CreateKitchenRequest createKitchenRequest, CancellationToken cancellationToken = default)
     {
         var gameGrain = client.GetGrain<IGameGrain>(createKitchenRequest.GameId);
-        var result = await gameGrain.AddKitchen(createKitchenRequest);
+        var result = await gameGrain.CreateKitchen(createKitchenRequest);
         return this.MatchActionResult(result);
     }
     
