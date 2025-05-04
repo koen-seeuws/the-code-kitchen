@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests;
-using TheCodeKitchen.Application.Contracts.Response;
 using TheCodeKitchen.Infrastructure.Security;
 using TheCodeKitchen.Presentation.API.Cook.Models;
 using TheCodeKitchen.Presentation.WebCore;

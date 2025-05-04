@@ -11,16 +11,4 @@ public class GameManagementState
 
 public partial class GameManagementGrain(
     [PersistentState("Games")] IPersistentState<GameManagementState> state
-) : Grain, IGameManagementGrain
-{
-    public override async Task OnActivateAsync(CancellationToken cancellationToken)
-    {
-        if (!state.RecordExists)
-        {
-            state.State = new GameManagementState();
-            await state.WriteStateAsync(cancellationToken);
-        }
-
-        await base.OnActivateAsync(cancellationToken);
-    }
-}
+) : Grain, IGameManagementGrain;
