@@ -4,13 +4,13 @@ using TheCodeKitchen.Application.Contracts.Results;
 namespace TheCodeKitchen.Application.Contracts.Errors;
 
 [GenerateSerializer]
-public record UnauthorizedError : Error
+public record NotImplementedError : Error
 {
-    public UnauthorizedError()
+    public NotImplementedError()
     {
     }
 
-    public UnauthorizedError(string message) : base(message)
+    public NotImplementedError(string message) : base(message)
     {
     }
 }

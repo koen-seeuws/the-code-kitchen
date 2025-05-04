@@ -1,9 +1,6 @@
-using Orleans;
-using TheCodeKitchen.Application.Contracts.Errors;
 using TheCodeKitchen.Application.Contracts.Requests;
-using TheCodeKitchen.Application.Contracts.Results;
 
-namespace TheCodeKitchen.Application.Business.Grains;
+namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
 public partial class KitchenGrain
 {
@@ -16,15 +13,13 @@ public partial class KitchenGrain
 
         var foundCook = getCooksResult.Value.FirstOrDefault();
         if (foundCook is not null)
-        {
-            if (foundCook.PasswordHash != request.PasswordHash)
-                return new JoinKitchenResponse(foundCook.Id, foundCook.Username, this.GetPrimaryKey());
-            else
-                return new UnauthorizedError("The password is incorrect");
-        }
-
+            return passwordHashingService.VerifyHashedPassword(foundCook.PasswordHash, request.Password)
+                ? new JoinKitchenResponse(foundCook.Id, foundCook.Username, this.GetPrimaryKey())
+                : new UnauthorizedError("The password is incorrect");
+        
+        var passwordHash = passwordHashingService.HashPassword(request.Password);
         var createCookResult =
-            await CreateCook(new CreateCookRequest(request.Username, request.PasswordHash, this.GetPrimaryKey()));
+            await CreateCook(new CreateCookRequest(request.Username, passwordHash, this.GetPrimaryKey()));
         if (!createCookResult.Succeeded)
             return createCookResult.Error;
 

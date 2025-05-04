@@ -1,8 +1,4 @@
-using Orleans;
-using Orleans.Runtime;
-using TheCodeKitchen.Application.Contracts.Grains;
-
-namespace TheCodeKitchen.Application.Business.Grains;
+namespace TheCodeKitchen.Application.Business.Grains.GameManagementGrain;
 
 public class GameManagementState
 {

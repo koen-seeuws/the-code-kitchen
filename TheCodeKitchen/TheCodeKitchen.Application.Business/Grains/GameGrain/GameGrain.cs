@@ -1,9 +1,6 @@
 using Microsoft.Extensions.Logging;
-using Orleans;
-using Orleans.Runtime;
-using TheCodeKitchen.Application.Contracts.Grains;
 
-namespace TheCodeKitchen.Application.Business.Grains;
+namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public partial class GameGrain(
     [PersistentState("Game")] IPersistentState<Game> state,

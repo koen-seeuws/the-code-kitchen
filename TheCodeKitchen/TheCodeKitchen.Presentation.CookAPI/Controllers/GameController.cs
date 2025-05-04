@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Contracts.Grains;
+using TheCodeKitchen.Application.Contracts.Interfaces.Security;
 using TheCodeKitchen.Application.Contracts.Requests;
 using TheCodeKitchen.Infrastructure.Security;
 using TheCodeKitchen.Presentation.API.Cook.Models;
@@ -11,23 +12,15 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 [Route("[controller]")]
 public class GameController(
     IClusterClient client,
-    IPasswordHashingService passwordHashingService,
     ISecurityTokenService securityTokenService
 ) : ControllerBase
 {
     [HttpPost("[action]")]
-    public async Task<IActionResult> Join([FromBody] AuthenticationRequest request)
+    public async Task<IActionResult> Join([FromBody] JoinKitchenRequest request)
     {
         var kitchenCodeIndexGrain = client.GetGrain<IKitchenManagementGrain>(Guid.Empty);
 
-        var hashedPassword = passwordHashingService.HashPassword(request.Password);
-        var joinKitchenRequest = new JoinKitchenRequest(
-            request.Username,
-            hashedPassword,
-            request.KitchenCode
-        );
-
-        var joinKitchenResult = await kitchenCodeIndexGrain.JoinKitchen(joinKitchenRequest);
+        var joinKitchenResult = await kitchenCodeIndexGrain.JoinKitchen(request);
 
         if (!joinKitchenResult.Succeeded)
             return this.MatchActionResult(joinKitchenResult);

@@ -1,8 +1,4 @@
-using Orleans;
-using TheCodeKitchen.Application.Contracts.Errors;
-using TheCodeKitchen.Application.Contracts.Results;
-
-namespace TheCodeKitchen.Application.Business.Grains;
+namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public partial class GameGrain
 {
@@ -10,6 +6,9 @@ public partial class GameGrain
     {
         if (state.State.Started is not null)
             return new GameAlreadyStartedError($"The game with id {this.GetPrimaryKey()} has already started");
+        
+        if (state.State.Kitchens.Count is 0)
+            return new EmptyError($"The game with id {this.GetPrimaryKey()} has no kitchens");
 
         state.State.Paused = state.State.Started = DateTimeOffset.UtcNow;
 

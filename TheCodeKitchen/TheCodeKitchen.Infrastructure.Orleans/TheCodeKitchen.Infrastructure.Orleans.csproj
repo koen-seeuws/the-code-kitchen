@@ -15,5 +15,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\TheCodeKitchen.Application.Business\TheCodeKitchen.Application.Business.csproj" />
+      <ProjectReference Include="..\TheCodeKitchen.Infrastructure.Security\TheCodeKitchen.Infrastructure.Security.csproj" />
     </ItemGroup>
 </Project>

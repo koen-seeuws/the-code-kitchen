@@ -1,8 +1,6 @@
-using Orleans;
 using TheCodeKitchen.Application.Contracts.Requests;
-using TheCodeKitchen.Application.Contracts.Results;
 
-namespace TheCodeKitchen.Application.Business.Grains;
+namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public partial class GameGrain
 {
@@ -14,7 +12,7 @@ public partial class GameGrain
         if (string.IsNullOrWhiteSpace(name))
             name = $"Game {count}";
 
-        var game = new Game(id, name);
+        var game = new Game(id, name, request.SpeedModifier);
         state.State = game;
         await state.WriteStateAsync();
 

@@ -1,8 +1,11 @@
 using TheCodeKitchen.Application.Business;
+using TheCodeKitchen.Infrastructure.Security.Configuration;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddApplicationServices();
+
+builder.Services.AddPasswordHashingServices();
 
 builder.UseOrleans(silo =>
 {

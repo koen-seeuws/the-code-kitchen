@@ -10,10 +10,7 @@ namespace TheCodeKitchen.Presentation.ManagementAPI.Controllers;
 public class GameController(IClusterClient client) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Create(
-        [FromBody] CreateGameRequest createGameRequest,
-        CancellationToken cancellationToken = default
-    )
+    public async Task<IActionResult> Create([FromBody] CreateGameRequest createGameRequest)
     {
         var gameManagementGrain = client.GetGrain<IGameManagementGrain>(Guid.Empty);
         var result = await gameManagementGrain.CreateGame(createGameRequest);
@@ -21,7 +18,7 @@ public class GameController(IClusterClient client) : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> Get(CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Get()
     {
         var gameManagementGrain = client.GetGrain<IGameManagementGrain>(Guid.Empty);
         var result = await gameManagementGrain.GetGames();
@@ -29,7 +26,7 @@ public class GameController(IClusterClient client) : ControllerBase
     }
     
     [HttpGet("{gameId}/[action]")]
-    public async Task<IActionResult> Get(Guid gameId, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Get(Guid gameId)
     {
         var gameGrain = client.GetGrain<IGameGrain>(gameId);
         var result = await gameGrain.GetGame();
@@ -37,7 +34,7 @@ public class GameController(IClusterClient client) : ControllerBase
     }
 
     [HttpPut("{gameId}/[action]")]
-    public async Task<IActionResult> Start(Guid gameId, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Start(Guid gameId)
     {
         var gameGrain = client.GetGrain<IGameGrain>(gameId);
         var result = await gameGrain.StartGame();
@@ -45,7 +42,7 @@ public class GameController(IClusterClient client) : ControllerBase
     }
 
     [HttpPut("{gameId}/[action]")]
-    public async Task<IActionResult> PauseOrUnpause(Guid gameId, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> PauseOrUnpause(Guid gameId)
     {
         var gameGrain = client.GetGrain<IGameGrain>(gameId);
         var result = await gameGrain.PauseOrUnpauseGame();

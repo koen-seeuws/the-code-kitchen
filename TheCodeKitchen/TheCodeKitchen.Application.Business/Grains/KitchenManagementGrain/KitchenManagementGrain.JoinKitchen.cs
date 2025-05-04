@@ -1,9 +1,6 @@
-using TheCodeKitchen.Application.Contracts.Errors;
-using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests;
-using TheCodeKitchen.Application.Contracts.Results;
 
-namespace TheCodeKitchen.Application.Business.Grains;
+namespace TheCodeKitchen.Application.Business.Grains.KitchenManagementGrain;
 
 public partial class KitchenManagementGrain
 {

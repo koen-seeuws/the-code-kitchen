@@ -43,10 +43,10 @@ public static class ControllerBaseExtensions
                 return controllerBase.NotFound(error.Message);
             case BusinessError:
                 return controllerBase.BadRequest(error.Message);
-            /*
-            case NotImplementedException:
+            case UnauthorizedError:
+                return controllerBase.StatusCode((int) HttpStatusCode.Unauthorized, error.Message);
+            case NotImplementedError:
                 return controllerBase.StatusCode((int) HttpStatusCode.NotImplemented, "This operation has not been implemented yet.");
-                */
             default:
                 return controllerBase.StatusCode((int) HttpStatusCode.InternalServerError, error.Message);
         }

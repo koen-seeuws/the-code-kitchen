@@ -6,6 +6,7 @@ namespace TheCodeKitchen.Application.Contracts.Response;
 public record GetGameResponse(
     Guid Id,
     string Name,
+    double SpeedModifier,
     DateTimeOffset? Started,
     DateTimeOffset? Paused
 );

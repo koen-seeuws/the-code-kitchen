@@ -1,12 +1,12 @@
-namespace TheCodeKitchen.Application.Business.Grains;
+namespace TheCodeKitchen.Application.Business.Grains.KitchenManagementGrain;
 
-public partial class GameManagementGrain
+public partial class KitchenManagementGrain
 {
     public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
         if (!state.RecordExists)
         {
-            state.State = new GameManagementState();
+            state.State = new KitchenManagementState();
             await state.WriteStateAsync(cancellationToken);
         }
 
