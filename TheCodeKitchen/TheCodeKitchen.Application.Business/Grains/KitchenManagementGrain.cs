@@ -2,6 +2,7 @@ using Orleans;
 using Orleans.Runtime;
 using TheCodeKitchen.Application.Contracts.Errors;
 using TheCodeKitchen.Application.Contracts.Grains;
+using TheCodeKitchen.Application.Contracts.Requests;
 using TheCodeKitchen.Application.Contracts.Results;
 
 namespace TheCodeKitchen.Application.Business.Grains;
@@ -11,9 +12,9 @@ public class KitchenCodeIndexState
     public IDictionary<string, Guid> KitchenCodes { get; set; } = new Dictionary<string, Guid>();
 }
 
-public class KitchenCodeIndexGrain(
+public class KitchenManagementGrain(
     [PersistentState("KitchenCodes")] IPersistentState<KitchenCodeIndexState> state
-) : Grain, IKitchenCodeIndexGrain
+) : Grain, IKitchenManagementGrain
 {
     private const int MaxAttempts = 10;
 
@@ -54,17 +55,19 @@ public class KitchenCodeIndexGrain(
             length++;
         }
     }
-    
 
-    public Task<Result<Guid>> GetKitchenId(string code)
+
+    public async Task<Result<JoinKitchenResponse>> JoinKitchen(JoinKitchenRequest request)
     {
-        var retrieved = state.State.KitchenCodes.TryGetValue(code, out var kitchenId);
+        var retrieved = state.State.KitchenCodes.TryGetValue(request.KitchenCode, out var kitchenId);
 
-        Result<Guid> result = retrieved
-            ? kitchenId
-            : new NotFoundError($"The kitchen code {code} does not exist");
+        if (!retrieved)
+            return new NotFoundError($"The kitchen code {request.KitchenCode} does not exist");
 
-        return Task.FromResult(result);
+        var kitchenGrain = GrainFactory.GetGrain<IKitchenGrain>(kitchenId);
+        var result = await kitchenGrain.JoinKitchen(request);
+
+        return result;
     }
 
     public async Task<Result<TheCodeKitchenUnit>> DeleteKitchenCode(string code)

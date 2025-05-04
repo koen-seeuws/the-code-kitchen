@@ -17,14 +17,14 @@ public partial class KitchenGrain
         var foundCook = getCooksResult.Value.FirstOrDefault();
         if (foundCook is not null)
         {
-            if (foundCook.PasswordHash != request.Password)
+            if (foundCook.PasswordHash != request.PasswordHash)
                 return new JoinKitchenResponse(foundCook.Id, foundCook.Username, this.GetPrimaryKey());
             else
                 return new UnauthorizedError("The password is incorrect");
         }
 
         var createCookResult =
-            await CreateCook(new CreateCookRequest(request.Username, request.Password, this.GetPrimaryKey()));
+            await CreateCook(new CreateCookRequest(request.Username, request.PasswordHash, this.GetPrimaryKey()));
         if (!createCookResult.Succeeded)
             return createCookResult.Error;
 

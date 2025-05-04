@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public partial class Game
+public class Game
 {
     public Guid Id { get; }
     public string Name { get; set; }
@@ -12,6 +12,6 @@ public partial class Game
     {
         Id = id;
         Name = name;
-        Kitchens = [];
+        Kitchens = new List<Guid>();
     }
 }

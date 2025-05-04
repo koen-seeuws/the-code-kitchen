@@ -7,7 +7,6 @@ public class Cook
     public string PasswordHash { get; set; }
     public Guid Kitchen { get; set; }
     
-
     public Cook(Guid id, string username, string passwordHash, Guid kitchen)
     {
         Id = id;

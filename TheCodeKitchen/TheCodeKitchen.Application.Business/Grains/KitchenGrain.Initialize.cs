@@ -15,7 +15,7 @@ public partial class KitchenGrain
         if (string.IsNullOrWhiteSpace(name))
             name = $"Kitchen {count}";
 
-        var kitchenCodeIndexGrain = GrainFactory.GetGrain<IKitchenCodeIndexGrain>(Guid.Empty);
+        var kitchenCodeIndexGrain = GrainFactory.GetGrain<IKitchenManagementGrain>(Guid.Empty);
         var codeResult = await kitchenCodeIndexGrain.GenerateUniqueCode(id);
 
         if (!codeResult.Succeeded)

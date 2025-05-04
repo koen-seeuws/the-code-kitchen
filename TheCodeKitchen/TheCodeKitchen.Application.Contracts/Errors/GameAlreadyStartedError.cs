@@ -1,5 +1,4 @@
 using Orleans;
-using TheCodeKitchen.Application.Contracts.Exception;
 
 namespace TheCodeKitchen.Application.Contracts.Errors;
 

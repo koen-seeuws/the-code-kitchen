@@ -11,7 +11,7 @@ public partial class KitchenGrain
         if (string.IsNullOrWhiteSpace(state.State.Code))
             return new EmptyError();
 
-        var kitchenCodeIndexGrain = GrainFactory.GetGrain<IKitchenCodeIndexGrain>(Guid.Empty);
+        var kitchenCodeIndexGrain = GrainFactory.GetGrain<IKitchenManagementGrain>(Guid.Empty);
         await kitchenCodeIndexGrain.DeleteKitchenCode(state.State.Code);
 
         state.State.Code = null;

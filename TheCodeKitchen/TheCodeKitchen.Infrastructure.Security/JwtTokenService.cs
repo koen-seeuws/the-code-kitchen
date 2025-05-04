@@ -8,21 +8,22 @@ namespace TheCodeKitchen.Infrastructure.Security;
 
 public interface ISecurityTokenService
 {
-    public string GeneratePlayerToken(string username, Guid kitchenId);
+    public string GeneratePlayerToken(Guid cookId, string username, Guid kitchenId);
 }
 
 public class JwtTokenService(JwtSecurityOptions jwtSecurityOptions) : ISecurityTokenService
 {
     private readonly SymmetricSecurityKey _signingKey = new(Encoding.UTF8.GetBytes(jwtSecurityOptions.Secret));
 
-    public string GeneratePlayerToken(string username, Guid kitchenId)
+    public string GeneratePlayerToken(Guid cookId, string username, Guid kitchenId)
     {
         var signingCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {
+            new Claim(ClaimTypes.Sid, cookId.ToString()),
             new Claim(ClaimTypes.Name, username),
-            new Claim("Kitchen", kitchenId.ToString()),
+            new Claim(ClaimTypes.PrimaryGroupSid, kitchenId.ToString()),
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor

@@ -1,7 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Contracts.Errors;
-using TheCodeKitchen.Application.Contracts.Exception;
 using TheCodeKitchen.Application.Contracts.Results;
 
 namespace TheCodeKitchen.Presentation.WebCore;

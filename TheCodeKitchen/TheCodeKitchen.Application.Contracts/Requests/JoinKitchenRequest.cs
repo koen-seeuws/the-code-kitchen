@@ -5,6 +5,6 @@ namespace TheCodeKitchen.Application.Contracts.Requests;
 [GenerateSerializer]
 public record JoinKitchenRequest(
     string Username,
-    string Password,
+    string PasswordHash,
     string KitchenCode
 );
