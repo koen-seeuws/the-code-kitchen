@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using TheCodeKitchen.Application.Contracts.Interfaces.Security;
 using TheCodeKitchen.Infrastructure.Extensions;
 
 namespace TheCodeKitchen.Infrastructure.Security.Configuration;

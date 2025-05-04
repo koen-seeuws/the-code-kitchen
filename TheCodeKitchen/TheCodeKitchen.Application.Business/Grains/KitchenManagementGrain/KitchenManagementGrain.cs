@@ -1,5 +1,3 @@
-using TheCodeKitchen.Application.Contracts.Interfaces.Security;
-
 namespace TheCodeKitchen.Application.Business.Grains.KitchenManagementGrain;
 
 public class KitchenManagementState

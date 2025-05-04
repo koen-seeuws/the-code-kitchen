@@ -13,17 +13,26 @@ public partial class KitchenGrain
 
         var foundCook = getCooksResult.Value.FirstOrDefault();
         if (foundCook is not null)
-            return passwordHashingService.VerifyHashedPassword(foundCook.PasswordHash, request.Password)
-                ? new JoinKitchenResponse(foundCook.Id, foundCook.Username, this.GetPrimaryKey())
-                : new UnauthorizedError("The password is incorrect");
-        
-        var passwordHash = passwordHashingService.HashPassword(request.Password);
+            return new JoinKitchenResponse(
+                foundCook.Id,
+                foundCook.Username,
+                this.GetPrimaryKey(),
+                foundCook.PasswordHash,
+                false
+            );
+
         var createCookResult =
-            await CreateCook(new CreateCookRequest(request.Username, passwordHash, this.GetPrimaryKey()));
+            await CreateCook(new CreateCookRequest(request.Username, request.PasswordHash, this.GetPrimaryKey()));
         if (!createCookResult.Succeeded)
             return createCookResult.Error;
 
         var createdCook = createCookResult.Value;
-        return new JoinKitchenResponse(createdCook.Id, createdCook.Username, this.GetPrimaryKey());
+        return new JoinKitchenResponse(
+            createdCook.Id,
+            createdCook.Username,
+            this.GetPrimaryKey(),
+            request.PasswordHash,
+            true
+        );
     }
 }
