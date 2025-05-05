@@ -1,10 +1,13 @@
-using Microsoft.Extensions.Logging;
+using Orleans.Providers.Streams.Common;
+using Orleans.Streams;
 
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public partial class GameGrain
 {
     private IGrainTimer? _timer;
+    private TimeSpan? _roundDelay;
+    private IAsyncStream _gameStream;
 
     public async Task<Result<PauseOrUnpauseGameResponse>> PauseOrUnpauseGame()
     {
@@ -14,21 +17,13 @@ public partial class GameGrain
         if (state.State.Paused is not null)
         {
             state.State.Paused = null;
-            var speed = TimeSpan.FromSeconds(1) / state.State.SpeedModifier;
-            _timer = this.RegisterGrainTimer(_ =>
-            {
-                logger.LogInformation(
-                    "Logging time from GameGrain {id}: {time} (x{modifier})",
-                    this.GetPrimaryKey(),
-                    DateTimeOffset.UtcNow,
-                    state.State.SpeedModifier
-                );
-                return Task.CompletedTask;
-            }, TimeSpan.Zero, speed);
+            _roundDelay = TimeSpan.FromSeconds(1) / state.State.SpeedModifier;
+            _timer = this.RegisterGrainTimer(RunGame, TimeSpan.Zero, _roundDelay.Value);
         }
         else
         {
             state.State.Paused = DateTimeOffset.UtcNow;
+            _roundDelay = TimeSpan.Zero;
             _timer?.Dispose();
         }
 

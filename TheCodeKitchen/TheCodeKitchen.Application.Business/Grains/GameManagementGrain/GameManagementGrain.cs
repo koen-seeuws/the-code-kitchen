@@ -6,5 +6,6 @@ public class GameManagementState
 }
 
 public partial class GameManagementGrain(
-    [PersistentState("Games")] IPersistentState<GameManagementState> state
+    [PersistentState(Storage.GameManagement)]
+    IPersistentState<GameManagementState> state
 ) : Grain, IGameManagementGrain;

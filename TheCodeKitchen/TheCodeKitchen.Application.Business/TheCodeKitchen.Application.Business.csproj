@@ -11,6 +11,7 @@
       <PackageReference Include="FluentValidation" Version="11.11.0" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
       <PackageReference Include="Microsoft.Orleans.Persistence.Memory" Version="9.1.2" />
+      <PackageReference Include="Microsoft.Orleans.Streaming" Version="9.1.2" />
     </ItemGroup>
 
     <ItemGroup>
