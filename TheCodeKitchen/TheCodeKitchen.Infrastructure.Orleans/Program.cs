@@ -1,6 +1,5 @@
 using TheCodeKitchen.Application.Business;
 using TheCodeKitchen.Application.Business.Contants;
-using Stream = TheCodeKitchen.Application.Business.Contants.Stream;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -13,7 +12,7 @@ builder.UseOrleans(silo =>
         silo.UseLocalhostClustering();
         silo.AddMemoryGrainStorageAsDefault();
         silo.AddStreaming()
-            .AddMemoryStreams(Stream.Default);
+            .AddMemoryStreams(TheCodeKitchenStreams.Default);
         
         silo.ConfigureLogging(logging => { logging.AddConsole(); });
     }

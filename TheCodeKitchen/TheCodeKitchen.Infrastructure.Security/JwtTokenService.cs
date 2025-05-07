@@ -21,9 +21,9 @@ public class JwtTokenService(JwtSecurityOptions jwtSecurityOptions) : ISecurityT
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.Sid, cookId.ToString()),
-            new Claim(ClaimTypes.Name, username),
-            new Claim(ClaimTypes.PrimaryGroupSid, kitchenId.ToString()),
+            new Claim(TheCodeKitchenClaimTypes.CookId, cookId.ToString()),
+            new Claim(TheCodeKitchenClaimTypes.Username, username),
+            new Claim(TheCodeKitchenClaimTypes.KitchenId, kitchenId.ToString()),
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor

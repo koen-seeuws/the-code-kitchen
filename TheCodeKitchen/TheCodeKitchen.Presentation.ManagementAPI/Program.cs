@@ -1,6 +1,6 @@
 using TheCodeKitchen.Infrastructure.AzureServiceBus;
 using TheCodeKitchen.Infrastructure.Security.Configuration;
-using TheCodeKitchen.Infrastructure.SignalR;
+using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Presentation.WebCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +10,7 @@ builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration, builder.E
 builder.Services.AddAzureServiceBusServices(builder.Configuration);
 builder.Services.AddPasswordHashingServices();
 builder.Services.AddJwtSecurityServices(builder.Configuration);
-builder.Services.AddSignalRServices();
+builder.Services.AddSignalRServices(builder.Configuration, builder.Environment);
 
 // Presentation services
 builder.Services.AddControllers();

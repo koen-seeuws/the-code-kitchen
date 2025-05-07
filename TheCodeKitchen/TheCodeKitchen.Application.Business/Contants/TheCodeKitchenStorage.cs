@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Business.Contants;
 
-public static class Storage
+public static class TheCodeKitchenStorage
 {
     public const string Cook = nameof(Cook);
     public const string Game = nameof(Game);

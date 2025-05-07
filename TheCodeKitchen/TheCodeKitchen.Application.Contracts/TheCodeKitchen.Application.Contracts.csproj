@@ -15,7 +15,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Events\Kitchen\" />
       <Folder Include="Interfaces\Security\" />
     </ItemGroup>
 

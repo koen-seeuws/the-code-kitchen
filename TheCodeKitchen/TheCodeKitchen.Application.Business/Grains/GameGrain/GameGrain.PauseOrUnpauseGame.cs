@@ -18,7 +18,7 @@ public partial class GameGrain
         {
             state.State.Paused = null;
             _roundDelay = TimeSpan.FromSeconds(1) / state.State.SpeedModifier;
-            _timer = this.RegisterGrainTimer(RunGame, TimeSpan.Zero, _roundDelay.Value);
+            _timer = this.RegisterGrainTimer(NextMoment, TimeSpan.Zero, _roundDelay.Value);
         }
         else
         {
