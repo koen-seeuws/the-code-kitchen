@@ -1,5 +1,5 @@
 using TheCodeKitchen.Application.Business;
-using TheCodeKitchen.Application.Business.Contants;
+using TheCodeKitchen.Application.Contracts.Contants;
 
 var builder = Host.CreateApplicationBuilder(args);
 

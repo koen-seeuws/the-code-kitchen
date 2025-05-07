@@ -4,7 +4,6 @@ global using TheCodeKitchen.Core.Domain;
 // Application
 global using AutoMapper;
 global using FluentValidation;
-global using TheCodeKitchen.Application.Business.Contants;
 global using TheCodeKitchen.Application.Contracts.Grains;
 global using TheCodeKitchen.Application.Contracts.Response;
 global using TheCodeKitchen.Application.Contracts.Errors;

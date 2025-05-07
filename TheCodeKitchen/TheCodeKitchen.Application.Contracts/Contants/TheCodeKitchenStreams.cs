@@ -1,4 +1,4 @@
-namespace TheCodeKitchen.Application.Business.Contants;
+namespace TheCodeKitchen.Application.Contracts.Contants;
 
 public static class TheCodeKitchenStreams
 {

@@ -5,7 +5,7 @@ using TheCodeKitchen.Application.Contracts.Events;
 using TheCodeKitchen.Application.Contracts.Models;
 
 const string apiUrl = "http://localhost:5169/";
-const string kitchenCode = "";
+const string kitchenCode = "27J9";
 
 var apiClient = new HttpClient { BaseAddress = new Uri(apiUrl) };
 
@@ -21,7 +21,7 @@ apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("B
 
 //SignalR
 var connection = new HubConnectionBuilder()
-    .WithUrl($"{apiUrl}KitchenHub", options =>
+    .WithUrl($"{apiUrl}kitchenhub", options =>
     {
         options.AccessTokenProvider = () => Task.FromResult(response.Token)!;
     })
@@ -31,3 +31,7 @@ connection.On<NextMomentEvent>(nameof(NextMomentEvent), nextMomentEvent =>
 {
     Console.WriteLine($"Kitchen: {nextMomentEvent.KitchenId} - Moment: {nextMomentEvent.Moment}");
 });
+
+await connection.StartAsync();
+
+Console.ReadLine();

@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 using Orleans.Streams;
-using TheCodeKitchen.Application.Business.Contants;
+using TheCodeKitchen.Application.Contracts.Contants;
 using TheCodeKitchen.Application.Contracts.Events;
 using TheCodeKitchen.Presentation.API.Cook.Hubs;
 

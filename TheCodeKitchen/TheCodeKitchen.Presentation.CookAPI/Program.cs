@@ -1,5 +1,6 @@
 using TheCodeKitchen.Infrastructure.Security.Configuration;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
+using TheCodeKitchen.Presentation.API.Cook.Hubs;
 using TheCodeKitchen.Presentation.API.Cook.StreamSubscribers;
 using TheCodeKitchen.Presentation.WebCore;
 
@@ -22,6 +23,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.MapControllers();
+app.MapHub<KitchenHub>("/kitchenhub");
 app.MapOpenApi();
 
 app.UseHttpsRedirection();

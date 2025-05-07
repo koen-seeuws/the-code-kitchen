@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Contracts.Contants;
 using TheCodeKitchen.Application.Contracts.Events;
 using TheCodeKitchen.Application.Contracts.Requests;
 
@@ -10,6 +11,7 @@ public partial class KitchenGrain
         var kitchenId = this.GetPrimaryKey();
         var nextMoment = new NextMomentEvent(kitchenId, request.Moment);
 
+        var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.Default);
         var stream = streamProvider.GetStream<NextMomentEvent>(nameof(NextMomentEvent), kitchenId);
         await stream.OnNextAsync(nextMoment);
         
