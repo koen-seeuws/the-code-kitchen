@@ -32,6 +32,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCodeKitchen.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCodeKitchen.Infrastructure.Orleans", "TheCodeKitchen.Infrastructure.Orleans\TheCodeKitchen.Infrastructure.Orleans.csproj", "{235713D3-BD52-412C-9545-782840148FB0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Testing", "5. Testing", "{46331BFC-8511-475E-BD10-F9112A19AE44}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCodeKitchen.Testing.Client", "TheCodeKitchen.Testing.Client\TheCodeKitchen.Testing.Client.csproj", "{1A7F9087-3760-45AF-B806-90FEBC85F4D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +54,7 @@ Global
 		{AD3C8B03-6C12-494A-8CA7-173B848E02C6} = {C664DED5-E003-49AC-8C0C-8C18C952D645}
 		{E88EEB82-04CB-43F1-9C79-93FC5C22A73B} = {C664DED5-E003-49AC-8C0C-8C18C952D645}
 		{235713D3-BD52-412C-9545-782840148FB0} = {C664DED5-E003-49AC-8C0C-8C18C952D645}
+		{1A7F9087-3760-45AF-B806-90FEBC85F4D4} = {46331BFC-8511-475E-BD10-F9112A19AE44}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{90A312A0-4F56-4ED3-9271-E532645F9A17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -100,5 +105,9 @@ Global
 		{235713D3-BD52-412C-9545-782840148FB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{235713D3-BD52-412C-9545-782840148FB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{235713D3-BD52-412C-9545-782840148FB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1A7F9087-3760-45AF-B806-90FEBC85F4D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1A7F9087-3760-45AF-B806-90FEBC85F4D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1A7F9087-3760-45AF-B806-90FEBC85F4D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1A7F9087-3760-45AF-B806-90FEBC85F4D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
