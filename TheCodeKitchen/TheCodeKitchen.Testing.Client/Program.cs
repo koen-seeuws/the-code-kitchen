@@ -5,7 +5,7 @@ using TheCodeKitchen.Application.Contracts.Events;
 using TheCodeKitchen.Application.Contracts.Models;
 
 const string apiUrl = "http://localhost:5169/";
-const string kitchenCode = "27J9";
+const string kitchenCode = "A7ZK";
 
 var apiClient = new HttpClient { BaseAddress = new Uri(apiUrl) };
 

@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\TheCodeKitchen.Application.Contracts\TheCodeKitchen.Application.Contracts.csproj" />
+      <ProjectReference Include="..\TheCodeKitchen.Infrastructure\TheCodeKitchen.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

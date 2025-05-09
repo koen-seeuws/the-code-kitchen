@@ -1,32 +1,39 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
+using TheCodeKitchen.Application.Contracts.Events;
 using TheCodeKitchen.Infrastructure.Security.Extensions;
-using TheCodeKitchen.Presentation.API.Cook.StreamSubscribers;
+using TheCodeKitchen.Presentation.WebCore;
 
 namespace TheCodeKitchen.Presentation.API.Cook.Hubs;
 
 [Authorize]
-public class KitchenHub(NextMomentStreamSubscriber nextMomentStreamSubscriber) : Hub
+public class KitchenHub(
+    IHubContext<KitchenHub> hubContext,
+    StreamSubscriber<Guid, NextMomentEvent> nextMomentStreamSubscriber
+) : Hub
 {
     public override async Task OnConnectedAsync()
     {
         var kitchenId = Context.User?.GetKitchenId() ?? throw new UnauthorizedAccessException();
-        
+
         await Groups.AddToGroupAsync(Context.ConnectionId, kitchenId.ToString());
-        await nextMomentStreamSubscriber.SubscribeToKitchenEvents(kitchenId);
-        
+        await nextMomentStreamSubscriber.SubscribeToEvents(kitchenId,
+            async @event =>
+            {
+                await hubContext.Clients.Group(kitchenId.ToString()).SendAsync(nameof(NextMomentEvent), @event);
+            }
+        );
+
         await base.OnConnectedAsync();
     }
-    
+
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         var kitchenId = Context.User?.GetKitchenId() ?? throw new UnauthorizedAccessException();
-        
+
         await Groups.RemoveFromGroupAsync(Context.ConnectionId, kitchenId.ToString());
-        await nextMomentStreamSubscriber.UnSubscribeFromKitchenEvents(kitchenId);
-        
+        await nextMomentStreamSubscriber.UnsubscribeFromEvents(kitchenId);
+
         await base.OnDisconnectedAsync(exception);
     }
-    
-
 }

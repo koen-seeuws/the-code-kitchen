@@ -11,6 +11,8 @@ builder.Services.AddJwtSecurityServices(builder.Configuration);
 builder.Services.AddSignalRServices(builder.Configuration, builder.Environment);
 
 // Presentation services
+builder.Services.AddSingleton(typeof(StreamSubscriber<,>));
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi(); // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddSwaggerGen();
