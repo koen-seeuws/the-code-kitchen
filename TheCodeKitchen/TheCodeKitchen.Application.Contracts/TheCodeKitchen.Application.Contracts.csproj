@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+      <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="9.1.2" />
     </ItemGroup>
 
     <ItemGroup>
@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Events\Kitchen\" />
+      <Folder Include="Interfaces\Security\" />
     </ItemGroup>
 
 </Project>

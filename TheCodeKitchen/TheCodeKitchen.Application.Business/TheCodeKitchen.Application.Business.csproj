@@ -10,11 +10,17 @@
       <PackageReference Include="AutoMapper" Version="14.0.0" />
       <PackageReference Include="FluentValidation" Version="11.11.0" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
-      <PackageReference Include="MediatR" Version="12.4.1" />
+      <PackageReference Include="Microsoft.Orleans.Persistence.Memory" Version="9.1.2" />
+      <PackageReference Include="Microsoft.Orleans.Streaming" Version="9.1.2" />
+      <PackageReference Include="Microsoft.Orleans.Streaming.AzureStorage" Version="9.1.2" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\TheCodeKitchen.Application.Contracts\TheCodeKitchen.Application.Contracts.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Validators\" />
     </ItemGroup>
 
 </Project>
