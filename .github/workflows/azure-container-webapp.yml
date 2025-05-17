@@ -22,10 +22,15 @@ jobs:
         uses: azure/container-apps-deploy-action@v2
         with:
           registryUrl: crthecodekitchen.azurecr.io
+          imageToBuild: crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest
+          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest
+          dockerfilePath: ./TheCodeKitchen/TheCodeKitchen.Infrastructure.OrleansSilo/Dockerfile   
           containerAppName: ca-tck-orleans-silo
           resourceGroup: rg-the-code-kitchen
-          imageToBuild: crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest
-          dockerfilePath: ./TheCodeKitchen/TheCodeKitchen.Infrastructure.OrleansSilo/Dockerfile   
+          containerAppEnvironment: cae-the-code-kitchen
+          runtimeStack: .NET:9.0
+
+      
 
       
           
