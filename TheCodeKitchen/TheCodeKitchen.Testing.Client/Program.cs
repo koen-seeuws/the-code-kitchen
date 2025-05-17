@@ -25,6 +25,7 @@ var connection = new HubConnectionBuilder()
     {
         options.AccessTokenProvider = () => Task.FromResult(response.Token)!;
     })
+    .WithAutomaticReconnect()
     .Build();
 
 connection.On<NextMomentEvent>(nameof(NextMomentEvent), nextMomentEvent =>

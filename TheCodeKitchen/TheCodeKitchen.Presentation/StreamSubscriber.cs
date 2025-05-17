@@ -1,7 +1,7 @@
 using Orleans.Streams;
 using TheCodeKitchen.Application.Contracts.Contants;
 
-namespace TheCodeKitchen.Presentation.WebCore;
+namespace TheCodeKitchen.Presentation;
 
 public class StreamSubscriber<TId, TEvent>(IClusterClient clusterClient)
     where TId : IEquatable<TId>
