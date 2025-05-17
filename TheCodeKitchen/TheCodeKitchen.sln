@@ -24,7 +24,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCodeKitchen.Presentation
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCodeKitchen.Infrastructure", "TheCodeKitchen.Infrastructure\TheCodeKitchen.Infrastructure.csproj", "{A2BC82F2-57E2-4068-B9CF-C26D474E45D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCodeKitchen.Presentation.WebCore", "TheCodeKitchen.Presentation.WebCore\TheCodeKitchen.Presentation.WebCore.csproj", "{975EFC07-0921-4520-83F2-F928943A691C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCodeKitchen.Presentation", "TheCodeKitchen.Presentation\TheCodeKitchen.Presentation.csproj", "{975EFC07-0921-4520-83F2-F928943A691C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCodeKitchen.Infrastructure.AzureSignalR", "TheCodeKitchen.Infrastructure.AzureSignalR\TheCodeKitchen.Infrastructure.AzureSignalR.csproj", "{AD3C8B03-6C12-494A-8CA7-173B848E02C6}"
 EndProject

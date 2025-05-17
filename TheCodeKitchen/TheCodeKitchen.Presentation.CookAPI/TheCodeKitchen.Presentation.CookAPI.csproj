@@ -20,7 +20,7 @@
       <ProjectReference Include="..\TheCodeKitchen.Application.Business\TheCodeKitchen.Application.Business.csproj" />
       <ProjectReference Include="..\TheCodeKitchen.Infrastructure.Security\TheCodeKitchen.Infrastructure.Security.csproj" />
       <ProjectReference Include="..\TheCodeKitchen.Infrastructure.AzureSignalR\TheCodeKitchen.Infrastructure.AzureSignalR.csproj" />
-      <ProjectReference Include="..\TheCodeKitchen.Presentation.WebCore\TheCodeKitchen.Presentation.WebCore.csproj" />
+      <ProjectReference Include="..\TheCodeKitchen.Presentation\TheCodeKitchen.Presentation.csproj" />
     </ItemGroup>
 
 </Project>

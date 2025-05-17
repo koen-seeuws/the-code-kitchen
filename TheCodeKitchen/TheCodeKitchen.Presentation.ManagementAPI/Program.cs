@@ -1,6 +1,6 @@
 using TheCodeKitchen.Infrastructure.Security.Configuration;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
-using TheCodeKitchen.Presentation.WebCore;
+using TheCodeKitchen.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
 

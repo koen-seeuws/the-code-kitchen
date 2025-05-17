@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using TheCodeKitchen.Application.Contracts.Events;
 using TheCodeKitchen.Infrastructure.Security.Extensions;
-using TheCodeKitchen.Presentation.WebCore;
+using TheCodeKitchen.Presentation;
 
 namespace TheCodeKitchen.Presentation.API.Cook.Hubs;
 
