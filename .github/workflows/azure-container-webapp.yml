@@ -6,9 +6,9 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  setup:
+    name: Setup
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -21,20 +21,21 @@ jobs:
       - name: Azure CLI - Login to ACR
         run: |
           az acr login --name crthecodekitchen
-          
-      - name: List files
-        run: ls -R
-
-      - name: Build Docker image
+  
+  build-and-deploy-orleans-silo:
+    name: Build and deploy Orleans Silo
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Build Orleans Silo Docker image
         run: |
           docker build -t crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest -f TheCodeKitchen/TheCodeKitchen.Infrastructure.OrleansSilo/Dockerfile TheCodeKitchen/
 
-
-      - name: Push Docker Image to ACR
+      - name: Push Orleans Silo Docker Image to ACR
         run: |
           docker push crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest
 
-      - name: Deploy to Azure Container Apps
+      - name: Deploy Orleans Silo to Azure Container Apps
         uses: azure/container-apps-deploy-action@v2
         with:
           imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest
@@ -43,7 +44,46 @@ jobs:
           resourceGroup: rg-the-code-kitchen
           containerAppEnvironment: cae-the-code-kitchen
 
-      
+  build-and-deploy-cook-api:
+    name: Build and deploy Cook API
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Build Cook API Docker image
+        run: |
+          docker build -t crthecodekitchen.azurecr.io/ca-tck-cook-api:latest -f TheCodeKitchen/TheCodeKitchen.Presentation.CookAPI/Dockerfile TheCodeKitchen/
 
-      
-          
+      - name: Push Cook API Docker Image to ACR
+        run: |
+          docker push crthecodekitchen.azurecr.io/ca-tck-cook-api:latest
+
+      - name: Deploy Cook API to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-cook-api:latest
+          registryUrl: crthecodekitchen.azurecr.io
+          containerAppName: ca-tck-cook-api
+          resourceGroup: rg-the-code-kitchen
+          containerAppEnvironment: cae-the-code-kitchen
+
+  build-and-deploy-management-api:
+    name: Build and deploy Management API
+    runs-on: ubuntu-latest
+    needs: setup
+    steps:
+      - name: Build Management API Docker image
+        run: |
+          docker build -t crthecodekitchen.azurecr.io/ca-tck-management-api:latest -f TheCodeKitchen/TheCodeKitchen.Presentation.ManagementAPI/Dockerfile TheCodeKitchen/
+
+      - name: Push Management API Docker Image to ACR
+        run: |
+          docker push crthecodekitchen.azurecr.io/ca-tck-management-api:latest
+
+      - name: Deploy Management API to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-management-api:latest
+          registryUrl: crthecodekitchen.azurecr.io
+          containerAppName: ca-tck-management-api
+          resourceGroup: rg-the-code-kitchen
+          containerAppEnvironment: cae-the-code-kitchen
