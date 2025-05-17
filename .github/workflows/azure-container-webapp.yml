@@ -1,0 +1,34 @@
+name: Deploy The Code Kitchen to Azure Container Apps
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Azure Login
+        uses: Azure/login@v2.3.0
+        with:
+          creds: {{ secrets.AZURE_CLIENT_SECRET }}
+          client-id: {{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: {{ secrets.AZURE_TENANT_ID }}
+          subscription-id: {{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Build and Push Docker Image
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          registryUrl: crthecodekitchen.azurecr.io
+          containerAppName: ca-tck-orleans-silo
+          resourceGroup: rg-the-code-kitchen
+          imageToBuild: crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest
+          dockerfilePath: ./TheCodeKitchen/TheCodeKitchen.Infrastructure.OrleansSilo/Dockerfile   
+
+      
+          
