@@ -1,6 +1,9 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER $APP_UID
 WORKDIR /app
+EXPOSE 11111  # Silo-to-Silo communication (default)
+EXPOSE 30000  # Client-to-Silo communication (default)
+EXPOSE 8080   # Orleans Dashboard
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
