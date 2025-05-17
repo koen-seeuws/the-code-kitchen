@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <UserSecretsId>dotnet-TheCodeKitchen.Infrastructure.Orleans-4b37af0c-56f9-459b-8e74-beea02669699</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -18,5 +19,11 @@
     <ItemGroup>
       <ProjectReference Include="..\TheCodeKitchen.Application.Business\TheCodeKitchen.Application.Business.csproj" />
       <ProjectReference Include="..\TheCodeKitchen.Infrastructure\TheCodeKitchen.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 </Project>
