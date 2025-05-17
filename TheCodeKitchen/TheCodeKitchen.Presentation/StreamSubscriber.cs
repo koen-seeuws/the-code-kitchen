@@ -21,7 +21,7 @@ public class StreamSubscriber<TId, TEvent>(IClusterClient clusterClient)
             return;
         }
 
-        var streamProvider = clusterClient.GetStreamProvider(TheCodeKitchenStreams.Default);
+        var streamProvider = clusterClient.GetStreamProvider(TheCodeKitchenStreams.AzureStorageQueuesProvider);
         var streamId = CreateStreamId(streamNamespace, id);
         var stream = streamProvider.GetStream<TEvent>(streamId);
 

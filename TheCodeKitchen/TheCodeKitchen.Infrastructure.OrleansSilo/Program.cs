@@ -6,7 +6,7 @@ using OrleansDashboard.Implementation.Details;
 using TheCodeKitchen.Application.Business;
 using TheCodeKitchen.Application.Contracts.Contants;
 using TheCodeKitchen.Infrastructure.Extensions;
-using TheCodeKitchen.Infrastructure.Orleans;
+using TheCodeKitchen.Infrastructure.OrleansSilo;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -30,19 +30,37 @@ builder.UseOrleans(silo =>
         options.ClusterId = siloConfiguration.ClusterId;
         options.ServiceId = siloConfiguration.ServiceId;
     });
-    
-    silo.UseAzureStorageClustering(options => { options.TableServiceClient = tableClient; });
 
-    silo.AddAzureTableGrainStorageAsDefault(options => { options.TableServiceClient = tableClient; });
+    silo.UseAzureStorageClustering(options =>
+    {
+        options.TableServiceClient = tableClient;
+        options.TableName = "TheCodeKitchenClustering";
+    });
 
-    silo.UseAzureTableReminderService(options => { options.TableServiceClient = tableClient; });
+    foreach (var storage in TheCodeKitchenStorage.All)
+    {
+        silo.AddAzureTableGrainStorage(storage, options => { options.TableServiceClient = tableClient; });
+    }
 
-    silo.AddStreaming()
-        .AddAzureQueueStreams(TheCodeKitchenStreams.Default,
+    silo.UseAzureTableReminderService(options =>
+    {
+        options.TableServiceClient = tableClient;
+        options.TableName = "TheCodeKitchenReminders";
+    });
+
+    silo
+        .AddStreaming()
+        .AddAzureQueueStreams(TheCodeKitchenStreams.AzureStorageQueuesProvider,
             options =>
             {
-                options.Configure(azureQueueOptions => { azureQueueOptions.QueueServiceClient = queueClient; });
+                options.Configure(azureQueueOptions =>
+                {
+                    azureQueueOptions.QueueServiceClient = queueClient;
+                    azureQueueOptions.QueueNames = TheCodeKitchenStreams.AzureStorageQueues;
+                });
             });
+
+    silo.UseDashboard();
 });
 
 var host = builder.Build();
