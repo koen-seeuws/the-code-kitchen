@@ -16,8 +16,9 @@ public static class OrleansClientRegistration
     {
         var clientConfiguration =
             configuration
-                .BindAndValidateConfiguration<OrleansClientConfiguration, OrleansClientConfigurationValidator>("Orleans");
-        
+                .BindAndValidateConfiguration<OrleansClientConfiguration, OrleansClientConfigurationValidator>(
+                    "Orleans");
+
         var azureStorageConnectionString =
             configuration.GetConnectionString("AzureStorage") ??
             throw new InvalidOperationException("ConnectionStrings__AzureStorage is not configured.");
@@ -32,18 +33,22 @@ public static class OrleansClientRegistration
                 options.ClusterId = clientConfiguration.ClusterId;
                 options.ServiceId = clientConfiguration.ServiceId;
             });
-            
-            client.UseAzureStorageClustering(options => { options.TableServiceClient = tableClient; });
+
+            client.UseAzureStorageClustering(options =>
+            {
+                options.TableServiceClient = tableClient;
+                options.TableName = "TheCodeKitchenClustering";
+            });
 
             client
                 .AddStreaming()
-                .AddAzureQueueStreams(TheCodeKitchenStreams.Default,
+                .AddAzureQueueStreams(TheCodeKitchenStreams.AzureStorageQueuesProvider,
                     options =>
                     {
                         options.Configure(azureQueueOptions =>
                         {
                             azureQueueOptions.QueueServiceClient = queueClient;
-                            
+                            azureQueueOptions.QueueNames = TheCodeKitchenStreams.AzureStorageQueues;
                         });
                     });
         });
