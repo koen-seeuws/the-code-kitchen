@@ -18,11 +18,17 @@ jobs:
       - name: Azure CLI - Login to ACR
         run: |
           az acr login --name crthecodekitchen
+          
+      - name: List files
+        run: ls -R
 
-      - name: Build Docker Image
+      - name: Build Docker image
         run: |
-          docker build -t crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest \
-            -f ./TheCodeKitchen/TheCodeKitchen.Infrastructure.OrleansSilo/Dockerfile .
+          docker build \
+            -t crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest \
+            -f TheCodeKitchen/TheCodeKitchen.Infrastructure.OrleansSilo/Dockerfile \
+            TheCodeKitchen/TheCodeKitchen.Infrastructure.OrleansSilo/
+
 
       - name: Push Docker Image to ACR
         run: |
