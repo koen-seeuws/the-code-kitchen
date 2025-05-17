@@ -27,10 +27,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build \
-            -t crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest \
-            -f TheCodeKitchen/TheCodeKitchen.Infrastructure.OrleansSilo/Dockerfile \
-            TheCodeKitchen/TheCodeKitchen.Infrastructure.OrleansSilo/
+          docker build -t crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest -f TheCodeKitchen/TheCodeKitchen.Infrastructure.OrleansSilo/Dockerfile TheCodeKitchen/
 
 
       - name: Push Docker Image to ACR
