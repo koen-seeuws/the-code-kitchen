@@ -6,7 +6,7 @@ using OrleansDashboard.Implementation.Details;
 using TheCodeKitchen.Application.Business;
 using TheCodeKitchen.Application.Contracts.Contants;
 using TheCodeKitchen.Infrastructure.Extensions;
-using TheCodeKitchen.Infrastructure.Orleans;
+using TheCodeKitchen.Infrastructure.OrleansSilo;
 
 var builder = Host.CreateApplicationBuilder(args);
 
