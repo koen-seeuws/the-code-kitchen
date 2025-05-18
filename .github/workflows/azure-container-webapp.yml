@@ -36,7 +36,6 @@ jobs:
 
   build-cook-api:
     name: Build Cook API
-    needs: build-and-deploy-orleans-silo
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -65,7 +64,6 @@ jobs:
 
   build-management-api:
     name: Build Management API
-    needs: 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
