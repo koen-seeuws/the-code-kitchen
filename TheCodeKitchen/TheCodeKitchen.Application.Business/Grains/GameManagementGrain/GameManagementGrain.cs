@@ -8,6 +8,6 @@ public class GameManagementState
 }
 
 public partial class GameManagementGrain(
-    [PersistentState(TheCodeKitchenStorage.GameManagement)]
+    [PersistentState(TheCodeKitchenStorage.GameManagement, TheCodeKitchenStorage.GameManagement)]
     IPersistentState<GameManagementState> state
 ) : Grain, IGameManagementGrain;
