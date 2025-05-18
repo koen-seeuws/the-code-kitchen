@@ -95,6 +95,11 @@ jobs:
     needs: build-orleans-silo
     runs-on: ubuntu-latest
     steps:
+      - name: Azure Login
+        uses: Azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
       - name: Deploy Orleans Silo to Azure Container Apps
         uses: azure/container-apps-deploy-action@v2
         with:
@@ -109,6 +114,11 @@ jobs:
     needs: [build-cook-api, deploy-orleans-silo]
     runs-on: ubuntu-latest
     steps:
+      - name: Azure Login
+        uses: Azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
       - name: Deploy Cook API to Azure Container Apps
         uses: azure/container-apps-deploy-action@v2
         with:
@@ -123,6 +133,11 @@ jobs:
     needs: [build-management-api, deploy-orleans-silo]
     runs-on: ubuntu-latest
     steps:
+      - name: Azure Login
+        uses: Azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
       - name: Deploy Management API to Azure Container Apps
         uses: azure/container-apps-deploy-action@v2
         with:
