@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  build-and-deploy-orleans-silo:
-    name: Build and deploy Orleans Silo
+  build-orleans-silo:
+    name: Build Orleans Silo
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -34,17 +34,8 @@ jobs:
         run: |
           docker push crthecodekitchen.azurecr.io/ca-tck-orleans-silo --all-tags
 
-      - name: Deploy Orleans Silo to Azure Container Apps
-        uses: azure/container-apps-deploy-action@v2
-        with:
-          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-orleans-silo:${{ github.run_number }}
-          registryUrl: crthecodekitchen.azurecr.io
-          containerAppName: ca-tck-orleans-silo
-          resourceGroup: rg-the-code-kitchen
-          containerAppEnvironment: cae-the-code-kitchen
-
-  build-and-deploy-cook-api:
-    name: Build and deploy Cook API
+  build-cook-api:
+    name: Build Cook API
     needs: build-and-deploy-orleans-silo
     runs-on: ubuntu-latest
     steps:
@@ -72,18 +63,9 @@ jobs:
         run: |
           docker push crthecodekitchen.azurecr.io/ca-tck-cook-api --all-tags
 
-      - name: Deploy Cook API to Azure Container Apps
-        uses: azure/container-apps-deploy-action@v2
-        with:
-          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-cook-api:${{ github.run_number }}
-          registryUrl: crthecodekitchen.azurecr.io
-          containerAppName: ca-tck-cook-api
-          resourceGroup: rg-the-code-kitchen
-          containerAppEnvironment: cae-the-code-kitchen
-
-  build-and-deploy-management-api:
-    name: Build and deploy Management API
-    needs: build-and-deploy-orleans-silo
+  build-management-api:
+    name: Build Management API
+    needs: 
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -110,6 +92,39 @@ jobs:
         run: |
           docker push crthecodekitchen.azurecr.io/ca-tck-management-api --all-tags
 
+  deploy-orleans-silo:
+    name: Deploy Orleans Silo
+    needs: build-orleans-silo
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Orleans Silo to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-orleans-silo:${{ github.run_number }}
+          registryUrl: crthecodekitchen.azurecr.io
+          containerAppName: ca-tck-orleans-silo
+          resourceGroup: rg-the-code-kitchen
+          containerAppEnvironment: cae-the-code-kitchen
+
+  deploy-cook-api:
+    name: Deploy Cook API
+    needs: [build-cook-api, deploy-orleans-silo]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Cook API to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-cook-api:${{ github.run_number }}
+          registryUrl: crthecodekitchen.azurecr.io
+          containerAppName: ca-tck-cook-api
+          resourceGroup: rg-the-code-kitchen
+          containerAppEnvironment: cae-the-code-kitchen
+
+  deploy-management-api:
+    name: Deploy Management API
+    needs: [build-management-api, deploy-orleans-silo]
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy Management API to Azure Container Apps
         uses: azure/container-apps-deploy-action@v2
         with:
@@ -118,3 +133,5 @@ jobs:
           containerAppName: ca-tck-management-api
           resourceGroup: rg-the-code-kitchen
           containerAppEnvironment: cae-the-code-kitchen
+
+      
