@@ -24,16 +24,18 @@ jobs:
     
       - name: Build Orleans Silo Docker image
         run: |
-          docker build -t crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest -f TheCodeKitchen/TheCodeKitchen.Infrastructure.OrleansSilo/Dockerfile TheCodeKitchen/
+          docker build -t crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest \
+                       -t crthecodekitchen.azurecr.io/ca-tck-orleans-silo:${{ GITHUB_RUN_NUMBER }} \
+                       -f TheCodeKitchen/TheCodeKitchen.Infrastructure.OrleansSilo/Dockerfile TheCodeKitchen/
 
       - name: Push Orleans Silo Docker Image to ACR
         run: |
-          docker push crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest
+          docker push crthecodekitchen.azurecr.io/ca-tck-orleans-silo
 
       - name: Deploy Orleans Silo to Azure Container Apps
         uses: azure/container-apps-deploy-action@v2
         with:
-          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest
+          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-orleans-silo:${{ GITHUB_RUN_NUMBER }} \
           registryUrl: crthecodekitchen.azurecr.io
           containerAppName: ca-tck-orleans-silo
           resourceGroup: rg-the-code-kitchen
@@ -57,16 +59,18 @@ jobs:
           
       - name: Build Cook API Docker image
         run: |
-          docker build -t crthecodekitchen.azurecr.io/ca-tck-cook-api:latest -f TheCodeKitchen/TheCodeKitchen.Presentation.CookAPI/Dockerfile TheCodeKitchen/
+          docker build -t crthecodekitchen.azurecr.io/ca-tck-cook-api:latest \
+                       -t crthecodekitchen.azurecr.io/ca-tck-cook-api:${{ GITHUB_RUN_NUMBER }} \
+                       -f TheCodeKitchen/TheCodeKitchen.Presentation.CookAPI/Dockerfile TheCodeKitchen/
 
       - name: Push Cook API Docker Image to ACR
         run: |
-          docker push crthecodekitchen.azurecr.io/ca-tck-cook-api:latest
+          docker push crthecodekitchen.azurecr.io/ca-tck-cook-api
 
       - name: Deploy Cook API to Azure Container Apps
         uses: azure/container-apps-deploy-action@v2
         with:
-          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-cook-api:latest
+          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-cook-api:${{ GITHUB_RUN_NUMBER }}
           registryUrl: crthecodekitchen.azurecr.io
           containerAppName: ca-tck-cook-api
           resourceGroup: rg-the-code-kitchen
@@ -90,16 +94,18 @@ jobs:
     
       - name: Build Management API Docker image
         run: |
-          docker build -t crthecodekitchen.azurecr.io/ca-tck-management-api:latest -f TheCodeKitchen/TheCodeKitchen.Presentation.ManagementAPI/Dockerfile TheCodeKitchen/
+          docker build -t crthecodekitchen.azurecr.io/ca-tck-management-api:latest \
+                       -t crthecodekitchen.azurecr.io/ca-tck-management-api:${{ GITHUB_RUN_NUMBER }} \
+                       -f TheCodeKitchen/TheCodeKitchen.Presentation.ManagementAPI/Dockerfile TheCodeKitchen/
 
       - name: Push Management API Docker Image to ACR
         run: |
-          docker push crthecodekitchen.azurecr.io/ca-tck-management-api:latest
+          docker push crthecodekitchen.azurecr.io/ca-tck-management-api
 
       - name: Deploy Management API to Azure Container Apps
         uses: azure/container-apps-deploy-action@v2
         with:
-          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-management-api:latest
+          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-management-api:${{ GITHUB_RUN_NUMBER }}
           registryUrl: crthecodekitchen.azurecr.io
           containerAppName: ca-tck-management-api
           resourceGroup: rg-the-code-kitchen
