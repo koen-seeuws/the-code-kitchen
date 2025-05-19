@@ -5,7 +5,7 @@ public partial class GameGrain
     public Task<Result<GetGameResponse>> GetGame()
     {
         Result<GetGameResponse> result = state.RecordExists
-            ? mapper.Map<GetGameResponse>(state.State)
+            ? mapper.Map<GetGameResponse>(state.State) with { Paused = _nextMomentTimer == null }
             : new NotFoundError($"The game with id {this.GetPrimaryKey()} does not exist");
         return Task.FromResult(result);
     }

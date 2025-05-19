@@ -48,4 +48,13 @@ public class GameController(IClusterClient client) : ControllerBase
         var result = await gameGrain.PauseOrUnpauseGame();
         return this.MatchActionResult(result);
     }
+    
+    [HttpPatch("{gameId}/[action]")]
+    public async Task<IActionResult> ModifySpeed(Guid gameId, [FromBody] float speedModifier)
+    {
+        var request = new UpdateGameRequest(speedModifier);
+        var gameGrain = client.GetGrain<IGameGrain>(gameId);
+        var result = await gameGrain.UpdateGame(request);
+        return this.MatchActionResult(result);
+    }
 }

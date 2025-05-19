@@ -6,5 +6,5 @@ public record GetGameResponse(
     string Name,
     double SpeedModifier,
     DateTimeOffset? Started,
-    DateTimeOffset? Paused
+    bool Paused
 );

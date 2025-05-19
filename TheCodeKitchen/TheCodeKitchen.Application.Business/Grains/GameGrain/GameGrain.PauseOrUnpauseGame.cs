@@ -2,30 +2,28 @@ namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public partial class GameGrain
 {
-    private IGrainTimer? _timer;
+    private IGrainTimer? _nextMomentTimer;
     private TimeSpan? _roundDelay;
-    private IAsyncStream _gameStream;
 
     public async Task<Result<PauseOrUnpauseGameResponse>> PauseOrUnpauseGame()
     {
+        if (!state.RecordExists)
+            return new NotFoundError($"The game with id {this.GetPrimaryKey()} has not been initialized");
+        
         if (state.State.Started is null)
             return new EmptyError($"The game with id {this.GetPrimaryKey()} has not yet started");
         
-        if (state.State.Paused is not null)
+        if (_nextMomentTimer is null)
         {
-            state.State.Paused = null;
             _roundDelay = TimeSpan.FromSeconds(1) / state.State.SpeedModifier;
-            _timer = this.RegisterGrainTimer(NextMoment, TimeSpan.Zero, _roundDelay.Value);
+            _nextMomentTimer = this.RegisterGrainTimer(NextMoment, TimeSpan.Zero, _roundDelay.Value);
         }
         else
         {
-            state.State.Paused = DateTimeOffset.UtcNow;
-            _roundDelay = TimeSpan.Zero;
-            _timer?.Dispose();
+            _nextMomentTimer?.Dispose();
+            _nextMomentTimer = null;
         }
 
-        await state.WriteStateAsync();
-
-        return mapper.Map<PauseOrUnpauseGameResponse>(state.State);
+        return new PauseOrUnpauseGameResponse(_nextMomentTimer == null);
     }
 }

@@ -6,6 +6,9 @@ public partial class GameGrain
 {
     public async Task<Result<CreateKitchenResponse>> CreateKitchen(CreateKitchenRequest request)
     {
+        if (!state.RecordExists)
+            return new NotFoundError($"The game with id {this.GetPrimaryKey()} has not been initialized");
+
         var id = Guid.CreateVersion7();
         state.State.Kitchens.Add(id);
         await state.WriteStateAsync();

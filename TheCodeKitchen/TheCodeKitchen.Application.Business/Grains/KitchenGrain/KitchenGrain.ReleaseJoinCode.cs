@@ -4,6 +4,9 @@ public partial class KitchenGrain
 {
     public async Task<Result<TheCodeKitchenUnit>> ReleaseJoinCode()
     {
+        if (!state.RecordExists)
+            return new NotFoundError($"The game with id {this.GetPrimaryKey()} has not been initialized");
+
         if (string.IsNullOrWhiteSpace(state.State.Code))
             return new EmptyError();
 

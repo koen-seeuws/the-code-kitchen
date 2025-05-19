@@ -5,12 +5,14 @@ using TheCodeKitchen.Application.Contracts.Events;
 using TheCodeKitchen.Application.Contracts.Models;
 
 const string apiUrl = "http://localhost:5169/";
-const string kitchenCode = "0HWA";
+const string kitchenCode = "55JV";
+const string username = "Koen";
+const string password = "Test123!";
 
 var apiClient = new HttpClient { BaseAddress = new Uri(apiUrl) };
 
 //Auth
-var authRequest = new AuthenticationRequest("Koen", "Test123!", kitchenCode);
+var authRequest = new AuthenticationRequest(username, password, kitchenCode);
 var httpResponse = await apiClient.PostAsJsonAsync("game/join", authRequest);
 httpResponse.EnsureSuccessStatusCode();
 var response = await httpResponse.Content.ReadFromJsonAsync<AuthenticationResponse>();

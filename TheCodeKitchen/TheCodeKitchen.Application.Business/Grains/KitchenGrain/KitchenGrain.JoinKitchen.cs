@@ -6,6 +6,9 @@ public partial class KitchenGrain
 {
     public async Task<Result<JoinKitchenResponse>> JoinKitchen(JoinKitchenRequest request)
     {
+        if (!state.RecordExists)
+            return new NotFoundError($"The game with id {this.GetPrimaryKey()} has not been initialized");
+
         var getCooksResult = await GetCooks(new GetCookRequest(request.Username));
 
         if (!getCooksResult.Succeeded)

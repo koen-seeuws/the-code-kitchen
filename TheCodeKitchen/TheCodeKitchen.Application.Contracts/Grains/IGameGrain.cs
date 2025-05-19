@@ -7,6 +7,7 @@ namespace TheCodeKitchen.Application.Contracts.Grains;
 public interface IGameGrain : IGrainWithGuidKey
 {
     Task<Result<CreateGameResponse>> Initialize(CreateGameRequest request, int count);
+    Task<Result<TheCodeKitchenUnit>> UpdateGame(UpdateGameRequest request);
     Task<Result<GetGameResponse>> GetGame();
     Task<Result<CreateKitchenResponse>> CreateKitchen(CreateKitchenRequest request);
     Task<Result<IEnumerable<GetKitchenResponse>>> GetKitchens();
