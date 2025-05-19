@@ -4,11 +4,11 @@ public class Game
 {
     public Guid Id { get; }
     public string Name { get; set; }
-    public double SpeedModifier { get; set; }
+    public float SpeedModifier { get; set; }
     public DateTimeOffset? Started { get; set; }
     public ICollection<Guid> Kitchens { get;  set; }
     
-    public Game(Guid id, string name, double speedModifier)
+    public Game(Guid id, string name, float speedModifier)
     {
         Id = id;
         Name = name;
