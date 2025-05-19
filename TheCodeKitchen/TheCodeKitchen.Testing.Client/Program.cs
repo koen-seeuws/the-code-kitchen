@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.SignalR.Client;
 using TheCodeKitchen.Application.Contracts.Events;
 using TheCodeKitchen.Application.Contracts.Models;
 
-const string apiUrl = "http://localhost:5169/";
-const string kitchenCode = "55JV";
-const string username = "Koen";
+const string apiUrl = "https://ca-tck-cook-api.proudbeach-fbb36fdd.westeurope.azurecontainerapps.io/";
+const string kitchenCode = "MJYJ";
+const string username = "Koen 5";
 const string password = "Test123!";
 
 var apiClient = new HttpClient { BaseAddress = new Uri(apiUrl) };

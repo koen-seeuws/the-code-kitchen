@@ -5,8 +5,6 @@ namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public partial class GameGrain
 {
-    private readonly TimeSpan _deactivationDelayMargin = TimeSpan.FromMinutes(1);
-    
     private async Task NextMoment()
     {
         var now = DateTimeOffset.Now;
@@ -18,6 +16,7 @@ public partial class GameGrain
             state.State.SpeedModifier
         );
 
+        // Notifying the kitchens
         var nextMoment = new NextKitchenMomentRequest(now);
         
         var nextKitchenMomentTasks = state.State.Kitchens.Select(kitchen =>
@@ -27,14 +26,23 @@ public partial class GameGrain
         });
 
         await Task.WhenAll(nextKitchenMomentTasks);
+        
+        // Order generation
+        if (--_secondsUntilNewOrder <= 0)
+        {
+            await GenerateOrder();
+            await PickSecondsUntilNextOrder();
+        }
 
-        CheckAndDelayDeactivation();
+        // Keep grain active while game is playing
+        await CheckAndDelayDeactivation();
     }
     
-    private void CheckAndDelayDeactivation()
+    private Task CheckAndDelayDeactivation()
     {
-        if (!_roundDelay.HasValue) return;
-        var delay = _roundDelay.Value.Add(_deactivationDelayMargin);
+        if (!_roundDelay.HasValue) return Task.CompletedTask;
+        var delay = _roundDelay.Value.Add(TimeSpan.FromSeconds(30));
         DelayDeactivation(delay);
+        return Task.CompletedTask;
     }
 }
