@@ -6,6 +6,9 @@ public partial class CookGrain
 {
     public async Task<Result<CreateCookResponse>> Initialize(CreateCookRequest request)
     {
+        if(state.RecordExists)
+            return new AlreadyExistsError($"The cook with id {this.GetPrimaryKey()} has already been initialized");
+        
         var id = this.GetPrimaryKey();
         var username = request.Username.Trim();
 

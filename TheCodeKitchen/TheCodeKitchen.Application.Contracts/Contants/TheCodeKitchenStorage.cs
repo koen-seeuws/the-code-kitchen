@@ -11,6 +11,7 @@ public static class TheCodeKitchenStorage
         GameManagement,
         Kitchen,
         KitchenManagement,
+        Order,
         PubSubStore
     ];
 
@@ -20,6 +21,7 @@ public static class TheCodeKitchenStorage
     public const string GameManagement = nameof(GameManagement);
     public const string Kitchen = nameof(Kitchen);
     public const string KitchenManagement = nameof(KitchenManagement);
+    public const string Order = nameof(Order);
 
     //Streams
     public const string PubSubStore = nameof(PubSubStore);

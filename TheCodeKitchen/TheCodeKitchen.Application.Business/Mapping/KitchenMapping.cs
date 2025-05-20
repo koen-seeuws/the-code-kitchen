@@ -6,6 +6,5 @@ public class KitchenMapping : Profile
     {
         CreateMap<Kitchen, CreateKitchenResponse>();
         CreateMap<Kitchen, GetKitchenResponse>();
-        
     }
 }

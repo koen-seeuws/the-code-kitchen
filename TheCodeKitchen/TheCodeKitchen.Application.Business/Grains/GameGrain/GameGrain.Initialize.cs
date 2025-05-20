@@ -6,6 +6,9 @@ public partial class GameGrain
 {
     public async Task<Result<CreateGameResponse>> Initialize(CreateGameRequest request, int count)
     {
+        if(state.RecordExists)
+            return new AlreadyExistsError($"The game with id {this.GetPrimaryKey()} has already been initialized");
+        
         var id = this.GetPrimaryKey();
         var name = request.Name?.Trim();
 
