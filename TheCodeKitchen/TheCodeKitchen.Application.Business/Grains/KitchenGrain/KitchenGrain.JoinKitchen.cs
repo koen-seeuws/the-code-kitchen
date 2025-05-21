@@ -15,7 +15,7 @@ public partial class KitchenGrain
         if (!game.Succeeded)
             return game.Error;
 
-        if (game.Value.Started.HasValue)
+        if (game.Value.Started is not null)
             return new AlreadyExistsError(
                 $"The game with id {state.State.Game} has already started, you can't join a game that has already started!");
 

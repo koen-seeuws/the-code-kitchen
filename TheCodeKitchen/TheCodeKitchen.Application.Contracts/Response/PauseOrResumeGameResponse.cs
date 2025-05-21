@@ -1,4 +1,4 @@
 namespace TheCodeKitchen.Application.Contracts.Response;
 
 [GenerateSerializer]
-public record PauseOrUnpauseGameResponse(bool Paused);
+public record PauseOrResumeGameResponse(bool Paused);

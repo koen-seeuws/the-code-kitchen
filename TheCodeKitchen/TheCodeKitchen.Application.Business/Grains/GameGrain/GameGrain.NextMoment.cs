@@ -5,6 +5,9 @@ namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public partial class GameGrain
 {
+    private IGrainTimer? _nextMomentTimer;
+    private TimeSpan? _nextMomentDelay;
+    
     private async Task NextMoment()
     {
         var now = DateTimeOffset.Now;
@@ -40,8 +43,8 @@ public partial class GameGrain
     
     private Task CheckAndDelayDeactivation()
     {
-        if (!_roundDelay.HasValue) return Task.CompletedTask;
-        var delay = _roundDelay.Value.Add(TimeSpan.FromSeconds(30));
+        if (!_nextMomentDelay.HasValue) return Task.CompletedTask;
+        var delay = _nextMomentDelay.Value.Add(TimeSpan.FromSeconds(30));
         DelayDeactivation(delay);
         return Task.CompletedTask;
     }

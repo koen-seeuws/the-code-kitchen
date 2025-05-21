@@ -9,7 +9,7 @@ public partial class GameGrain
         if (!state.RecordExists)
             return new NotFoundError($"The game with id {this.GetPrimaryKey()} has not been initialized");
         
-        if(state.State.Started.HasValue)
+        if(state.State.Started is not null)
             return new GameAlreadyStartedError($"The game with id {this.GetPrimaryKey()} has already started, you can't add any new kitchens");
 
         var id = Guid.CreateVersion7();

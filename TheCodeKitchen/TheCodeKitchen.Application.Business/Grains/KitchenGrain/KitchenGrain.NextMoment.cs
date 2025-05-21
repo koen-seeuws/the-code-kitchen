@@ -1,4 +1,3 @@
-using TheCodeKitchen.Application.Contracts.Contants;
 using TheCodeKitchen.Application.Contracts.Events;
 using TheCodeKitchen.Application.Contracts.Requests;
 

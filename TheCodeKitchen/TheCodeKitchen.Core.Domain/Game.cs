@@ -1,5 +1,3 @@
-using System.Collections;
-
 namespace TheCodeKitchen.Core.Domain;
 
 public class Game

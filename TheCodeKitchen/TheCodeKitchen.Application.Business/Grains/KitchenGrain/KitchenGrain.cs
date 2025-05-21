@@ -1,5 +1,4 @@
 using Orleans.Placement;
-using TheCodeKitchen.Application.Contracts.Contants;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 

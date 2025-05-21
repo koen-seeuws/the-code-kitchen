@@ -1,5 +1,3 @@
-using TheCodeKitchen.Core.Domain;
-
 namespace TheCodeKitchen.Application.Contracts.Contants;
 
 public static class TheCodeKitchenStorage
