@@ -1,6 +1,7 @@
 namespace TheCodeKitchen.Application.Contracts.Grains;
 
-public class IKitchenOrderGrain
+//Key exists of OrderNumber and KitchenId
+public interface IKitchenOrderGrain : IGrainWithIntegerCompoundKey
 {
-    
+    Task<Result<CreateKitchenOrderResponse>> Initialize(CreateKitchenOrderRequest request);
 }

@@ -1,5 +1,3 @@
-using TheCodeKitchen.Application.Contracts.Results;
-
 namespace TheCodeKitchen.Application.Contracts.Errors;
 
 [GenerateSerializer]

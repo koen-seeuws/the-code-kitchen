@@ -18,6 +18,12 @@ public partial class GameGrain
             _roundDelay = TimeSpan.FromSeconds(1) / state.State.SpeedModifier;
             if (_secondsUntilNewOrder is null)
                 await PickSecondsUntilNextOrder();
+            
+            
+            
+            
+            
+            
             _nextMomentTimer = this.RegisterGrainTimer(NextMoment, TimeSpan.Zero, _roundDelay.Value);
         }
         else
