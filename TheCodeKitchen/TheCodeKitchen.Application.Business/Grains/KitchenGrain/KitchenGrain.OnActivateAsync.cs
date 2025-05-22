@@ -1,0 +1,10 @@
+namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
+
+public sealed partial class EquipmentGrain
+{
+    public sealed override async Task OnActivateAsync(CancellationToken cancellationToken)
+    {
+        await SubscribeToNextMomentEvent();
+        await base.OnActivateAsync(cancellationToken);
+    }
+}

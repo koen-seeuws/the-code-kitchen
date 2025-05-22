@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Requests;
 
 namespace TheCodeKitchen.Application.Business.Grains.GameManagementGrain;
 
-public partial class GameManagementGrain
+public sealed partial class GameManagementGrain
 {
     public async Task<Result<CreateGameResponse>> CreateGame(CreateGameRequest request)
     {

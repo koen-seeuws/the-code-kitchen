@@ -5,6 +5,7 @@ public static class TheCodeKitchenStorage
     public static readonly string[] All =
     [
         Cook,
+        Equipment,
         Game,
         GameManagement,
         Kitchen,
@@ -16,6 +17,7 @@ public static class TheCodeKitchenStorage
 
     // Grains
     public const string Cook = nameof(Cook);
+    public const string Equipment = nameof(Equipment);
     public const string Game = nameof(Game);
     public const string GameManagement = nameof(GameManagement);
     public const string Kitchen = nameof(Kitchen);

@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
-public partial class GameGrain
+public sealed partial class GameGrain
 {
     public Task<Result<GetGameResponse>> GetGame()
     {

@@ -1,8 +1,8 @@
 namespace TheCodeKitchen.Application.Business.Grains.KitchenManagementGrain;
 
-public partial class KitchenManagementGrain
+public sealed partial class KitchenManagementGrain
 {
-    public override async Task OnActivateAsync(CancellationToken cancellationToken)
+    public sealed override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
         if (!state.RecordExists)
         {

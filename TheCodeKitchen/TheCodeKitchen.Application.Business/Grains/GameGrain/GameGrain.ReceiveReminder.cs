@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
-public partial class GameGrain : IRemindable
+public sealed partial class GameGrain : IRemindable
 {
     public async Task ReceiveReminder(string reminderName, TickStatus status)
     {

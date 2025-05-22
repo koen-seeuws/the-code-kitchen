@@ -8,6 +8,5 @@ public interface IKitchenGrain : IGrainWithGuidKey
     Task<Result<TheCodeKitchenUnit>> ReleaseJoinCode();
     Task<Result<CreateCookResponse>> CreateCook(CreateCookRequest request);
     Task<Result<JoinKitchenResponse>> JoinKitchen(JoinKitchenRequest request);
-    Task<Result<TheCodeKitchenUnit>> NextMoment(NextKitchenMomentRequest request);
     
 }

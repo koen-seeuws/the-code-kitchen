@@ -1,4 +1,6 @@
-﻿namespace TheCodeKitchen.Core.Domain;
+﻿using TheCodeKitchen.Core.Enums;
+
+namespace TheCodeKitchen.Core.Domain;
 
 public class Kitchen
 {
@@ -6,6 +8,8 @@ public class Kitchen
     public string Name { get; set; }
     public string? Code { get; set; }
     public Guid Game { get; set; }
+    public IDictionary<string, int> Equipment { get; set; }
+
     public ICollection<Guid> Cooks { get; set; }
 
     public Kitchen(Guid id, string name, string code, Guid game)
@@ -15,5 +19,10 @@ public class Kitchen
         Code = code;
         Game = game;
         Cooks = new List<Guid>();
+        Equipment = new Dictionary<string, int>()
+        {
+            { EquipmentTypes.Furnace, 4 },
+            { EquipmentTypes.Blender, 2 }
+        };
     }
 }

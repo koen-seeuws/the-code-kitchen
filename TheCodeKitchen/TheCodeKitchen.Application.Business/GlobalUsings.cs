@@ -6,9 +6,10 @@ global using AutoMapper;
 global using FluentValidation;
 
 global using TheCodeKitchen.Application.Contracts.Contants;
+global using TheCodeKitchen.Application.Contracts.Errors;
+global using TheCodeKitchen.Application.Contracts.Events;
 global using TheCodeKitchen.Application.Contracts.Grains;
 global using TheCodeKitchen.Application.Contracts.Response;
-global using TheCodeKitchen.Application.Contracts.Errors;
 global using TheCodeKitchen.Application.Contracts.Results;
 
 global using Orleans;

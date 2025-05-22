@@ -32,7 +32,7 @@ var connection = new HubConnectionBuilder()
 
 connection.On<NextMomentEvent>(nameof(NextMomentEvent), nextMomentEvent =>
 {
-    Console.WriteLine($"Kitchen: {nextMomentEvent.KitchenId} - Moment: {nextMomentEvent.Moment}");
+    Console.WriteLine($"Kitchen: {nextMomentEvent.GameId} - Moment: {nextMomentEvent.Moment}");
 });
 
 await connection.StartAsync();

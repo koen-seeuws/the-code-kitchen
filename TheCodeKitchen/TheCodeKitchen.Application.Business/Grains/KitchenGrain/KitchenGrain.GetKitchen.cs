@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
-public partial class KitchenGrain
+public sealed partial class EquipmentGrain
 {
     public Task<Result<GetKitchenResponse>> GetKitchen()
     {

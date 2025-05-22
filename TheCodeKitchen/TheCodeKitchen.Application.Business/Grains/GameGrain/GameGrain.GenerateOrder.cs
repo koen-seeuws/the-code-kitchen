@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Contracts.Requests;
 
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
-public partial class GameGrain
+public sealed partial class GameGrain
 {
     private async Task<Result<TheCodeKitchenUnit>> GenerateOrder()
     {

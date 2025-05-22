@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Requests;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenManagementGrain;
 
-public partial class KitchenManagementGrain
+public sealed partial class KitchenManagementGrain
 {
     public async Task<Result<JoinKitchenResponse>> JoinKitchen(JoinKitchenRequest request)
     {

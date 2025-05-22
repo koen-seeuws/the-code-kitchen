@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Requests;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
 
-public partial class KitchenOrderGrain
+public sealed partial class KitchenOrderGrain
 {
     public async Task<Result<CreateKitchenOrderResponse>> Initialize(CreateKitchenOrderRequest request)
     {

@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Requests;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
-public partial class KitchenGrain
+public sealed partial class EquipmentGrain
 {
     public async Task<Result<CreateKitchenResponse>> Initialize(CreateKitchenRequest request, int count)
     {
@@ -20,13 +20,18 @@ public partial class KitchenGrain
 
         if (!codeResult.Succeeded)
             return codeResult.Error;
-
+        
+        // State
         var kitchen = new Kitchen(id, name, codeResult.Value, request.GameId);
-
         state.State = kitchen;
-
         await state.WriteStateAsync();
-
+        
+        // Equipment 
+        
+        
+        // Streams
+        await SubscribeToNextMomentEvent();
+        
         return mapper.Map<CreateKitchenResponse>(kitchen);
     }
 }

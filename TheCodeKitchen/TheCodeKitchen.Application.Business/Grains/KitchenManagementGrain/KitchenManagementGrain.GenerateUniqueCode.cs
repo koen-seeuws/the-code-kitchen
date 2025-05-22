@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Business.Grains.KitchenManagementGrain;
 
-public partial class KitchenManagementGrain
+public sealed partial class KitchenManagementGrain
 {
     private const int MaxAttempts = 10;
     

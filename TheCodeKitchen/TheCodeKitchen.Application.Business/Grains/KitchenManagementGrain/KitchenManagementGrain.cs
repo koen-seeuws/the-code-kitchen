@@ -5,7 +5,7 @@ public class KitchenManagementState
     public IDictionary<string, Guid> KitchenCodes { get; set; } = new Dictionary<string, Guid>();
 }
 
-public partial class KitchenManagementGrain(
+public sealed partial class KitchenManagementGrain(
     [PersistentState(TheCodeKitchenStorage.KitchenManagement, TheCodeKitchenStorage.KitchenManagement)]
     IPersistentState<KitchenManagementState> state
 ) : Grain, IKitchenManagementGrain;

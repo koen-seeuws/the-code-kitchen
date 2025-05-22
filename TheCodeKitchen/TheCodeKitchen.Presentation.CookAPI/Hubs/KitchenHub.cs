@@ -13,13 +13,13 @@ public class KitchenHub(
 {
     public override async Task OnConnectedAsync()
     {
-        var kitchenId = Context.User?.GetKitchenId() ?? throw new UnauthorizedAccessException();
+        var gameId = Context.User?.GetGameId() ?? throw new UnauthorizedAccessException();
 
-        await Groups.AddToGroupAsync(Context.ConnectionId, kitchenId.ToString());
-        await nextMomentStreamSubscriber.SubscribeToEvents(kitchenId,
+        await Groups.AddToGroupAsync(Context.ConnectionId, gameId.ToString());
+        await nextMomentStreamSubscriber.SubscribeToEvents(gameId,
             async @event =>
             {
-                await hubContext.Clients.Group(kitchenId.ToString()).SendAsync(nameof(NextMomentEvent), @event);
+                await hubContext.Clients.Group(gameId.ToString()).SendAsync(nameof(NextMomentEvent), @event);
             }
         );
 
@@ -28,10 +28,10 @@ public class KitchenHub(
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        var kitchenId = Context.User?.GetKitchenId() ?? throw new UnauthorizedAccessException();
+        var gameId = Context.User?.GetGameId() ?? throw new UnauthorizedAccessException();
 
-        await Groups.RemoveFromGroupAsync(Context.ConnectionId, kitchenId.ToString());
-        await nextMomentStreamSubscriber.UnsubscribeFromEvents(kitchenId);
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, gameId.ToString());
+        await nextMomentStreamSubscriber.UnsubscribeFromEvents(gameId);
 
         await base.OnDisconnectedAsync(exception);
     }

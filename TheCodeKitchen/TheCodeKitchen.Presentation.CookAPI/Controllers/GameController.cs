@@ -40,9 +40,11 @@ public class GameController(
             return this.MatchActionResult(new UnauthorizedError("Invalid password"));
 
         var token = securityTokenService.GeneratePlayerToken(
+            joinKitchenResult.Value.GameId,
+            joinKitchenResult.Value.KitchenId,
             joinKitchenResult.Value.CookId,
-            joinKitchenResult.Value.Username,
-            joinKitchenResult.Value.KitchenId
+            joinKitchenResult.Value.Username
+            
         );
 
         return Ok(new AuthenticationResponse(token));

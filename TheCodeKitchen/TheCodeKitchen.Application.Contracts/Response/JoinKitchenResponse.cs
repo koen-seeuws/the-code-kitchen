@@ -2,9 +2,10 @@ namespace TheCodeKitchen.Application.Contracts.Response;
 
 [GenerateSerializer]
 public record JoinKitchenResponse(
+    Guid GameId,
+    Guid KitchenId,
     Guid CookId,
     string Username,
-    Guid KitchenId,
     string PasswordHash,
     bool isNewCook
 );

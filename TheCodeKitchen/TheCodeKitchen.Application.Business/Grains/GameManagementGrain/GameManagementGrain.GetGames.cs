@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Business.Grains.GameManagementGrain;
 
-public partial class GameManagementGrain
+public sealed partial class GameManagementGrain
 {
     public async Task<Result<IEnumerable<GetGameResponse>>> GetGames()
     {

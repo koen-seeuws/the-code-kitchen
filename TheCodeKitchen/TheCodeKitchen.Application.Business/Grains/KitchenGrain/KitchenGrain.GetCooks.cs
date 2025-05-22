@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Requests;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
-public partial class KitchenGrain
+public sealed partial class EquipmentGrain
 {
     public async Task<Result<IEnumerable<GetCookResponse>>> GetCooks(GetCookRequest request)
     {

@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Business.Grains.CookGrain;
 
-public partial class CookGrain
+public sealed partial class CookGrain
 {
     public Task<Result<GetCookResponse>> GetCook()
     {

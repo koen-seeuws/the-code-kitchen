@@ -1,4 +1,4 @@
 namespace TheCodeKitchen.Application.Contracts.Events;
 
 [GenerateSerializer]
-public record NextMomentEvent(Guid KitchenId, DateTimeOffset Moment);
+public record NextMomentEvent(Guid GameId, DateTimeOffset Moment);
