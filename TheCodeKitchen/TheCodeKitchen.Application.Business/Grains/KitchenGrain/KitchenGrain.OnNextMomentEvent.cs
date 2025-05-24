@@ -1,10 +1,12 @@
+using Microsoft.Extensions.Logging;
+
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
-public sealed partial class EquipmentGrain
+public sealed partial class KitchenGrain
 {
     private Task OnNextMomentEvent(NextMomentEvent nextMomentEvent)
     {
-        //TODO
+        logger.LogInformation("Kitchen {kitchenId}: OnNextMomentEvent {moment}", state.State.Id, nextMomentEvent.Moment);
         return Task.CompletedTask;
     }
 }

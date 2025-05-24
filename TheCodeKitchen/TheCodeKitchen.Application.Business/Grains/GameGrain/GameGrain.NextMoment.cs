@@ -10,15 +10,15 @@ public sealed partial class GameGrain
     private async Task NextMoment()
     {
         var gameId = this.GetPrimaryKey();
-        var now = DateTimeOffset.Now;
+        var moment = DateTimeOffset.Now;
 
-        logger.LogInformation("Logging time from GameGrain {id}: {time} (x{modifier})",
-            gameId, now, state.State.SpeedModifier);
+        logger.LogInformation("Game {id}: {moment} (x{modifier})",
+            gameId, moment, state.State.SpeedModifier);
 
         // Sending out event
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.AzureStorageQueuesProvider);
         var stream = streamProvider.GetStream<NextMomentEvent>(nameof(NextMomentEvent), gameId);
-        var nextMomentEvent = new NextMomentEvent(state.State.Id, now);
+        var nextMomentEvent = new NextMomentEvent(state.State.Id, moment);
         await stream.OnNextAsync(nextMomentEvent);
 
         // Order generation

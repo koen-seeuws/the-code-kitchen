@@ -4,7 +4,7 @@ using TheCodeKitchen.Application.Contracts.Requests.Equipment;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
-public sealed partial class EquipmentGrain
+public sealed partial class KitchenGrain
 {
     public async Task<Result<CreateKitchenResponse>> Initialize(CreateKitchenRequest request, int count)
     {

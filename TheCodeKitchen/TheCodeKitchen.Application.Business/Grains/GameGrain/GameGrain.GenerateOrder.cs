@@ -13,7 +13,8 @@ public sealed partial class GameGrain
         var orderGrain = GrainFactory.GetGrain<IOrderGrain>(orderNumber, game.ToString());
 
         //TODO: Implement order generation logic
-        logger.LogInformation("Generating order {number}...", orderNumber);
+        logger.LogInformation("Game {gameId}:Generating order {number}...", state.State.Id, orderNumber);
+        
         var orderRequest = new CreateOrderRequest();
 
         var createOrderResult = await orderGrain.Initialize(orderRequest);

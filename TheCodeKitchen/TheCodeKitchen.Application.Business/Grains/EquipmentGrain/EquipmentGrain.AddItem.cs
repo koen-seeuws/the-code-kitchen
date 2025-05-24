@@ -9,7 +9,8 @@ public abstract partial class EquipmentGrain
         if(state.State.Items.Count >= maxItems)
             return new EquipmentFullError($"The equipment {this.GetPrimaryKey()} has reached the maximum number of contained items ({maxItems})");
         
-        //TODO: Possibly 
+        // TODO: Possibly 
+        
         
         state.State.Items.Add(request.Item);
         await state.WriteStateAsync();
