@@ -6,6 +6,6 @@ public class KitchenManagementState
 }
 
 public sealed partial class KitchenManagementGrain(
-    [PersistentState(TheCodeKitchenStorage.KitchenManagement, TheCodeKitchenStorage.KitchenManagement)]
+    [PersistentState(TheCodeKitchenState.KitchenManagement, TheCodeKitchenState.KitchenManagement)]
     IPersistentState<KitchenManagementState> state
 ) : Grain, IKitchenManagementGrain;

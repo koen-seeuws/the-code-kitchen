@@ -1,3 +1,3 @@
 namespace TheCodeKitchen.Application.Contracts.Grains.Equipment;
 
-public interface IBlenderGrain : IEquipmentGrain;
+public interface IBlenderGrain : IEquipmentGrain, IGrainWithGuidCompoundKey;

@@ -1,6 +1,7 @@
 using TheCodeKitchen.Application.Contracts.Grains.Equipment;
 using TheCodeKitchen.Application.Contracts.Requests;
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
+using TheCodeKitchen.Core.Enums;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
@@ -33,7 +34,13 @@ public sealed partial class KitchenGrain
         {
             for (var number = 0; number < equipment.Value; number++)
             {
-                var equipmentGrain = GrainFactory.GetGrain<IEquipmentGrain>(state.State.Id, number.ToString(), equipment.Key);
+                IEquipmentGrain equipmentGrain = equipment.Key switch
+                {
+                    EquipmentTypes.Blender => GrainFactory.GetGrain<IBlenderGrain>(state.State.Id, number.ToString()),
+                    EquipmentTypes.Furnace => GrainFactory.GetGrain<IFurnaceGrain>(state.State.Id, number.ToString()),
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+
                 var createEquipmentRequest = new CreateEquipmentRequest(state.State.Game, state.State.Id, number);
                 await equipmentGrain.Initialize(createEquipmentRequest);
             }

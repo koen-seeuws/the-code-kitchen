@@ -11,33 +11,24 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 [Authorize]
 public class KitchenController(IClusterClient clusterClient) : ControllerBase
 {
+    [HttpPost("[action]/{number:int}")]
+    public IActionResult Blender(int number)
+    {
+        var kitchen = HttpContext.User.GetKitchenId();
+        var grain = clusterClient.GetGrain<IBlenderGrain>(kitchen, number.ToString());
+        
+        
+        return Ok();
+    }
     
-    [HttpPost("/{number:int}")]
+    [HttpPost("[action]/{number:int}")]
     public IActionResult Furnace(int number)
     {
         var kitchen = HttpContext.User.GetKitchenId();
-        var grain = clusterClient.GetGrain<IEquipmentGrain>(kitchen, number.ToString(), EquipmentTypes.Furnace);
+        var grain = clusterClient.GetGrain<IFurnaceGrain>(kitchen, number.ToString());
         
         
         return Ok();
     }
-    
-    [HttpPost("[action]/{number:int}")]
-    public IActionResult HotPlate(int number)
-    {
-        var kitchen = HttpContext.User.GetKitchenId();
-        var grain = clusterClient.GetGrain<IEquipmentGrain>(kitchen, number.ToString(), EquipmentTypes.Furnace);
-        
-        
-        return Ok();
-    }
-    
-    [HttpPost("[action]/{number:int}")]
-    public IActionResult Oven(int number)
-    {
-        
-        
-        
-        return Ok();
-    }
+  
 }

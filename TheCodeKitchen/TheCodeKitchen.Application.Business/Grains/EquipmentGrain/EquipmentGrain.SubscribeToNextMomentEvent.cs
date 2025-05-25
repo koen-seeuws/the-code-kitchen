@@ -4,7 +4,7 @@ public abstract partial class EquipmentGrain
 {
     protected StreamSubscriptionHandle<NextMomentEvent>? NextMomentEventSubscription;
 
-    protected async Task SubscribeToNextMomentEvent()
+    private async Task SubscribeToNextMomentEvent()
     {
         if (state.RecordExists)
         {

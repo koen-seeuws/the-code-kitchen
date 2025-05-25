@@ -4,9 +4,8 @@ using TheCodeKitchen.Core.Enums;
 
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
-[GrainType(EquipmentTypes.Blender)]
 public sealed partial class BlenderGrain(
-    [PersistentState(TheCodeKitchenStorage.Equipment, TheCodeKitchenStorage.Equipment)]
+    [PersistentState(TheCodeKitchenState.Equipment, TheCodeKitchenState.Equipment)]
     IPersistentState<Equipment> state,
     IMapper mapper,
     ILogger<BlenderGrain> logger

@@ -35,9 +35,13 @@ builder.UseOrleans(silo =>
         options.TableName = "TheCodeKitchenClustering";
     });
 
-    foreach (var storage in TheCodeKitchenStorage.All)
+    foreach (var storage in TheCodeKitchenState.All)
     {
-        silo.AddAzureTableGrainStorage(storage, options => { options.TableServiceClient = tableClient; });
+        silo.AddAzureTableGrainStorage(storage, options =>
+        {
+            options.TableServiceClient = tableClient;
+            options.TableName = storage;
+        });
     }
 
     silo.UseAzureTableReminderService(options =>

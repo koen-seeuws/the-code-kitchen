@@ -1,7 +1,7 @@
 namespace TheCodeKitchen.Core.Enums;
 
-public static class EquipmentTypes
+public enum EquipmentTypes
 {
-    public const string Furnace = nameof(Furnace);
-    public const string Blender = nameof(Blender);
+    Blender = 0,
+    Furnace = 1
 }

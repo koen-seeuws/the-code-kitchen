@@ -4,9 +4,8 @@ using TheCodeKitchen.Core.Enums;
 
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
-[GrainType(EquipmentTypes.Furnace)]
 public sealed partial class FurnaceGrain(
-    [PersistentState(TheCodeKitchenStorage.Equipment, TheCodeKitchenStorage.Equipment)]
+    [PersistentState(TheCodeKitchenState.Equipment, TheCodeKitchenState.Equipment)]
     IPersistentState<Equipment> state,
     IMapper mapper,
     ILogger<FurnaceGrain> logger
