@@ -2,22 +2,23 @@ namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
 public abstract partial class EquipmentGrain
 {
-    protected StreamSubscriptionHandle<NextMomentEvent>? NextMomentEventSubscription;
-
     private async Task SubscribeToNextMomentEvent()
     {
-        if (state.RecordExists)
+        try
         {
-            var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.AzureStorageQueuesProvider);
-            var stream = streamProvider.GetStream<NextMomentEvent>(state.State.Game);
-            NextMomentEventSubscription = await stream.SubscribeAsync(async events =>
-                {
-                    foreach (var @event in events)
-                    {
-                        await OnNextMomentEvent(@event.Item);
-                    }
-                }
-            );
+            await streamSubscriptionSubscriptionHAndleses.State.NextMomentStreamSubscriptionHandle
+                .ResumeAsync(OnNextMomentEvent);
+        }
+        catch (Exception e) when (e is OrleansException or NullReferenceException)
+        {
+            if (state.RecordExists)
+            {
+                var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.AzureStorageQueuesProvider);
+                var stream = streamProvider.GetStream<NextMomentEvent>(nameof(NextMomentEvent), state.State.Game);
+                streamSubscriptionSubscriptionHAndleses.State.NextMomentStreamSubscriptionHandle =
+                    await stream.SubscribeAsync(OnNextMomentEvent);
+                await streamSubscriptionSubscriptionHAndleses.WriteStateAsync();
+            }
         }
     }
 }

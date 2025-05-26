@@ -6,7 +6,8 @@ public class Equipment
     public Guid Kitchen { get; set; }
     public int Number { get; set; }
     public bool On { get; set; }
-    public ICollection<Guid> Items { get; set; }
+    public ICollection<Guid> AddedItems { get; set; }
+    
     
     //public Guid CurrentItem { get; set; }
 
@@ -15,6 +16,6 @@ public class Equipment
         Game = game;
         Kitchen = kitchen;
         Number = number;
-        Items = new List<Guid>();
+        AddedItems = new List<Guid>();
     }
 }

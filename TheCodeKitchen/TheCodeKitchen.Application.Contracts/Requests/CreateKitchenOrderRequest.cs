@@ -1,4 +1,4 @@
 namespace TheCodeKitchen.Application.Contracts.Requests;
 
 [GenerateSerializer]
-public record CreateKitchenOrderRequest();
+public record CreateKitchenOrderRequest(Guid KitchenId, long OrderNumber);

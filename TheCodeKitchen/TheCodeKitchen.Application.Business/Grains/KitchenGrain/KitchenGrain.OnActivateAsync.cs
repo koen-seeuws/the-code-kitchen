@@ -5,6 +5,7 @@ public sealed partial class KitchenGrain
     public sealed override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
         await SubscribeToNextMomentEvent();
+        await SubscribeToNewOrderEvent();
         await base.OnActivateAsync(cancellationToken);
     }
 }

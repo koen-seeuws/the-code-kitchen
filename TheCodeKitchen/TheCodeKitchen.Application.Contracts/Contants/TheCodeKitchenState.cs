@@ -4,27 +4,32 @@ public static class TheCodeKitchenState
 {
     public static readonly string[] All =
     [
-        Cook,
+        //Grains
+        Cooks,
         Equipment,
-        Game,
+        Games,
         GameManagement,
-        Kitchen,
+        Kitchens,
         KitchenManagement,
-        KitchenOrder,
-        Order,
-        PubSubStore
+        KitchenOrders,
+        Orders,
+        
+        // Persistent Streaming
+        PubSubStore,
+        StreamHandles
     ];
 
     // Grains
-    public const string Cook = "TheCodeKitchenCookState";
+    public const string Cooks = "TheCodeKitchenCookState";
     public const string Equipment = "TheCodeKitchenEquipmentState";
-    public const string Game = "TheCodeKitchenGameState";
+    public const string Games = "TheCodeKitchenGameState";
     public const string GameManagement = "TheCodeKitchenGameManagementState";
-    public const string Kitchen = "TheCodeKitchenKitchenState";
+    public const string Kitchens = "TheCodeKitchenKitchenState";
     public const string KitchenManagement = "TheCodeKitchenKitchenManagementState";
-    public const string KitchenOrder = "TheCodeKitchenKitchenOrderState";
-    public const string Order = "TheCodeKitchenOrderState";
+    public const string KitchenOrders = "TheCodeKitchenKitchenOrderState";
+    public const string Orders = "TheCodeKitchenOrderState";
 
-    //Streams
+    // Persistent Streaming
     public const string PubSubStore = nameof(PubSubStore);
+    public const string StreamHandles = "TheCodeKitchenStreamHandleState";
 }

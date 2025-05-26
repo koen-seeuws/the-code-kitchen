@@ -17,7 +17,7 @@ public sealed partial class GameGrain
 
         // Sending out event
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.AzureStorageQueuesProvider);
-        var stream = streamProvider.GetStream<NextMomentEvent>(gameId);
+        var stream = streamProvider.GetStream<NextMomentEvent>(nameof(NextMomentEvent), gameId);
         var nextMomentEvent = new NextMomentEvent(state.State.Id, moment);
         await stream.OnNextAsync(nextMomentEvent);
 
@@ -25,7 +25,6 @@ public sealed partial class GameGrain
         if (--_secondsUntilNewOrder <= 0)
         {
             await GenerateOrder();
-            await PickSecondsUntilNextOrder();
         }
 
         // Keep grain active while game is playing

@@ -3,11 +3,18 @@ using Orleans.Placement;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
-[ImplicitStreamSubscription("")]
+public class KitchenGrainStreamSubscriptionHandles
+{
+    public StreamSubscriptionHandle<NextMomentEvent>? NextMomentStreamSubscriptionHandle { get; set; }
+    public StreamSubscriptionHandle<NewOrderEvent>? NewOrderStreamSubscriptionHandle { get; set; }
+}
+
 [PreferLocalPlacement]
 public sealed partial class KitchenGrain(
-    [PersistentState(TheCodeKitchenState.Kitchen, TheCodeKitchenState.Kitchen)]
+    [PersistentState(TheCodeKitchenState.Kitchens, TheCodeKitchenState.Kitchens)]
     IPersistentState<Kitchen> state,
+    [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
+    IPersistentState<KitchenGrainStreamSubscriptionHandles> streamHandles,
     IMapper mapper,
     ILogger<KitchenGrain> logger
 ) : Grain, IKitchenGrain;

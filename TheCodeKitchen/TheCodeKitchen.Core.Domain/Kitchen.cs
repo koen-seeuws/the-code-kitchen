@@ -7,10 +7,10 @@ public class Kitchen
     public Guid Id { get; init; }
     public string Name { get; set; }
     public string? Code { get; set; }
-    public Guid Game { get; set; }
-    public IDictionary<EquipmentTypes, int> Equipment { get; set; }
-
+    public Guid Game { get; set; } 
     public ICollection<Guid> Cooks { get; set; }
+    public IDictionary<EquipmentTypes, int> Equipment { get; set; }
+    public ICollection<long> Orders { get; set; }
 
     public Kitchen(Guid id, string name, string code, Guid game)
     {
@@ -24,5 +24,6 @@ public class Kitchen
             { EquipmentTypes.Furnace, 4 },
             { EquipmentTypes.Blender, 2 }
         };
+        Orders = new List<long>();
     }
 }

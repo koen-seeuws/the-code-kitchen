@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Contracts.Grains.Equipment;
-using TheCodeKitchen.Core.Enums;
 using TheCodeKitchen.Infrastructure.Security.Extensions;
 
 namespace TheCodeKitchen.Presentation.API.Cook.Controllers;

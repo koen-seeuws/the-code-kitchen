@@ -4,7 +4,7 @@ namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
 public sealed partial class BlenderGrain
 {
-    protected override Task OnNextMomentEvent(NextMomentEvent nextMomentEvent)
+    protected override Task OnNextMomentEvent(NextMomentEvent nextMomentEvent, StreamSequenceToken _)
     {
         //TODO
         logger.LogInformation("Blender {gameId} {kitchenId} {number}: OnNextMomentEvent {moment}", 

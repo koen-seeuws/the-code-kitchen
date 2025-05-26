@@ -9,11 +9,11 @@ public sealed partial class GameGrain
     {
         var orderNumber = state.State.OrderNumbers.DefaultIfEmpty(0).Max() + 1;
 
-        var game = this.GetPrimaryKey();
+        var game = state.State.Id;
         var orderGrain = GrainFactory.GetGrain<IOrderGrain>(orderNumber, game.ToString());
 
         //TODO: Implement order generation logic
-        logger.LogInformation("Game {gameId}:Generating order {number}...", state.State.Id, orderNumber);
+        logger.LogInformation("Game {gameId}: Generating order {number}...", state.State.Id, orderNumber);
         
         var orderRequest = new CreateOrderRequest();
 
@@ -24,15 +24,14 @@ public sealed partial class GameGrain
 
         state.State.OrderNumbers.Add(orderNumber);
         await state.WriteStateAsync();
-
-        var createKitchenOrderTasks = state.State.Kitchens.Select(kitchen =>
-        {
-            var kitchenOrderGrain = GrainFactory.GetGrain<IKitchenOrderGrain>(orderNumber, kitchen.ToString());
-            var createKitchenOrderRequest = new CreateKitchenOrderRequest();
-            return kitchenOrderGrain.Initialize(createKitchenOrderRequest);
-        });
-
-        await Task.WhenAll(createKitchenOrderTasks);
+        
+        var newOrderEvent = new NewOrderEvent(orderNumber);
+        
+        var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.AzureStorageQueuesProvider);
+        var stream = streamProvider.GetStream<NewOrderEvent>(nameof(NewOrderEvent), state.State.Id);
+        await stream.OnNextAsync(newOrderEvent);
+        
+        await PickSecondsUntilNextOrder();
 
         return TheCodeKitchenUnit.Value;
     }
