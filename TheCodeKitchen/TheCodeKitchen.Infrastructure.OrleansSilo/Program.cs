@@ -58,7 +58,7 @@ builder.UseOrleans(silo =>
 
     silo
         .AddStreaming()
-        .AddAzureQueueStreams(TheCodeKitchenStreams.AzureStorageQueuesProvider,
+        .AddAzureQueueStreams(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider,
             options =>
             {
                 options.Configure(azureQueueOptions =>

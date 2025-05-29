@@ -27,7 +27,7 @@ public sealed partial class GameGrain
         
         var newOrderEvent = new NewOrderEvent(orderNumber);
         
-        var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.AzureStorageQueuesProvider);
+        var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
         var stream = streamProvider.GetStream<NewOrderEvent>(nameof(NewOrderEvent), state.State.Id);
         await stream.OnNextAsync(newOrderEvent);
         

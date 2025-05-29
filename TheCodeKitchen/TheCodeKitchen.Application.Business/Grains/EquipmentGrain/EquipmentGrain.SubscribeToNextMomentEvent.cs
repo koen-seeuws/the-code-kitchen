@@ -13,7 +13,7 @@ public abstract partial class EquipmentGrain
         {
             if (state.RecordExists)
             {
-                var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.AzureStorageQueuesProvider);
+                var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
                 var stream = streamProvider.GetStream<NextMomentEvent>(nameof(NextMomentEvent), state.State.Game);
                 streamSubscriptionSubscriptionHAndleses.State.NextMomentStreamSubscriptionHandle =
                     await stream.SubscribeAsync(OnNextMomentEvent);

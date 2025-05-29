@@ -16,7 +16,7 @@ public sealed partial class GameGrain
             gameId, moment, state.State.SpeedModifier);
 
         // Sending out event
-        var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.AzureStorageQueuesProvider);
+        var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
         var stream = streamProvider.GetStream<NextMomentEvent>(nameof(NextMomentEvent), gameId);
         var nextMomentEvent = new NextMomentEvent(state.State.Id, moment);
         await stream.OnNextAsync(nextMomentEvent);

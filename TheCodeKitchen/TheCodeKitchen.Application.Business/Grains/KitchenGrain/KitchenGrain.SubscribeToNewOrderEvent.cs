@@ -14,7 +14,7 @@ public sealed partial class KitchenGrain
         {
             if (state.RecordExists)
             {
-                var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.AzureStorageQueuesProvider);
+                var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
                 var stream = streamProvider.GetStream<NewOrderEvent>(nameof(NewOrderEvent), state.State.Game);
                 streamHandles.State.NewOrderStreamSubscriptionHandle = await stream.SubscribeAsync(OnNewOrderEvent);
                 await streamHandles.WriteStateAsync();
