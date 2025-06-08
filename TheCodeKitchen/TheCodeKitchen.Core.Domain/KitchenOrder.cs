@@ -1,15 +1,8 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public class KitchenOrder
+public class KitchenOrder(long number, Guid kitchen)
 {
-    public long Number { get; set; }
-    public Guid Kitchen { get; set; }
-    public ICollection<Guid> Deliveries { get; set; }
-    
-    public KitchenOrder(long number, Guid kitchen)
-    {
-        Number = number;
-        Kitchen = kitchen;
-        Deliveries = new List<Guid>();
-    }
+    public long Number { get; } = number;
+    public Guid Kitchen { get; } = kitchen;
+    public ICollection<Guid> DeliveredFoods { get; } = new List<Guid>();
 }

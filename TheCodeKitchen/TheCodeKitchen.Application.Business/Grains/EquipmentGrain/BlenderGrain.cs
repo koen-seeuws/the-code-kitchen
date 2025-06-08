@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Contracts.Grains.Equipment;
+using TheCodeKitchen.Application.Contracts.Requests.Equipment;
 
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
@@ -13,4 +14,5 @@ public sealed partial class BlenderGrain(
 ) : EquipmentGrain(state, streamSubscriptionHandles, mapper, 1), IBlenderGrain
 {
     private readonly IPersistentState<Equipment> _state = state;
+
 }

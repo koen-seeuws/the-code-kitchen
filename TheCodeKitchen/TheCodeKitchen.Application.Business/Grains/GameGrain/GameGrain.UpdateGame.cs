@@ -1,4 +1,5 @@
 using TheCodeKitchen.Application.Contracts.Requests;
+using TheCodeKitchen.Application.Contracts.Requests.Game;
 
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 

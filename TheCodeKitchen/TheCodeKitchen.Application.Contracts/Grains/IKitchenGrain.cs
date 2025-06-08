@@ -1,3 +1,8 @@
+using TheCodeKitchen.Application.Contracts.Requests.Cook;
+using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
+using TheCodeKitchen.Application.Contracts.Response.Cook;
+using TheCodeKitchen.Application.Contracts.Response.Kitchen;
+
 namespace TheCodeKitchen.Application.Contracts.Grains;
 
 public interface IKitchenGrain : IGrainWithGuidKey

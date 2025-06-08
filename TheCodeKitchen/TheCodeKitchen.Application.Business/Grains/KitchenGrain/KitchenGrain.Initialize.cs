@@ -1,6 +1,8 @@
 using TheCodeKitchen.Application.Contracts.Grains.Equipment;
 using TheCodeKitchen.Application.Contracts.Requests;
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
+using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
+using TheCodeKitchen.Application.Contracts.Response.Kitchen;
 using TheCodeKitchen.Core.Enums;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;

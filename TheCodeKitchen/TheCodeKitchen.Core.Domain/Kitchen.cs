@@ -2,28 +2,21 @@
 
 namespace TheCodeKitchen.Core.Domain;
 
-public class Kitchen
+public class Kitchen(Guid id, string name, string code, Guid game)
 {
-    public Guid Id { get; init; }
-    public string Name { get; set; }
-    public string? Code { get; set; }
-    public Guid Game { get; set; } 
-    public ICollection<Guid> Cooks { get; set; }
-    public IDictionary<EquipmentTypes, int> Equipment { get; set; }
-    public ICollection<long> Orders { get; set; }
-
-    public Kitchen(Guid id, string name, string code, Guid game)
+    public Guid Id { get; } = id;
+    public string Name { get; } = name;
+    public string? Code { get; set; } = code;
+    public Guid Game { get; } = game;
+    public ICollection<Guid> Cooks { get; } = new List<Guid>();
+    public IDictionary<EquipmentTypes, int> Equipment { get; } = new Dictionary<EquipmentTypes, int>
     {
-        Id = id;
-        Name = name;
-        Code = code;
-        Game = game;
-        Cooks = new List<Guid>();
-        Equipment = new Dictionary<EquipmentTypes, int>()
-        {
-            { EquipmentTypes.Furnace, 4 },
-            { EquipmentTypes.Blender, 2 }
-        };
-        Orders = new List<long>();
-    }
+        { EquipmentTypes.Blender, 1 },
+        { EquipmentTypes.Counter, 30 },
+        { EquipmentTypes.CuttingBoard, 4 },
+        { EquipmentTypes.Furnace, 4 },
+        { EquipmentTypes.HotPlate, 10 },
+    };
+
+    public ICollection<long> Orders { get; } = new List<long>();
 }

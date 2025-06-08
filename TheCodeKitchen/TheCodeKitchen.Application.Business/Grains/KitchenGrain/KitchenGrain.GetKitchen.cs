@@ -1,3 +1,5 @@
+using TheCodeKitchen.Application.Contracts.Response.Kitchen;
+
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
 public sealed partial class KitchenGrain

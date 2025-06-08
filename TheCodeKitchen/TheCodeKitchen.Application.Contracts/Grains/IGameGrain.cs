@@ -1,3 +1,8 @@
+using TheCodeKitchen.Application.Contracts.Requests.Game;
+using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
+using TheCodeKitchen.Application.Contracts.Response.Game;
+using TheCodeKitchen.Application.Contracts.Response.Kitchen;
+
 namespace TheCodeKitchen.Application.Contracts.Grains;
 
 public interface IGameGrain : IGrainWithGuidKey

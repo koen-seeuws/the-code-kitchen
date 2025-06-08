@@ -1,21 +1,9 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public class Equipment
+public class Equipment(Guid game, Guid kitchen, int number)
 {
-    public Guid Game { get; set; }
-    public Guid Kitchen { get; set; }
-    public int Number { get; set; }
-    public bool On { get; set; }
-    public ICollection<Guid> AddedItems { get; set; }
-    
-    
-    //public Guid CurrentItem { get; set; }
-
-    public Equipment(Guid game, Guid kitchen, int number)
-    {
-        Game = game;
-        Kitchen = kitchen;
-        Number = number;
-        AddedItems = new List<Guid>();
-    }
+    public Guid Game { get; } = game;
+    public Guid Kitchen { get; } = kitchen;
+    public int Number { get; } = number;
+    public IList<Guid> Foods { get; set; }
 }

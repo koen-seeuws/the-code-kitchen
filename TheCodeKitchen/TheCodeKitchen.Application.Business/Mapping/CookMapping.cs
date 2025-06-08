@@ -1,3 +1,5 @@
+using TheCodeKitchen.Application.Contracts.Response.Cook;
+
 namespace TheCodeKitchen.Application.Business.Mapping;
 
 public class CookMapping : Profile

@@ -12,8 +12,8 @@ const string password = "Test123!";
 var apiClient = new HttpClient { BaseAddress = new Uri(apiUrl) };
 
 //Auth
-var authRequest = new AuthenticationRequest(username, password, kitchenCode);
-var httpResponse = await apiClient.PostAsJsonAsync("game/join", authRequest);
+var authRequest = new AuthenticationRequest(username, password);
+var httpResponse = await apiClient.PostAsJsonAsync($"kitchen/{kitchenCode}/join", authRequest);
 httpResponse.EnsureSuccessStatusCode();
 var response = await httpResponse.Content.ReadFromJsonAsync<AuthenticationResponse>();
 ArgumentNullException.ThrowIfNull(response);

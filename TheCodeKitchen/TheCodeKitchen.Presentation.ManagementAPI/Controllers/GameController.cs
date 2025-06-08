@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests;
+using TheCodeKitchen.Application.Contracts.Requests.Game;
 
 namespace TheCodeKitchen.Presentation.ManagementAPI.Controllers;
 
@@ -49,7 +50,7 @@ public class GameController(IClusterClient client) : ControllerBase
     }
     
     [HttpPatch("{gameId}/[action]")]
-    public async Task<IActionResult> ModifySpeed(Guid gameId, [FromBody] float speedModifier)
+    public async Task<IActionResult> ModifySpeed(Guid gameId, [FromBody] double speedModifier)
     {
         var request = new UpdateGameRequest(speedModifier);
         var gameGrain = client.GetGrain<IGameGrain>(gameId);

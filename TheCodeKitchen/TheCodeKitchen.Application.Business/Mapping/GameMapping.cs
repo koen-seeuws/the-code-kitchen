@@ -1,3 +1,5 @@
+using TheCodeKitchen.Application.Contracts.Response.Game;
+
 namespace TheCodeKitchen.Application.Business.Mapping;
 
 public class GameMapping : Profile

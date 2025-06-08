@@ -4,7 +4,7 @@ public abstract partial class EquipmentGrain
 {
     public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
-        await SubscribeToNextMomentEvent();
+        //await SubscribeToNextMomentEvent();
         await base.OnActivateAsync(cancellationToken);
     }
 }

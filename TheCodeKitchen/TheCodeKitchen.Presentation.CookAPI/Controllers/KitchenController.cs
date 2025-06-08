@@ -1,33 +1,54 @@
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TheCodeKitchen.Application.Contracts.Grains.Equipment;
-using TheCodeKitchen.Infrastructure.Security.Extensions;
+using TheCodeKitchen.Application.Contracts.Errors;
+using TheCodeKitchen.Application.Contracts.Grains;
+using TheCodeKitchen.Application.Contracts.Models;
+using TheCodeKitchen.Application.Contracts.Requests;
+using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
+using TheCodeKitchen.Infrastructure.Security;
 
 namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-[Authorize]
-public class KitchenController(IClusterClient clusterClient) : ControllerBase
+public class KitchenController(
+    IClusterClient client,
+    IPasswordHashingService passwordHashingService,
+    ISecurityTokenService securityTokenService
+) : ControllerBase
 {
-    [HttpPost("[action]/{number:int}")]
-    public IActionResult Blender(int number)
+    [HttpPost("{joinCode}/[action]")]
+    public async Task<IActionResult> Join([FromRoute] string joinCode, [FromBody] AuthenticationRequest request)
     {
-        var kitchen = HttpContext.User.GetKitchenId();
-        var grain = clusterClient.GetGrain<IBlenderGrain>(kitchen, number.ToString());
-        
-        
-        return Ok();
+        var kitchenCodeIndexGrain = client.GetGrain<IKitchenManagementGrain>(Guid.Empty);
+
+        var passwordHash = passwordHashingService.HashPassword(request.Password);
+
+        var joinKitchenRequest = new JoinKitchenRequest(
+            request.Username,
+            passwordHash,
+            joinCode
+        );
+
+        var joinKitchenResult = await kitchenCodeIndexGrain.JoinKitchen(joinKitchenRequest);
+
+        if (!joinKitchenResult.Succeeded)
+            return this.MatchActionResult(joinKitchenResult);
+
+        if (
+            !joinKitchenResult.Value.isNewCook &&
+            !passwordHashingService.VerifyHashedPassword(joinKitchenResult.Value.PasswordHash, request.Password)
+        )
+            return this.MatchActionResult(new UnauthorizedError("Invalid password"));
+
+        var token = securityTokenService.GeneratePlayerToken(
+            joinKitchenResult.Value.GameId,
+            joinKitchenResult.Value.KitchenId,
+            joinKitchenResult.Value.CookId,
+            joinKitchenResult.Value.Username
+        );
+
+        var response = new AuthenticationResponse(token);
+
+        return Ok(response);
     }
-    
-    [HttpPost("[action]/{number:int}")]
-    public IActionResult Furnace(int number)
-    {
-        var kitchen = HttpContext.User.GetKitchenId();
-        var grain = clusterClient.GetGrain<IFurnaceGrain>(kitchen, number.ToString());
-        
-        
-        return Ok();
-    }
-  
 }

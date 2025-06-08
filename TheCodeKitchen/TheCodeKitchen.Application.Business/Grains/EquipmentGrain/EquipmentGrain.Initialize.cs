@@ -7,6 +7,7 @@ public abstract partial class EquipmentGrain
 {
     public async Task<Result<CreateEquipmentResponse>> Initialize(CreateEquipmentRequest request)
     {
+        
         var kitchen = this.GetPrimaryKey();
         var number = int.Parse(this.GetPrimaryKeyString().Split('+')[1]);
         
@@ -19,7 +20,7 @@ public abstract partial class EquipmentGrain
         await state.WriteStateAsync();
         
         // Streams
-        await SubscribeToNextMomentEvent();
+        //await SubscribeToNextMomentEvent();
         
         return mapper.Map<CreateEquipmentResponse>(equipment);
 

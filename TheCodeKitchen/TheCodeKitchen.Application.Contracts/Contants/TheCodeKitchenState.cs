@@ -5,6 +5,7 @@ public static class TheCodeKitchenState
     public static readonly string[] All =
     [
         //Grains
+        CookBook,
         Cooks,
         Equipment,
         Games,
@@ -13,6 +14,7 @@ public static class TheCodeKitchenState
         KitchenManagement,
         KitchenOrders,
         Orders,
+        Pantry,
         
         // Persistent Streaming
         PubSubStore,
@@ -20,16 +22,20 @@ public static class TheCodeKitchenState
     ];
 
     // Grains
+    public const string CookBook = "TheCodeKitchenCookBookState";
     public const string Cooks = "TheCodeKitchenCookState";
     public const string Equipment = "TheCodeKitchenEquipmentState";
+    public const string Food = "TheCodeKitchenFoodState";
     public const string Games = "TheCodeKitchenGameState";
     public const string GameManagement = "TheCodeKitchenGameManagementState";
     public const string Kitchens = "TheCodeKitchenKitchenState";
     public const string KitchenManagement = "TheCodeKitchenKitchenManagementState";
     public const string KitchenOrders = "TheCodeKitchenKitchenOrderState";
     public const string Orders = "TheCodeKitchenOrderState";
+    public const string Pantry = "TheCodeKitchenPantryState";
 
     // Persistent Streaming
     public const string PubSubStore = nameof(PubSubStore);
     public const string StreamHandles = "TheCodeKitchenStreamHandleState";
+    
 }

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Contracts.Requests;
+using TheCodeKitchen.Application.Contracts.Requests.Order;
 
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
