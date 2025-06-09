@@ -1,9 +1,7 @@
 name: Deploy The Code Kitchen to Azure Container Apps
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   build-orleans-silo:
