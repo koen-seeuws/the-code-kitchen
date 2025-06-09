@@ -16,7 +16,7 @@ public sealed partial class GameGrain
         if (string.IsNullOrWhiteSpace(name))
             name = $"Game {count}";
 
-        var game = new Game(id, name, request.SpeedModifier);
+        var game = new Game(id, name, request.SpeedModifier, request.Temperature);
         state.State = game;
         await state.WriteStateAsync();
 

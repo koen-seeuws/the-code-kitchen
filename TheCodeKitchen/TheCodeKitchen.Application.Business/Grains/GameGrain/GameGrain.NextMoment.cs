@@ -18,7 +18,7 @@ public sealed partial class GameGrain
         // Sending out event
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
         var stream = streamProvider.GetStream<NextMomentEvent>(nameof(NextMomentEvent), gameId);
-        var nextMomentEvent = new NextMomentEvent(state.State.Id, moment);
+        var nextMomentEvent = new NextMomentEvent(state.State.Id, moment, state.State.Temperature);
         await stream.OnNextAsync(nextMomentEvent);
 
         // Order generation

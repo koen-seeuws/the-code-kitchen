@@ -1,4 +1,4 @@
 namespace TheCodeKitchen.Application.Contracts.Requests.Game;
 
 [GenerateSerializer]
-public record UpdateGameRequest(double SpeedModifier);
+public record UpdateGameRequest(double SpeedModifier, double Temperature);

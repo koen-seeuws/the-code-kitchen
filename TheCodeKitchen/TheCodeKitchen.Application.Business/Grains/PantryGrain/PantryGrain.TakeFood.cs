@@ -24,8 +24,13 @@ public partial class PantryGrain
         if (cookCurrentFood.Value.FoodId != null)
             return new AlreadyHoldingFoodError($"You are already holding food with id {cookCurrentFood.Value.FoodId}");
         
+        var kitchen = await cookGrain.GetKitchen();
+        
+        if(!kitchen.Succeeded)
+            return kitchen.Error;
+        
         var foodId = Guid.CreateVersion7();
-        var createFoodRequest = new CreateFoodRequest(ingredient.Name, state.State.Temperature);
+        var createFoodRequest = new CreateFoodRequest(ingredient.Name, state.State.Temperature, kitchen.Value.Game);
         var foodGrain = GrainFactory.GetGrain<IFoodGrain>(foodId);
         var newFood = await foodGrain.Initialize(createFoodRequest);
         
@@ -33,10 +38,10 @@ public partial class PantryGrain
             return newFood.Error;
         
         var holdFoodRequest = new HoldFoodRequest(foodId);
-        await cookGrain.HoldFood(holdFoodRequest);
+        var holdFood = await cookGrain.HoldFood(holdFoodRequest);
         
-        if(!newFood.Succeeded)
-            return newFood.Error;
+        if(!holdFood.Succeeded)
+            return holdFood.Error;
 
         return new TakeFoodResponse(foodId);
     }

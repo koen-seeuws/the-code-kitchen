@@ -1,4 +1,4 @@
 namespace TheCodeKitchen.Application.Contracts.Requests.Food;
 
 [GenerateSerializer]
-public record CreateFoodRequest(string Name, double Temperature);
+public record CreateFoodRequest(string Name, double Temperature, Guid Kitchen);

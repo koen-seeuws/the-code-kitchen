@@ -15,6 +15,7 @@ public sealed partial class GameGrain
             await PauseOrUnpauseGame();
         
         state.State.SpeedModifier = request.SpeedModifier;
+        state.State.Temperature = request.Temperature;
 
         await state.WriteStateAsync();
         

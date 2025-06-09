@@ -14,10 +14,12 @@ public partial class FoodGrain
         var id = this.GetPrimaryKey();
         var name = request.Name.Trim().ToCamelCase();
         
-        var food = new Food(id, name, request.Temperature);
+        var food = new Food(id, name, request.Temperature, request.Kitchen);
 
         state.State = food;
         await state.WriteStateAsync();
+
+        await SubscribeToNextMomentEvent();
 
         return mapper.Map<CreateFoodResponse>(food);
     }
