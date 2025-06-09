@@ -1,4 +1,3 @@
-using System.Globalization;
 using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Requests.Pantry;
 using TheCodeKitchen.Application.Contracts.Response.Pantry;

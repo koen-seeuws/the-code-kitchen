@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.Pantry;
-using TheCodeKitchen.Core.Domain;
 
 namespace TheCodeKitchen.Presentation.ManagementAPI.Controllers;
 

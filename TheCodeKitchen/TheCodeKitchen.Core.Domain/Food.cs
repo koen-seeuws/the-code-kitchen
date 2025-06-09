@@ -1,5 +1,3 @@
-using TheCodeKitchen.Core.Enums;
-
 namespace TheCodeKitchen.Core.Domain;
 
 public class Food

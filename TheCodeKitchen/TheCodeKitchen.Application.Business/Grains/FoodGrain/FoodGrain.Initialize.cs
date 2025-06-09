@@ -1,4 +1,3 @@
-using Microsoft.Azure.Amqp.Serialization;
 using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Requests.Food;
 using TheCodeKitchen.Application.Contracts.Response.Food;

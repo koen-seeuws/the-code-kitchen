@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Contracts.Grains;
-using TheCodeKitchen.Application.Contracts.Requests;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 
 namespace TheCodeKitchen.Presentation.ManagementAPI.Controllers;

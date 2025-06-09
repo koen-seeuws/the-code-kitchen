@@ -1,4 +1,3 @@
-using TheCodeKitchen.Application.Contracts.Requests;
 using TheCodeKitchen.Application.Contracts.Requests.Order;
 using TheCodeKitchen.Application.Contracts.Response.Order;
 

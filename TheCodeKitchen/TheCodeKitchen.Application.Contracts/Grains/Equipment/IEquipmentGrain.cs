@@ -1,5 +1,4 @@
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
-using TheCodeKitchen.Application.Contracts.Requests.Food;
 using TheCodeKitchen.Application.Contracts.Response.Equipment;
 using TheCodeKitchen.Application.Contracts.Response.Food;
 
