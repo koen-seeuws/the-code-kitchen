@@ -1,3 +1,4 @@
+using Microsoft.OpenApi.Models;
 using TheCodeKitchen.Infrastructure.Security.Configuration;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Presentation.API.Cook.Hubs;
@@ -16,7 +17,34 @@ builder.Services.AddSingleton(typeof(StreamSubscriber<,>));
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi(); // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(swagger =>
+{
+    // Add Bearer token support
+    swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+
+    swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 var app = builder.Build();
 

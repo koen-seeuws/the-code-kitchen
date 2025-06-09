@@ -31,6 +31,7 @@ public sealed partial class KitchenGrain
         await state.WriteStateAsync();
 
         // Equipment 
+        /*
         foreach (var equipment in state.State.Equipment)
         {
             for (var number = 0; number < equipment.Value; number++)
@@ -46,6 +47,7 @@ public sealed partial class KitchenGrain
                 await equipmentGrain.Initialize(createEquipmentRequest);
             }
         }
+        */
         
         // Streams
         await SubscribeToNextMomentEvent();

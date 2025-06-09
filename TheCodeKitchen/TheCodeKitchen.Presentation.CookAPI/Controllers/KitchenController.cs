@@ -15,8 +15,8 @@ public class KitchenController(
     ISecurityTokenService securityTokenService
 ) : ControllerBase
 {
-    [HttpPost("{joinCode}/[action]")]
-    public async Task<IActionResult> Join([FromRoute] string joinCode, [FromBody] AuthenticationRequest request)
+    [HttpPost("{code}/[action]")]
+    public async Task<IActionResult> Join([FromRoute] string code, [FromBody] AuthenticationRequest request)
     {
         var kitchenCodeIndexGrain = client.GetGrain<IKitchenManagementGrain>(Guid.Empty);
 
@@ -25,7 +25,7 @@ public class KitchenController(
         var joinKitchenRequest = new JoinKitchenRequest(
             request.Username,
             passwordHash,
-            joinCode
+            code
         );
 
         var joinKitchenResult = await kitchenCodeIndexGrain.JoinKitchen(joinKitchenRequest);

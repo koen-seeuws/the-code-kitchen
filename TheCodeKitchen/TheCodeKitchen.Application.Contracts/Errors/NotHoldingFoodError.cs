@@ -1,5 +1,6 @@
 namespace TheCodeKitchen.Application.Contracts.Errors;
 
+[GenerateSerializer]
 public record NotHoldingFoodError : BusinessError
 {
     public NotHoldingFoodError()

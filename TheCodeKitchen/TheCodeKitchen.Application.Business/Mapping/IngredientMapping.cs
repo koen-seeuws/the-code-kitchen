@@ -7,5 +7,6 @@ public class IngredientMapping : Profile
     public IngredientMapping()
     {
         CreateMap<Ingredient, CreateIngredientResponse>();
+        CreateMap<Ingredient, GetIngredientResponse>();
     }
 }

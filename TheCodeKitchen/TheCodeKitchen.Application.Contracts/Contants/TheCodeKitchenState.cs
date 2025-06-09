@@ -8,6 +8,7 @@ public static class TheCodeKitchenState
         CookBook,
         Cooks,
         Equipment,
+        Food,
         Games,
         GameManagement,
         Kitchens,
