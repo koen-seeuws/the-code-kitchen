@@ -1,4 +1,4 @@
-using TheCodeKitchen.Application.Contracts.Response.Kitchen;
+using TheCodeKitchen.Application.Contracts.Response.KitchenOrder;
 
 namespace TheCodeKitchen.Application.Business.Mapping;
 

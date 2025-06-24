@@ -10,6 +10,6 @@ public interface ICookGrain : IGrainWithGuidKey
     Task<Result<GetCookResponse>> GetCook();
     Task<Result<GetKitchenResponse>> GetKitchen();
     Task<Result<TheCodeKitchenUnit>> HoldFood(HoldFoodRequest request); 
-    Task<Result<TheCodeKitchenUnit>> ReleaseFood(ReleaseFoodRequest request);
+    Task<Result<ReleaseFoodResponse>> ReleaseFood();
     Task<Result<CurrentFoodResponse>> CurrentFood();
 }

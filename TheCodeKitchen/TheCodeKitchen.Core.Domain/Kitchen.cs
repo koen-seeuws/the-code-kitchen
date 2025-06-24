@@ -9,13 +9,13 @@ public class Kitchen(Guid id, string name, string code, Guid game)
     public string? Code { get; set; } = code;
     public Guid Game { get; } = game;
     public ICollection<Guid> Cooks { get; } = new List<Guid>();
-    public IDictionary<EquipmentTypes, int> Equipment { get; } = new Dictionary<EquipmentTypes, int>
+    public IDictionary<EquipmentType, int> Equipment { get; } = new Dictionary<EquipmentType, int>
     {
-        { EquipmentTypes.Blender, 1 },
-        { EquipmentTypes.Counter, 30 },
-        { EquipmentTypes.CuttingBoard, 4 },
-        { EquipmentTypes.Furnace, 4 },
-        { EquipmentTypes.HotPlate, 10 },
+        { EquipmentType.Blender, 1 },
+        { EquipmentType.Counter, 30 },
+        { EquipmentType.CuttingBoard, 4 },
+        { EquipmentType.Furnace, 4 },
+        { EquipmentType.HotPlate, 10 },
     };
 
     public ICollection<long> Orders { get; } = new List<long>();

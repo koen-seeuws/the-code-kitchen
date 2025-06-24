@@ -14,34 +14,30 @@ public partial class PantryGrain
 
         if (ingredient == null)
             return new NotFoundError($"The ingredient with name {request.Ingredient} was not found in the pantry");
-        
+
         var cookGrain = GrainFactory.GetGrain<ICookGrain>(request.Cook);
-        var cookCurrentFood = await cookGrain.CurrentFood();
-
-        if (!cookCurrentFood.Succeeded)
-            return cookCurrentFood.Error;
-
-        if (cookCurrentFood.Value.FoodId != null)
-            return new AlreadyHoldingFoodError($"You are already holding food with id {cookCurrentFood.Value.FoodId}");
         
-        var kitchen = await cookGrain.GetKitchen();
-        
-        if(!kitchen.Succeeded)
-            return kitchen.Error;
+        var getKitchenResult = await cookGrain.GetKitchen();
+
+        if (!getKitchenResult.Succeeded)
+            return getKitchenResult.Error;
         
         var foodId = Guid.CreateVersion7();
-        var createFoodRequest = new CreateFoodRequest(ingredient.Name, state.State.Temperature, kitchen.Value.Game);
         var foodGrain = GrainFactory.GetGrain<IFoodGrain>(foodId);
-        var newFood = await foodGrain.Initialize(createFoodRequest);
-        
-        if(!newFood.Succeeded)
-            return newFood.Error;
+        var createFoodRequest = new CreateFoodRequest(ingredient.Name, state.State.Temperature, getKitchenResult.Value.Game);
+        var createFoodResult = await foodGrain.Initialize(createFoodRequest);
+
+        if (!createFoodResult.Succeeded)
+            return createFoodResult.Error;
         
         var holdFoodRequest = new HoldFoodRequest(foodId);
-        var holdFood = await cookGrain.HoldFood(holdFoodRequest);
-        
-        if(!holdFood.Succeeded)
-            return holdFood.Error;
+        var holdFoodResult = await cookGrain.HoldFood(holdFoodRequest);
+
+        if (!holdFoodResult.Succeeded)
+        {
+            await foodGrain.Trash(); // Try to clean up if holding food fails
+            return holdFoodResult.Error;
+        }
 
         return new TakeFoodResponse(foodId);
     }

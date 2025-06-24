@@ -1,5 +1,5 @@
-using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
-using TheCodeKitchen.Application.Contracts.Response.Kitchen;
+using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
+using TheCodeKitchen.Application.Contracts.Response.KitchenOrder;
 
 namespace TheCodeKitchen.Application.Contracts.Grains;
 
@@ -7,4 +7,6 @@ namespace TheCodeKitchen.Application.Contracts.Grains;
 public interface IKitchenOrderGrain : IGrainWithIntegerCompoundKey
 {
     Task<Result<CreateKitchenOrderResponse>> Initialize(CreateKitchenOrderRequest request);
+    Task<Result<TheCodeKitchenUnit>> DeliverFood(DeliverFoodRequest request);
+    Task<Result<TheCodeKitchenUnit>> Complete();
 }

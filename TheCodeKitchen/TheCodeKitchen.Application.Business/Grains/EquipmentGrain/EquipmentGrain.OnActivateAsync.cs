@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
-public abstract partial class EquipmentGrain
+public  partial class EquipmentGrain
 {
     public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {

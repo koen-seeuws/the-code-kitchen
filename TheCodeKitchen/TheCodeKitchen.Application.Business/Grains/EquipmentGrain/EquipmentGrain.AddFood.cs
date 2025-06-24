@@ -1,21 +1,28 @@
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
+using TheCodeKitchen.Application.Contracts.Requests.Food;
 
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
-public abstract partial class EquipmentGrain
+public partial class EquipmentGrain
 {
     public virtual async Task<Result<TheCodeKitchenUnit>> AddFood(AddFoodRequest request)
     {
-        if(state.State.Foods.Count >= maxItems)
-            return new EquipmentFullError($"The equipment {this.GetPrimaryKey()} is full");
-        
         var cookGrain = GrainFactory.GetGrain<ICookGrain>(request.Cook);
+        var releaseFoodResult = await cookGrain.ReleaseFood();
+
+        if (!releaseFoodResult.Succeeded)
+            return releaseFoodResult.Error;
         
+        var foodGrain = GrainFactory.GetGrain<IFoodGrain>(releaseFoodResult.Value.Food);
+        var setEquipmentRequest =
+            new SetEquipmentRequest(state.State.EquipmentType, state.State.Number);
         
-        // TODO: Possibly check something
+        var setEquipmentResult = await foodGrain.SetEquipment(setEquipmentRequest);
         
+        if (!setEquipmentResult.Succeeded)
+            return setEquipmentResult.Error;
         
-        
+        state.State.Foods.Add(releaseFoodResult.Value.Food);
         await state.WriteStateAsync();
         
         return TheCodeKitchenUnit.Value;

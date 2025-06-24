@@ -7,7 +7,7 @@ public sealed partial class GameGrain
     private IGrainTimer? _nextMomentTimer;
     private TimeSpan? _nextMomentDelay;
 
-    private async Task NextMoment()
+    public async Task<Result<TheCodeKitchenUnit>> NextMoment()
     {
         var gameId = this.GetPrimaryKey();
         var moment = DateTimeOffset.Now;
@@ -22,13 +22,15 @@ public sealed partial class GameGrain
         await stream.OnNextAsync(nextMomentEvent);
 
         // Order generation
-        if (--_secondsUntilNewOrder <= 0)
+        if (--_momentsUntilNewOrder <= 0)
         {
             await GenerateOrder();
         }
 
         // Keep grain active while game is playing
         await CheckAndDelayDeactivation();
+
+        return TheCodeKitchenUnit.Value;
     }
 
     private Task CheckAndDelayDeactivation()

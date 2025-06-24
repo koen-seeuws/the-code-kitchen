@@ -55,4 +55,12 @@ public class GameController(IClusterClient client) : ControllerBase
         var result = await gameGrain.UpdateGame(request);
         return this.MatchActionResult(result);
     }
+    
+    [HttpPost("{gameId}/[action]")]
+    public async Task<IActionResult> NextMoment(Guid gameId)
+    {
+        var gameGrain = client.GetGrain<IGameGrain>(gameId);
+        var result = await gameGrain.NextMoment();
+        return this.MatchActionResult(result);
+    }
 }

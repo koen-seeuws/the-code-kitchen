@@ -2,11 +2,11 @@ namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public sealed partial class GameGrain
 {
-    private int? _secondsUntilNewOrder = null;
+    private int? _momentsUntilNewOrder = null;
     
-    private Task PickSecondsUntilNextOrder()
+    private Task PickMomentsUntilNextOrder()
     {
-        _secondsUntilNewOrder = Random.Shared.Next(30, 300);
+        _momentsUntilNewOrder = Random.Shared.Next(30, 300);
         return Task.CompletedTask;
     }
 }

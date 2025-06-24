@@ -1,21 +1,23 @@
-using TheCodeKitchen.Application.Contracts.Requests.Cook;
+using TheCodeKitchen.Application.Contracts.Response.Cook;
 
 namespace TheCodeKitchen.Application.Business.Grains.CookGrain;
 
 public partial class CookGrain
 {
-    public async Task<Result<TheCodeKitchenUnit>> ReleaseFood(ReleaseFoodRequest request)
+    public async Task<Result<ReleaseFoodResponse>> ReleaseFood()
     {
         if (!state.RecordExists)
             return new NotFoundError($"The cook with id {this.GetPrimaryKey()} does not exist");
 
-        if (state.State.Food == null)
+        if (!state.State.Food.HasValue)
             return new NotHoldingFoodError(
-                $"The cook with id {this.GetPrimaryKey()} is not holding any food");
+                $"The cook with name {state.State.Username} is not holding any food");
+        
+        var releaseFoodResponse = new ReleaseFoodResponse(state.State.Food.Value);
 
         state.State.Food = null;
         await state.WriteStateAsync();
 
-        return TheCodeKitchenUnit.Value;
+        return releaseFoodResponse;
     }
 }

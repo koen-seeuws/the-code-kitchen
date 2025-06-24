@@ -1,13 +1,15 @@
+using TheCodeKitchen.Core.Enums;
+
 namespace TheCodeKitchen.Core.Domain;
 
 public class Food
 {
-    public Food(Guid id, string name, double temperature, Guid kitchenId)
+    public Food(Guid id, string name, double temperature, Guid kitchen)
     {
         Id = id;
         Name = name;
         Temperature = temperature;
-        KitchenId = kitchenId;
+        Kitchen = kitchen;
         Ingredients = new List<Food>();
     }
 
@@ -19,5 +21,12 @@ public class Food
     public TimeSpan TimeInBlender { get; set; }
     public ICollection<Food> Ingredients { get; set; }
     
-    public Guid KitchenId { get; set; }
+    public Guid Kitchen { get; set; }
+
+    public Guid? Cook { get; set; }
+    public EquipmentType? CurrentEquipmentType { get; set; }
+    public int? CurrentEquipmentNumber { get; set; }
+
+    public long? OrderNumber { get; set; }
+    
 }

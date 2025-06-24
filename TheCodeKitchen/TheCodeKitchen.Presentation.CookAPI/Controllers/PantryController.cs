@@ -11,8 +11,16 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 [Authorize]
 public class PantryController(IClusterClient clusterClient) : ControllerBase
 {
+    [HttpGet("[action]")]
+    public async Task<IActionResult> ViewFoods()
+    {
+        var pantryGrain = clusterClient.GetGrain<IPantryGrain>(Guid.Empty);
+        var result = await pantryGrain.GetIngredients();
+        return this.MatchActionResult(result);
+    }
+    
     [HttpGet("{ingredient}/[action]")]
-    public async Task<IActionResult> Take([FromRoute] string ingredient)
+    public async Task<IActionResult> TakeFood([FromRoute] string ingredient)
     {
         var cook = HttpContext.User.GetCookId();
         var request = new TakeFoodFromPantryRequest(ingredient, cook);

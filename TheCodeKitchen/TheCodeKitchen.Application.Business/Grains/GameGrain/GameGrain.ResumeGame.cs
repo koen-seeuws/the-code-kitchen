@@ -15,8 +15,8 @@ public sealed partial class GameGrain
         
         _nextMomentDelay = TimeSpan.FromSeconds(1) / state.State.SpeedModifier;
         
-        if (_secondsUntilNewOrder is null)
-            await PickSecondsUntilNextOrder();
+        if (_momentsUntilNewOrder is null)
+            await PickMomentsUntilNextOrder();
             
         _nextMomentTimer = this.RegisterGrainTimer(NextMoment, TimeSpan.Zero, _nextMomentDelay.Value);
             

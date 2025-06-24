@@ -1,5 +1,5 @@
-using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
-using TheCodeKitchen.Application.Contracts.Response.Kitchen;
+using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
+using TheCodeKitchen.Application.Contracts.Response.KitchenOrder;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
 

@@ -1,29 +1,28 @@
+using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
 using TheCodeKitchen.Application.Contracts.Response.Equipment;
+using TheCodeKitchen.Core.Enums;
 
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
-public abstract partial class EquipmentGrain
+public partial class EquipmentGrain
 {
     public async Task<Result<CreateEquipmentResponse>> Initialize(CreateEquipmentRequest request)
     {
-        
         var kitchen = this.GetPrimaryKey();
-        var number = int.Parse(this.GetPrimaryKeyString().Split('+')[1]);
-        
-        if(state.RecordExists)
-            return new AlreadyExistsError($"The {GetType().ToString().Replace("Grain", string.Empty)} equipment in kitchen {kitchen} with number {number}  has already been initialized");
-        
+        var primaryKeyExtensions = this.GetPrimaryKeyString().Split('+');
+        var equipmentType = Enum.Parse<EquipmentType>(primaryKeyExtensions[1]);
+        var number = int.Parse(primaryKeyExtensions[2]);
+
+        if (state.RecordExists)
+            return new AlreadyExistsError(
+                $"The {equipmentType.ToString().ToCamelCase()} equipment in kitchen {kitchen} with number {number}  has already been initialized");
+
         // State
-        var equipment = new Equipment(request.Game, kitchen, number);
+        var equipment = new Equipment(kitchen, equipmentType, number);
         state.State = equipment;
         await state.WriteStateAsync();
-        
-        // Streams
-        //await SubscribeToNextMomentEvent();
-        
+
         return mapper.Map<CreateEquipmentResponse>(equipment);
-
-
     }
 }

@@ -31,7 +31,7 @@ public sealed partial class GameGrain
         var stream = streamProvider.GetStream<NewOrderEvent>(nameof(NewOrderEvent), state.State.Id);
         await stream.OnNextAsync(newOrderEvent);
         
-        await PickSecondsUntilNextOrder();
+        await PickMomentsUntilNextOrder();
 
         return TheCodeKitchenUnit.Value;
     }

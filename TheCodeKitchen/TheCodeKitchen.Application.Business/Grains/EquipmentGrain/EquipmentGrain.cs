@@ -5,9 +5,10 @@ public class EquipmentGrainStreamSubscriptionHandles
     public StreamSubscriptionHandle<NextMomentEvent>? NextMomentStreamSubscriptionHandle { get; set; }
 }
 
-public abstract partial class EquipmentGrain(
+public partial class EquipmentGrain(
+    [PersistentState(TheCodeKitchenState.Equipment, TheCodeKitchenState.Equipment)]
     IPersistentState<Equipment> state,
-    IPersistentState<EquipmentGrainStreamSubscriptionHandles> streamSubscriptionSubscriptionHAndleses,
-    IMapper mapper,
-    short maxItems
-) : Grain;
+    [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
+    IPersistentState<EquipmentGrainStreamSubscriptionHandles> streamSubscriptionHandles,
+    IMapper mapper
+) : Grain, IEquipmentGrain;

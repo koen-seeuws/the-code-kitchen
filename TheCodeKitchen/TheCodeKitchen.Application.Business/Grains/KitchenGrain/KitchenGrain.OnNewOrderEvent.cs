@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
+using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
