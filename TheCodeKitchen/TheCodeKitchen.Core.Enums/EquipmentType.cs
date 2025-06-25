@@ -7,4 +7,6 @@ public enum EquipmentType
     CuttingBoard = 2,
     Furnace = 3,
     HotPlate = 4,
+    BBQ = 5
+    
 }

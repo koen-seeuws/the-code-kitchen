@@ -6,7 +6,7 @@ public sealed partial class GameGrain
     
     private Task PickMomentsUntilNextOrder()
     {
-        _momentsUntilNewOrder = Random.Shared.Next(30, 300);
+        _momentsUntilNewOrder = Random.Shared.Next(30, 31);
         return Task.CompletedTask;
     }
 }

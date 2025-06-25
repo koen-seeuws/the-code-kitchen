@@ -11,6 +11,15 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 [Authorize]
 public class OrdersController(IClusterClient clusterClient) : ControllerBase
 {
+    [HttpGet("[action]")]
+    public async Task<IActionResult> ViewOpen()
+    {
+        var kitchen = HttpContext.User.GetKitchenId();
+        var kitchenGrain = clusterClient.GetGrain<IKitchenGrain>(kitchen);
+        var result = await kitchenGrain.GetOpenOrders();
+        return this.MatchActionResult(result);
+    }
+    
     [HttpPost("{orderNumber:long}/[action]")]
     public async Task<IActionResult> Deliver([FromRoute] long orderNumber)
     {

@@ -7,4 +7,5 @@ namespace TheCodeKitchen.Application.Contracts.Grains;
 public interface IOrderGrain : IGrainWithIntegerCompoundKey
 {
     Task<Result<CreateOrderResponse>> Initialize(CreateOrderRequest request);
+    Task<Result<GetOrderResponse>> GetOrder();
 }

@@ -2,6 +2,7 @@ using TheCodeKitchen.Application.Contracts.Requests.Cook;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 using TheCodeKitchen.Application.Contracts.Response.Cook;
 using TheCodeKitchen.Application.Contracts.Response.Kitchen;
+using TheCodeKitchen.Application.Contracts.Response.Order;
 
 namespace TheCodeKitchen.Application.Contracts.Grains;
 
@@ -13,5 +14,8 @@ public interface IKitchenGrain : IGrainWithGuidKey
     Task<Result<TheCodeKitchenUnit>> ReleaseJoinCode();
     Task<Result<CreateCookResponse>> CreateCook(CreateCookRequest request);
     Task<Result<JoinKitchenResponse>> JoinKitchen(JoinKitchenRequest request);
+    Task<Result<TheCodeKitchenUnit>> CloseOrder(CloseOrderRequest request);
+    Task<Result<IEnumerable<GetOrderResponse>>> GetOpenOrders();
     
+
 }

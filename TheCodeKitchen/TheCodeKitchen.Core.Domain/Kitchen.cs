@@ -18,5 +18,5 @@ public class Kitchen(Guid id, string name, string code, Guid game)
         { EquipmentType.HotPlate, 10 },
     };
 
-    public ICollection<long> Orders { get; } = new List<long>();
+    public ICollection<long> OpenOrders { get; } = new List<long>();
 }
