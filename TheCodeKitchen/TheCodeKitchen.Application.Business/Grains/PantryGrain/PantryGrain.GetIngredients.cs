@@ -4,9 +4,9 @@ namespace TheCodeKitchen.Application.Business.Grains.PantryGrain;
 
 public partial class PantryGrain
 {
-    public async Task<Result<IEnumerable<GetIngredientResponse>>> GetIngredients()
+    public Task<Result<IEnumerable<GetIngredientResponse>>> GetIngredients()
     {
         var ingredients = mapper.Map<List<GetIngredientResponse>>(state.State.Ingredients);
-        return ingredients;
+        return Task.FromResult<Result<IEnumerable<GetIngredientResponse>>>(ingredients);
     }
 }

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Contracts.Errors;
 using TheCodeKitchen.Application.Contracts.Grains;
-using TheCodeKitchen.Application.Contracts.Models;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 using TheCodeKitchen.Infrastructure.Security;
+using TheCodeKitchen.Presentation.API.Cook.Models;
 
 namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 

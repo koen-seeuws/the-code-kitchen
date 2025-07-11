@@ -13,7 +13,7 @@ public partial class PantryGrain
         if (state.State.Ingredients.Any(i => i.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
             return new AlreadyExistsError($"The ingredient {name} already exists");
 
-        var ingredient = new Ingredient(name);
+        var ingredient = new PantryIngredient(name);
         
         state.State.Ingredients.Add(ingredient);
 

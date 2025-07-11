@@ -1,3 +1,3 @@
-namespace TheCodeKitchen.Application.Contracts.Models;
+namespace TheCodeKitchen.Presentation.API.Cook.Models;
 
 public record AuthenticationRequest(string Username, string Password);

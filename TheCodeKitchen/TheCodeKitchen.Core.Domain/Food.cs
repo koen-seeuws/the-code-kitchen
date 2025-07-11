@@ -2,26 +2,15 @@ using TheCodeKitchen.Core.Enums;
 
 namespace TheCodeKitchen.Core.Domain;
 
-public class Food
+public class Food(Guid id, string name, double temperature, Guid kitchen)
 {
-    public Food(Guid id, string name, double temperature, Guid kitchen)
-    {
-        Id = id;
-        Name = name;
-        Temperature = temperature;
-        Kitchen = kitchen;
-        Ingredients = new List<Food>();
-    }
+    public Guid Id { get; set; } = id;
+    public string Name { get; set; } = name;
+    public double Temperature { get; set; } = temperature;
+    public ICollection<Food> Ingredients { get; set; } = new List<Food>();
+    public ICollection<RecipeStep> Steps { get; set; } = new List<RecipeStep>();
 
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public double Temperature { get; set; }
-    public TimeSpan TimeOnFurnace { get; set; }
-    public TimeSpan TimeOnCuttingBoard { get; set; }
-    public TimeSpan TimeInBlender { get; set; }
-    public ICollection<Food> Ingredients { get; set; }
-    
-    public Guid Kitchen { get; set; }
+    public Guid Kitchen { get; set; } = kitchen;
 
     public Guid? Cook { get; set; }
     public EquipmentType? CurrentEquipmentType { get; set; }
