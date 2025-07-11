@@ -13,6 +13,8 @@ public class FoodMapping : Profile
 
         CreateMap<FoodDto, Food>();
 
-        CreateMap<GetFoodResponse, TakeFoodResponse>(); // TODO: In relation to TakeFood method TODOs, this may become unnecessary
+        // TODO: In relation to TakeFood method TODOs, these 2 may become unnecessary
+        CreateMap<GetFoodResponse, TakeFoodResponse>(); 
+        CreateMap<FoodDto, SimpleFoodDto>();
     }
 }

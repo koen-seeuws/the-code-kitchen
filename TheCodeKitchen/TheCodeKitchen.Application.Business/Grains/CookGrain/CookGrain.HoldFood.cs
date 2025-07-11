@@ -12,7 +12,7 @@ public partial class CookGrain
 
         if (state.State.Food != null)
             return new AlreadyHoldingFoodError(
-                $"The cook with name {state.State.Username} is already holding food with id {state.State.Food}");
+                $"The cook with name {state.State.Username} is already holding food");
 
         var foodGrain = GrainFactory.GetGrain<IFoodGrain>(request.FoodId);
         var setCookRequest = new SetCookRequest(state.State.Id);

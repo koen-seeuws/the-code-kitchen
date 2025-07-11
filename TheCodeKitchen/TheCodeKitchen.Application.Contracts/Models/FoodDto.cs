@@ -5,7 +5,7 @@ public record FoodDto(
     Guid Id,
     string Name,
     double Temperature,
-    ICollection<FoodDto>? Ingredients,
+    ICollection<FoodDto> Ingredients,
     ICollection<RecipeStepDto> Steps,
     Guid Kitchen,
     Guid? Cook,

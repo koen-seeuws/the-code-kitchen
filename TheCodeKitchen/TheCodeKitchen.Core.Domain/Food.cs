@@ -5,7 +5,7 @@ public class Food(Guid id, string name, double temperature, Guid kitchen, List<F
     public Guid Id { get; set; } = id;
     public string Name { get; set; } = name;
     public double Temperature { get; set; } = temperature;
-    public ICollection<Food> Ingredients { get; set; } = ingredients ?? new List<Food>();
+    public ICollection<Food> Ingredients { get; set; } = ingredients ?? [];
     public ICollection<RecipeStep> Steps { get; set; } = new List<RecipeStep>();
 
     public Guid Kitchen { get; set; } = kitchen;

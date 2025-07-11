@@ -14,9 +14,8 @@ public partial class EquipmentGrain
 
         if (state.RecordExists)
             return new AlreadyExistsError(
-                $"The {equipmentType} equipment in kitchen {kitchen} with number {number}  has already been initialized");
-
-        // State
+                $"The equipment {equipmentType} {number} has already been initialized in kitchen {kitchen}");
+        
         var equipment = new Equipment(kitchen, equipmentType, number);
         state.State = equipment;
         await state.WriteStateAsync();
