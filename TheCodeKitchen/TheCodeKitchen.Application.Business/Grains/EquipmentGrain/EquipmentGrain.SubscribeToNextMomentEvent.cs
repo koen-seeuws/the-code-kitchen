@@ -1,6 +1,6 @@
-namespace TheCodeKitchen.Application.Business.Grains.FoodGrain;
+namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
-public partial class FoodGrain
+public partial class EquipmentGrain
 {
     private async Task SubscribeToNextMomentEvent()
     {

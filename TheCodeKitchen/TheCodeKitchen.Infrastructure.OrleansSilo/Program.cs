@@ -22,11 +22,12 @@ var tableClient = new TableServiceClient(azureStorageConnectionString);
 var queueClient = new QueueServiceClient(azureStorageConnectionString);
 
 // TODO: REMOVE, this is only for development purposes to ensure a clean state.
-
+/*
 foreach (var storage in TheCodeKitchenState.All)
 {
     tableClient.DeleteTable(storage);
 }
+*/
 
 builder.UseOrleans(silo =>
 {

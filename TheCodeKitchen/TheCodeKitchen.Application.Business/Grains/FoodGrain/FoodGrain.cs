@@ -9,6 +9,6 @@ public partial class FoodGrain(
     [PersistentState(TheCodeKitchenState.Food, TheCodeKitchenState.Food)]
     IPersistentState<Food> state,
     [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
-    IPersistentState<FoodGrainStreamSubscriptionHandles> streamHandles,
+    IPersistentState<FoodGrainStreamSubscriptionHandles> streamSubscriptionHandles,
     IMapper mapper
 ) : Grain, IFoodGrain;
