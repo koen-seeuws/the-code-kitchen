@@ -6,5 +6,6 @@ public class Equipment(Guid kitchen, string equipmentType, int number)
     public string EquipmentType { get; set; } = equipmentType;
 
     public int Number { get; } = number;
+    public TimeSpan? Time { get; set; }
     public ICollection<Guid> Foods { get; set; } = new List<Guid>();
 }

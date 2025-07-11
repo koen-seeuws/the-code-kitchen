@@ -9,6 +9,7 @@ public interface IFoodGrain : IGrainWithGuidKey
     Task<Result<GetFoodResponse>> GetFood();
     Task<Result<TheCodeKitchenUnit>> SetCook(SetCookRequest request);
     Task<Result<TheCodeKitchenUnit>> SetEquipment(SetEquipmentRequest request);
+    Task<Result<TheCodeKitchenUnit>> AddStep(AddStepRequest request);
     Task<Result<TheCodeKitchenUnit>> SetOrder(SetOrderRequest request);
     Task<Result<TheCodeKitchenUnit>> Trash();
 }

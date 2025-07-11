@@ -5,7 +5,7 @@ namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
 public partial class EquipmentGrain
 {
-    public virtual async Task<Result<TheCodeKitchenUnit>> AddFood(AddFoodRequest request)
+    public async Task<Result<TheCodeKitchenUnit>> AddFood(AddFoodRequest request)
     {
         var cookGrain = GrainFactory.GetGrain<ICookGrain>(request.Cook);
         var releaseFoodResult = await cookGrain.ReleaseFood();
@@ -21,6 +21,9 @@ public partial class EquipmentGrain
         
         if (!setEquipmentResult.Succeeded)
             return setEquipmentResult.Error;
+        
+        if(!state.State.Time.HasValue)
+            state.State.Time = TimeSpan.Zero;
         
         state.State.Foods.Add(releaseFoodResult.Value.Food);
         await state.WriteStateAsync();
