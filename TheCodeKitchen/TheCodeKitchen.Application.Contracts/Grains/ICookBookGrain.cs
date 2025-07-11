@@ -6,5 +6,5 @@ namespace TheCodeKitchen.Application.Contracts.Grains;
 public interface ICookBookGrain : IGrainWithGuidKey
 {
     Task<Result<IEnumerable<GetRecipeResponse>>> GetRecipes();
-    Task<Result<TheCodeKitchenUnit>> CreateRecipe(CreateRecipeRequest request);
+    Task<Result<CreateRecipeResponse>> CreateRecipe(CreateRecipeRequest request);
 }

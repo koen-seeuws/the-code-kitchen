@@ -3,15 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Business.Helpers;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
-using TheCodeKitchen.Core.Enums;
 using TheCodeKitchen.Infrastructure.Security.Extensions;
 
 namespace TheCodeKitchen.Presentation.API.Cook.Controllers.Equipment;
 
 [ApiController]
-[Route("[controller]")]
+[Route("Equipment/[controller]")]
 [Authorize]
-public abstract class EquipmentController(IClusterClient clusterClient, EquipmentType equipmentType) : ControllerBase
+public abstract class EquipmentController(IClusterClient clusterClient, string equipmentType) : ControllerBase
 {
     [HttpPost("{number:int}/[action]")]
     public async Task<IActionResult> AddFood(int number)

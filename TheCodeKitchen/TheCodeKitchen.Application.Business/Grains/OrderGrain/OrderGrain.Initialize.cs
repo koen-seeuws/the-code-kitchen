@@ -13,6 +13,11 @@ public sealed partial class OrderGrain
         if(state.RecordExists)
             return new AlreadyExistsError($"The order with number {orderNumber} and game {game} has already been initialized");
 
+        
+        
+        
+        
+        
         var order = new Order(orderNumber, game);
         state.State = order;
         await state.WriteStateAsync();

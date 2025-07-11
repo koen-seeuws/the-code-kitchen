@@ -1,9 +1,7 @@
-using TheCodeKitchen.Core.Enums;
-
 namespace TheCodeKitchen.Core.Domain;
 
-public class RecipeStep(EquipmentType equipmentType, TimeSpan time)
+public class RecipeStep(string equipmentType, TimeSpan time)
 {
-    public EquipmentType EquipmentType { get; set; } = equipmentType;
+    public string EquipmentType { get; set; } = equipmentType;
     public TimeSpan Time { get; set; } = time;
 }

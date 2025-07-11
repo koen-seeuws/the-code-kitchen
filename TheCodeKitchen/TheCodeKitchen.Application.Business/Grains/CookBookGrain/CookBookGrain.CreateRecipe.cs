@@ -1,12 +1,12 @@
-using System.Net.Sockets;
 using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Requests.CookBook;
+using TheCodeKitchen.Application.Contracts.Response.CookBook;
 
 namespace TheCodeKitchen.Application.Business.Grains.CookBookGrain;
 
 public partial class CookBookGrain
 {
-    public async Task<Result<TheCodeKitchenUnit>> CreateRecipe(CreateRecipeRequest request)
+    public async Task<Result<CreateRecipeResponse>> CreateRecipe(CreateRecipeRequest request)
     {
         var newRecipeName = request.Name.Trim().ToCamelCase();
         
@@ -65,7 +65,7 @@ public partial class CookBookGrain
 
             if (isRecipe && necessaryIngredient.Steps.Any())
             {
-                // TODO: not sure if sub recipe should be allowed to have extra steps
+                // TODO: not sure yet if sub recipe should be allowed to have extra steps
             }
             
             var necessaryIngredientSteps = mapper.Map<List<RecipeStep>>(necessaryIngredient.Steps);
@@ -80,6 +80,6 @@ public partial class CookBookGrain
         state.State.Recipes.Add(newRecipe);
         await state.WriteStateAsync();
         
-        return TheCodeKitchenUnit.Value;
+        return mapper.Map<CreateRecipeResponse>(newRecipe);
     }
 }

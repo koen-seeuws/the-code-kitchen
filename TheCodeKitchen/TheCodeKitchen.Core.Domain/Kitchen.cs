@@ -9,9 +9,9 @@ public class Kitchen(Guid id, string name, string code, Guid game)
     public string? Code { get; set; } = code;
     public Guid Game { get; } = game;
     public ICollection<Guid> Cooks { get; } = new List<Guid>();
-    public IDictionary<EquipmentType, int> Equipment { get; } = new Dictionary<EquipmentType, int>
+    public IDictionary<string, int> Equipment { get; } = new Dictionary<string, int>
     {
-        { EquipmentType.Blender, 1 },
+        { EquipmentType.Mixer, 1 },
         { EquipmentType.Counter, 30 },
         { EquipmentType.CuttingBoard, 4 },
         { EquipmentType.Furnace, 4 },

@@ -7,6 +7,7 @@ public class RecipeMapping : Profile
 {
     public RecipeMapping()
     {
+        CreateMap<Recipe, CreateRecipeResponse>();
         CreateMap<Recipe, GetRecipeResponse>();
         CreateMap<RecipeIngredient, RecipeIngredientDto>();
         CreateMap<RecipeStep, RecipeStepDto>();

@@ -38,7 +38,11 @@ public partial class PantryGrain
             await foodGrain.Trash(); // Try to clean up if holding food fails
             return holdFoodResult.Error;
         }
-
-        return new TakeFoodResponse(foodId);
+        
+        //TODO: Check if this can be improved (that this call becomes unnecessary)
+        var getFoodResult = await foodGrain.GetFood();
+        if (!getFoodResult.Succeeded)
+            return getFoodResult.Error;
+        return mapper.Map<TakeFoodResponse>(getFoodResult.Value);
     }
 }

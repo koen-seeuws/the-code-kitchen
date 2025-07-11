@@ -1,12 +1,11 @@
 namespace TheCodeKitchen.Core.Enums;
 
-public enum EquipmentType
+public static class EquipmentType
 {
-    Blender = 0,
-    Counter = 1,
-    CuttingBoard = 2,
-    Furnace = 3,
-    HotPlate = 4,
-    BBQ = 5
-    
+    public const string Counter = "Counter";
+    public const string CuttingBoard = "Cutting Board";
+    public const string Mixer = "Mixer";
+    public const string Furnace = "Furnace";
+    public const string BBQ = "BBQ";
+    public const string HotPlate = "Hot Plate";
 }
