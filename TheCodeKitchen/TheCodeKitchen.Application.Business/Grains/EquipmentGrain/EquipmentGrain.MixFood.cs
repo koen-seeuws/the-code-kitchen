@@ -46,7 +46,7 @@ public partial class EquipmentGrain
         var newFoodGrain = GrainFactory.GetGrain<IFoodGrain>(foodId);
 
         var createFoodRequest = new CreateFoodRequest(
-            recipe?.Name ?? "UNKNOWN",
+            recipe?.Name ?? "UNKNOWN MIXTURE",
             foods.Select(f => f.Temperature).Average(),
             state.State.Kitchen,
             foods

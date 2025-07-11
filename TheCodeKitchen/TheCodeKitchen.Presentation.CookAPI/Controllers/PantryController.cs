@@ -12,7 +12,7 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 public class PantryController(IClusterClient clusterClient) : ControllerBase
 {
     [HttpGet("[action]")]
-    public async Task<IActionResult> ViewFoods()
+    public async Task<IActionResult> Inventory()
     {
         var pantryGrain = clusterClient.GetGrain<IPantryGrain>(Guid.Empty);
         var result = await pantryGrain.GetIngredients();

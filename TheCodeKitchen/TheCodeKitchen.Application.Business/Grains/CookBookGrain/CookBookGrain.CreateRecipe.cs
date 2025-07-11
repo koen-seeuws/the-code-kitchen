@@ -60,12 +60,12 @@ public partial class CookBookGrain
             // Check if necessary ingredient is available in pantry or as a recipe
             if(!isRecipe && !isIngredient)
             {
-                return new NotFoundError($"The ingredient {necessaryIngredientName} is not available in the pantry or as a recipe");
+                return new InvalidRecipeError($"The ingredient {necessaryIngredientName} is not available in the pantry or as a recipe");
             }
 
-            if (isRecipe && necessaryIngredient.Steps.Any())
+            if (isRecipe && necessaryIngredient.Steps.Length != 0)
             {
-                // TODO: not sure yet if sub recipe should be allowed to have extra steps
+                return new InvalidRecipeError("The subrecipes in a new recipe should not contain any steps");
             }
             
             var necessaryIngredientSteps = mapper.Map<List<RecipeStep>>(necessaryIngredient.Steps);
