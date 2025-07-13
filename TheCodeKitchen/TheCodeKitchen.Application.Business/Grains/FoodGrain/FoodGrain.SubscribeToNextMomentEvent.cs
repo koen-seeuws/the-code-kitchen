@@ -13,7 +13,7 @@ public partial class FoodGrain
             if (state.RecordExists)
             {
                 var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
-                var stream = streamProvider.GetStream<NextMomentEvent>(nameof(NextMomentEvent));
+                var stream = streamProvider.GetStream<NextMomentEvent>(nameof(NextMomentEvent), state.State.Game);
                 streamSubscriptionHandles.State.NextMomentStreamSubscriptionHandle = await stream.SubscribeAsync(OnNextMomentEvent);
                 await streamSubscriptionHandles.WriteStateAsync();
             }

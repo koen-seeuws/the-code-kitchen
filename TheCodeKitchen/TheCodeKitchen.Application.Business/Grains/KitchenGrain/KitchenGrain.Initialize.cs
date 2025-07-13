@@ -37,7 +37,7 @@ public sealed partial class KitchenGrain
                 var equipmentGrainIdExtension = EquipmentGrainIdHelper.CreateId(equipment.Key, number);
                 var equipmentGrain = GrainFactory.GetGrain<IEquipmentGrain>(id, equipmentGrainIdExtension);
 
-                var createEquipmentRequest = new CreateEquipmentRequest(id, number);
+                var createEquipmentRequest = new CreateEquipmentRequest(request.GameId,id, number);
                 await equipmentGrain.Initialize(createEquipmentRequest);
             }
         }

@@ -15,7 +15,7 @@ public partial class FoodGrain
         var name = request.Name.Trim().ToCamelCase();
         var foods = mapper.Map<List<Food>>(request.Foods);
         
-        var food = new Food(id, name, request.Temperature, request.Kitchen, foods);
+        var food = new Food(id, name, request.Temperature, request.Game, request.Kitchen, foods);
 
         state.State = food;
         await state.WriteStateAsync();

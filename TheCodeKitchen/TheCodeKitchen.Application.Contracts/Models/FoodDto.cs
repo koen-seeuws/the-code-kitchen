@@ -7,6 +7,7 @@ public record FoodDto(
     double Temperature,
     ICollection<FoodDto> Ingredients,
     ICollection<RecipeStepDto> Steps,
+    Guid Game,
     Guid Kitchen,
     Guid? Cook,
     string? CurrentEquipmentType,

@@ -6,6 +6,9 @@ public partial class FoodGrain
 {
     public async Task<Result<TheCodeKitchenUnit>> AddStep(AddStepRequest request)
     {
+        if(!state.RecordExists)
+            return new NotFoundError($"The food with id {this.GetPrimaryKey()} does not exist");
+        
         var lastStep = state.State.Steps.LastOrDefault();
         
         if (lastStep?.EquipmentType != request.EquipmentType)

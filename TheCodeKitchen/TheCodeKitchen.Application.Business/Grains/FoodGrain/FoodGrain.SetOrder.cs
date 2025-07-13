@@ -6,6 +6,9 @@ public partial class FoodGrain
 {
     public async Task<Result<TheCodeKitchenUnit>> SetOrder(SetOrderRequest request)
     {
+        if(!state.RecordExists)
+            return new NotFoundError($"The food with id {this.GetPrimaryKey()} does not exist");
+        
         if (state.State.OrderNumber.HasValue)
             return new AlreadyDeliveredError(
                 $"The food with id {this.GetPrimaryKey()} is already delivered to order {state.State.OrderNumber.Value}");

@@ -24,7 +24,7 @@ public partial class PantryGrain
         
         var foodId = Guid.CreateVersion7();
         var foodGrain = GrainFactory.GetGrain<IFoodGrain>(foodId);
-        var createFoodRequest = new CreateFoodRequest(ingredient.Name, state.State.Temperature, getKitchenResult.Value.Game);
+        var createFoodRequest = new CreateFoodRequest(ingredient.Name, state.State.Temperature, getKitchenResult.Value.Game, getKitchenResult.Value.Id);
         var createFoodResult = await foodGrain.Initialize(createFoodRequest);
 
         if (!createFoodResult.Succeeded)

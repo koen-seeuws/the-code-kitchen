@@ -6,6 +6,9 @@ public sealed partial class GameGrain
 {
     public async Task<Result<PauseOrResumeGameResponse>> PauseOrUnpauseGame()
     {
+        if (!state.RecordExists)
+            return new NotFoundError($"The game with id {this.GetPrimaryKey()} has not been initialized");
+        
         var result = _nextMomentTimer == null ? await ResumeGame() : await PauseGame();
 
         if (!result.Succeeded)

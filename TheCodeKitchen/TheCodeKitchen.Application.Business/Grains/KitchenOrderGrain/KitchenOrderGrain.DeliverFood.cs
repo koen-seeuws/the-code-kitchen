@@ -7,6 +7,13 @@ public partial class KitchenOrderGrain
 {
     public async Task<Result<TheCodeKitchenUnit>> DeliverFood(DeliverFoodRequest request)
     {
+        if (!state.RecordExists)
+        {
+            var orderNumber = this.GetPrimaryKeyLong();
+            var kitchenId = Guid.Parse(this.GetPrimaryKeyString().Split('+')[1]);
+            return new NotFoundError($"The order with number {orderNumber} does not exist in kitchen {kitchenId}");
+        }
+        
         if (state.State.Completed)
             return new OrderAlreadyCompletedError($"The order with number {state.State.Number} has already been completed, you cannot deliver any more food to it");
         

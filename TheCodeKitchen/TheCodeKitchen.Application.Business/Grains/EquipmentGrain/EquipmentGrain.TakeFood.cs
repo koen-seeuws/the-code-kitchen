@@ -11,6 +11,17 @@ public partial class EquipmentGrain
 {
     public async Task<Result<TakeFoodResponse>> TakeFood(TakeFoodFromEquipmentRequest request)
     {
+        if (!state.RecordExists)
+        {
+            var kitchen = this.GetPrimaryKey();
+            var primaryKeyExtensions = this.GetPrimaryKeyString().Split('+');
+            var equipmentType = primaryKeyExtensions[1];
+            var number = int.Parse(primaryKeyExtensions[2]);
+
+            return new AlreadyExistsError(
+                $"The equipment {equipmentType} {number} does not exist in kitchen {kitchen}");
+        }
+
         if (state.State.Foods.Count <= 0)
             return new EquipmentEmptyError(
                 $"The equipment {state.State.EquipmentType} {state.State.Number} does not contain any food");

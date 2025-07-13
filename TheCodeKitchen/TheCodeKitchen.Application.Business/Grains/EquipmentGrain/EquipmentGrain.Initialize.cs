@@ -16,9 +16,11 @@ public partial class EquipmentGrain
             return new AlreadyExistsError(
                 $"The equipment {equipmentType} {number} has already been initialized in kitchen {kitchen}");
         
-        var equipment = new Equipment(kitchen, equipmentType, number);
+        var equipment = new Equipment(request.Game, kitchen, equipmentType, number);
         state.State = equipment;
         await state.WriteStateAsync();
+
+        await SubscribeToNextMomentEvent();
 
         return mapper.Map<CreateEquipmentResponse>(equipment);
     }

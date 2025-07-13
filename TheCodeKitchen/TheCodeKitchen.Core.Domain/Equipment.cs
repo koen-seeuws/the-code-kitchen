@@ -1,7 +1,8 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public class Equipment(Guid kitchen, string equipmentType, int number)
+public class Equipment(Guid game, Guid kitchen, string equipmentType, int number)
 {
+    public Guid Game { get; } = game;
     public Guid Kitchen { get; } = kitchen;
     public string EquipmentType { get; set; } = equipmentType;
 

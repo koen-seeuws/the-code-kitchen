@@ -10,7 +10,7 @@ public sealed partial class KitchenGrain
         logger.LogInformation("Kitchen {KitchenId}: received new order {OrderNumber}", state.State.Id,
             newOrderEvent.Number);
 
-        var createKitchenOrderRequest = new CreateKitchenOrderRequest(state.State.Id, newOrderEvent.Number);
+        var createKitchenOrderRequest = new CreateKitchenOrderRequest(state.State.Game, state.State.Id, newOrderEvent.Number);
 
         var kitchenOrderGrain =
             GrainFactory.GetGrain<IKitchenOrderGrain>(newOrderEvent.Number, state.State.Id.ToString());

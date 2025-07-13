@@ -9,6 +9,17 @@ public partial class EquipmentGrain
 {
     private async Task<Result<TheCodeKitchenUnit>> MixFood()
     {
+        if (!state.RecordExists)
+        {
+            var kitchen = this.GetPrimaryKey();
+            var primaryKeyExtensions = this.GetPrimaryKeyString().Split('+');
+            var equipmentType = primaryKeyExtensions[1];
+            var number = int.Parse(primaryKeyExtensions[2]);
+
+            return new AlreadyExistsError(
+                $"The equipment {equipmentType} {number} does not exist in kitchen {kitchen}");
+        }
+        
         var getFoodTasks = state.State.Foods.Select(async id =>
         {
             var foodGrain = GrainFactory.GetGrain<IFoodGrain>(id);
@@ -48,6 +59,7 @@ public partial class EquipmentGrain
         var createFoodRequest = new CreateFoodRequest(
             recipe?.Name ?? "UNKNOWN MIXTURE",
             foods.Select(f => f.Temperature).Average(),
+            state.State.Game,
             state.State.Kitchen,
             foods
                 .Select(f =>
@@ -57,6 +69,7 @@ public partial class EquipmentGrain
                         f.Temperature,
                         f.Ingredients,
                         f.Steps,
+                        f.Game,
                         f.Kitchen,
                         null,
                         null,
