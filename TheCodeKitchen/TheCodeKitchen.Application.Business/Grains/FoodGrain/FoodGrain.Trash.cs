@@ -10,6 +10,8 @@ public partial class FoodGrain
         await streamSubscriptionHandles.ClearStateAsync();
         await state.ClearStateAsync();
 
+        DeactivateOnIdle();
+
         return TheCodeKitchenUnit.Value;
     }
 }
