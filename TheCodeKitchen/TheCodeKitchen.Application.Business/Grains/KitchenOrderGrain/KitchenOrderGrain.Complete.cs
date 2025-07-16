@@ -21,9 +21,15 @@ public partial class KitchenOrderGrain
             return closeOrderResult.Error;
 
         state.State.Completed = true;
+        
+        //TODO:
+        // Order rating for missing food
+        
+        
+        
         await state.WriteStateAsync();
 
-        //TODO: order rating
+        DeactivateOnIdle();
 
         return TheCodeKitchenUnit.Value;
     }

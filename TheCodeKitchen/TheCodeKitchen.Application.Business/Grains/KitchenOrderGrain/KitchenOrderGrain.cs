@@ -1,3 +1,5 @@
+using TheCodeKitchen.Application.Contracts.Response.Food;
+
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
 
 public class KitchenOrderGrainStreamSubscriptionHandles
@@ -11,4 +13,8 @@ public sealed partial class KitchenOrderGrain(
     [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
     IPersistentState<KitchenOrderGrainStreamSubscriptionHandles> streamHandles,
     IMapper mapper
-) : Grain, IKitchenOrderGrain;
+) : Grain, IKitchenOrderGrain
+{
+    private ICollection<GetFoodResponse> _deliveredFoods = new List<GetFoodResponse>();
+    private IDictionary<string, TimeSpan> _requestedFoodsWithTimeToPrepare = new Dictionary<string, TimeSpan>();
+}

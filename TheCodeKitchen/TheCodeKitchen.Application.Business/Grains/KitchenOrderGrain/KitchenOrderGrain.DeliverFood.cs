@@ -35,6 +35,17 @@ public partial class KitchenOrderGrain
         state.State.DeliveredFoods.Add(releaseFoodResult.Value.Food);
         await state.WriteStateAsync();
         
+        //TODO:
+        // Rating the delivered food quality
+        
+        
+        
+        // Adding to in-memory list for quick access
+        var getFoodResult = await foodGrain.GetFood();
+        if (!getFoodResult.Succeeded)
+            return getFoodResult.Error;
+        _deliveredFoods.Add(getFoodResult.Value);
+        
         return TheCodeKitchenUnit.Value;
     }
 }

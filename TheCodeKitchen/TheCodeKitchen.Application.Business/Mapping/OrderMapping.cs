@@ -6,7 +6,6 @@ public class OrderMapping : Profile
 {
     public OrderMapping()
     {
-        CreateMap<Order, CreateOrderResponse>();
         CreateMap<Order, GetOrderResponse>();
     }
 }

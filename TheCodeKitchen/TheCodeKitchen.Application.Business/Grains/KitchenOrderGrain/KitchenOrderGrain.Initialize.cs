@@ -16,6 +16,8 @@ public sealed partial class KitchenOrderGrain
         var kitchenOrder = new KitchenOrder(orderNumber, request.Game, kitchen);
         state.State = kitchenOrder;
         await state.WriteStateAsync();
+
+        _requestedFoodsWithTimeToPrepare = request.RequestedFoodsWithTimeToPrepare;
         
         return mapper.Map<CreateKitchenOrderResponse>(kitchenOrder);
     }

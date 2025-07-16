@@ -1,6 +1,3 @@
-using Microsoft.Extensions.Logging;
-using TheCodeKitchen.Application.Contracts.Requests.Order;
-
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public sealed partial class GameGrain
@@ -11,25 +8,14 @@ public sealed partial class GameGrain
 
         var game = state.State.Id;
         var orderGrain = GrainFactory.GetGrain<IOrderGrain>(orderNumber, game.ToString());
-
-        //TODO: Implement order generation logic
-        logger.LogInformation("Game {gameId}: Generating order {number}...", state.State.Id, orderNumber);
         
-        var orderRequest = new CreateOrderRequest();
+        var generateOrderResult = await orderGrain.Generate();
 
-        var createOrderResult = await orderGrain.Initialize(orderRequest);
-
-        if (!createOrderResult.Succeeded)
-            return createOrderResult.Error;
+        if (!generateOrderResult.Succeeded)
+            return generateOrderResult.Error;
 
         state.State.OrderNumbers.Add(orderNumber);
         await state.WriteStateAsync();
-        
-        var newOrderEvent = new NewOrderEvent(orderNumber);
-        
-        var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
-        var stream = streamProvider.GetStream<NewOrderEvent>(nameof(NewOrderEvent), state.State.Id);
-        await stream.OnNextAsync(newOrderEvent);
         
         await PickMomentsUntilNextOrder();
 

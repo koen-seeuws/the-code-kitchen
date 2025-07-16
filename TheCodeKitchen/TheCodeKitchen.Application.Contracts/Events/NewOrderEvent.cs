@@ -1,4 +1,4 @@
 namespace TheCodeKitchen.Application.Contracts.Events;
 
 [GenerateSerializer]
-public record NewOrderEvent(long Number);
+public record NewOrderEvent(long Number, IDictionary<string, TimeSpan> RequestedFoodsWithTimeToPrepare);
