@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Response.Game;
 
 namespace TheCodeKitchen.Application.Business.Grains.GameManagementGrain;
@@ -15,6 +16,6 @@ public sealed partial class GameManagementGrain
 
         var results = await Task.WhenAll(tasks);
 
-        return Result<GetGameResponse>.Combine(results);
+        return results.Combine();
     }
 }

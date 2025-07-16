@@ -27,9 +27,9 @@ public partial class EquipmentGrain
             return result;
         });
 
-        var results = await Task.WhenAll(getFoodTasks);
+        var getFoodResults = await Task.WhenAll(getFoodTasks);
 
-        var getFoodsResult = Result<GetFoodResponse>.Combine(results);
+        var getFoodsResult = getFoodResults.Combine();
 
         if (!getFoodsResult.Succeeded)
             return getFoodsResult.Error;

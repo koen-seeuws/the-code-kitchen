@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
 using TheCodeKitchen.Application.Contracts.Response.Cook;
 
@@ -20,7 +21,7 @@ public sealed partial class KitchenGrain
         IEnumerable<Result<GetCookResponse>> results = await Task.WhenAll(tasks);
 
         if (!results.All(x => x.Succeeded))
-            return Result<GetCookResponse>.Combine(results);
+            return results.Combine();
 
         var username = request.Username?.Trim().ToLower();
         if (!string.IsNullOrWhiteSpace(request.Username))
@@ -28,6 +29,6 @@ public sealed partial class KitchenGrain
             results = results.Where(x => x.Value.Username.Trim().ToLower() == username);
         }
 
-        return Result<GetCookResponse>.Combine(results);
+        return results.Combine();
     }
 }

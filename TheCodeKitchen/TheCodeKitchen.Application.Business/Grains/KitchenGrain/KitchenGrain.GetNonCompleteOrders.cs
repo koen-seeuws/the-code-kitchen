@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Response.Order;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
@@ -18,6 +19,6 @@ public partial class KitchenGrain
 
         var results = await Task.WhenAll(tasks);
 
-        return Result<GetOrderResponse>.Combine(results);
+        return results.Combine();
     }
 }
