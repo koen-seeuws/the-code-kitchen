@@ -14,6 +14,9 @@ public partial class KitchenOrderGrain
             return new NotFoundError($"The order with number {orderNumber} does not exist in kitchen {kitchenId}");
         }
 
+        if (streamHandles.State.NextMomentStreamSubscriptionHandle is not null)
+            await streamHandles.State.NextMomentStreamSubscriptionHandle.UnsubscribeAsync();
+
         var kitchen = GrainFactory.GetGrain<IKitchenGrain>(state.State.Kitchen);
         var closeOrderRequest = new CloseOrderRequest(state.State.Number);
         var closeOrderResult = await kitchen.CloseOrder(closeOrderRequest);
@@ -22,7 +25,7 @@ public partial class KitchenOrderGrain
             return closeOrderResult.Error;
 
         state.State.Completed = true;
-        
+
         await state.WriteStateAsync();
 
         DeactivateOnIdle();
