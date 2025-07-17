@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Business.Extensions;
+using TheCodeKitchen.Application.Contracts.Models;
 
 namespace TheCodeKitchen.Application.Business.Grains.OrderGrain;
 
@@ -23,18 +24,21 @@ public sealed partial class OrderGrain
         var recipes = getRecipesResult.Value.ToArray();
         
         var amountOfDishes = Random.Shared.Next(1, 9);
-        var dishesWithTimeToPrepare = Random.Shared
+        var foodRequests = Random.Shared
             .GetItems(recipes, amountOfDishes)
-            .ToDictionary(
-                r => r.Name,
-                r => r.GetMinimumPreparationTime(recipes)
-            );
+            .Select(r =>
+            {
+                var timeToPrepare = r.GetMinimumPreparationTime(recipes);
+                return new FoodRequest(r.Name, timeToPrepare);
+            })
+            .ToList();
         
-        var order = new Order(orderNumber, game, dishesWithTimeToPrepare);
+        var order = new Order(orderNumber, game, foodRequests);
         state.State = order;
         await state.WriteStateAsync();
-        
-        var newOrderEvent = new NewOrderEvent(orderNumber, dishesWithTimeToPrepare);
+
+        var foodRequestDtos = mapper.Map<List<FoodRequestDto>>(foodRequests);
+        var newOrderEvent = new NewOrderEvent(orderNumber, foodRequestDtos);
         
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
         var stream = streamProvider.GetStream<NewOrderEvent>(nameof(NewOrderEvent), state.State.Game);

@@ -5,9 +5,15 @@ public partial class KitchenOrderGrain
     private async Task OnNextMomentEvent(NextMomentEvent nextMomentEvent, StreamSequenceToken _)
     {
         state.State.Time += TheCodeKitchenMomentDuration.Value;
-
-        //TODO:
-        // Rating down order when it takes too long
         
+        // Rating down order when it takes too long
+        var nonDeliveredRequestedFoodRatings = state.State.FoodRequestRatings
+            .Where(fr => !fr.Delivered)
+            .ToList();
+
+        foreach (var foodRating in nonDeliveredRequestedFoodRatings)
+        {
+            //TODO:
+        }
     }
 }

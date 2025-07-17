@@ -1,3 +1,4 @@
+using Microsoft.Azure.Amqp.Serialization;
 using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
 using TheCodeKitchen.Application.Contracts.Response.KitchenOrder;
 
@@ -13,11 +14,11 @@ public sealed partial class KitchenOrderGrain
         if(state.RecordExists)
             return new AlreadyExistsError($"The order with number {orderNumber} has already been initialized in kitchen {kitchen}");
 
-        var kitchenOrder = new KitchenOrder(orderNumber, request.Game, kitchen);
+        var requestedFoods = mapper.Map<List<FoodRequest>>(request.RequestedFoods);
+            
+        var kitchenOrder = new KitchenOrder(requestedFoods, orderNumber, request.Game, kitchen);
         state.State = kitchenOrder;
         await state.WriteStateAsync();
-
-        _requestedFoodsWithTimeToPrepare = request.RequestedFoodsWithTimeToPrepare;
         
         return mapper.Map<CreateKitchenOrderResponse>(kitchenOrder);
     }
