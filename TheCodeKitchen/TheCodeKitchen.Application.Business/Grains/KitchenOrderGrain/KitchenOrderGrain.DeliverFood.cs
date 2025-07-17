@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Requests.Food;
 using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
 
@@ -32,13 +33,35 @@ public partial class KitchenOrderGrain
         if (!setOrderResult.Succeeded)
             return setOrderResult.Error;
         
-        state.State.DeliveredFoods.Add(releaseFoodResult.Value.Food);
-        await state.WriteStateAsync();
+        // Rating order completeness
+        var requestedFoods = _requestedFoodsWithTimeToPrepare.Keys.ToList();
+        var deliveredFoods = _deliveredFoods.Select(f => f.Name).ToList();
+        
+        var missingFoods = requestedFoods.MultiExcept(deliveredFoods).ToList();
+        var wrongFoods = deliveredFoods.MultiExcept(requestedFoods).ToList();
+        var correctFoods = requestedFoods.MultiIntersect(deliveredFoods).ToList();
+        
+        // In case of missing foods, we apply a penalty for wrong foods
+        // In case of no missing food (and possibly wrong(/extra) food) , we apply no penalty
+        
+        var penaltyWeight = (double)missingFoods.Count / requestedFoods.Count; 
+        var adjustedCorrectCount = correctFoods.Count - (wrongFoods.Count * penaltyWeight);
+        adjustedCorrectCount = Math.Max(0, adjustedCorrectCount); // Avoid negative score
+
+        state.State.CompletenessRating = adjustedCorrectCount / requestedFoods.Count * 100;
         
         //TODO:
         // Rating the delivered food quality
         
         
+        
+        
+        
+        
+        
+        // Updating the state
+        state.State.DeliveredFoods.Add(releaseFoodResult.Value.Food);
+        await state.WriteStateAsync();
         
         // Adding to in-memory list for quick access
         var getFoodResult = await foodGrain.GetFood();

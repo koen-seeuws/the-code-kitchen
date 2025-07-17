@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
@@ -21,11 +22,6 @@ public partial class KitchenOrderGrain
             return closeOrderResult.Error;
 
         state.State.Completed = true;
-        
-        //TODO:
-        // Order rating for missing food
-        
-        
         
         await state.WriteStateAsync();
 
