@@ -1,5 +1,3 @@
-using TheCodeKitchen.Application.Business.Extensions;
-using TheCodeKitchen.Application.Contracts.Models;
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
 using TheCodeKitchen.Application.Contracts.Requests.Food;

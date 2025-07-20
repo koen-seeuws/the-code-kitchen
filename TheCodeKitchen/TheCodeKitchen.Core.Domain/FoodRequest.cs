@@ -1,5 +1,3 @@
-using System.Security.AccessControl;
-
 namespace TheCodeKitchen.Core.Domain;
 
 public record FoodRequest(string food, TimeSpan minimumTimeToPrepareFood)

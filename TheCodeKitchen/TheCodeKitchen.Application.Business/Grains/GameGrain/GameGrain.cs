@@ -1,7 +1,6 @@
 
 using Microsoft.Extensions.Logging;
 
-
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public sealed partial class GameGrain(

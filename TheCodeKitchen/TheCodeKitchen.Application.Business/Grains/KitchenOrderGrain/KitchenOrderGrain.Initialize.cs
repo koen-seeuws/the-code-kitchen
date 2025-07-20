@@ -1,4 +1,3 @@
-using Microsoft.Azure.Amqp.Serialization;
 using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
 using TheCodeKitchen.Application.Contracts.Response.KitchenOrder;
 

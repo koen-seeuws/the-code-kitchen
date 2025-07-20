@@ -1,7 +1,6 @@
 using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Models;
 using TheCodeKitchen.Application.Contracts.Requests.Food;
-using TheCodeKitchen.Application.Contracts.Response.Food;
 
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 

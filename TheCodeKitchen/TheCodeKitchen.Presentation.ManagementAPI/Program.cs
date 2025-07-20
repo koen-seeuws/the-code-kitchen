@@ -1,5 +1,5 @@
-using TheCodeKitchen.Infrastructure.Security.Configuration;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
+using TheCodeKitchen.Infrastructure.Security.Configuration;
 using TheCodeKitchen.Presentation;
 using TheCodeKitchen.Presentation.ManagementAPI.Hubs;
 
