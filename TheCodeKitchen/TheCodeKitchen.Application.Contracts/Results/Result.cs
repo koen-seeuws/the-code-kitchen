@@ -5,7 +5,7 @@ namespace TheCodeKitchen.Application.Contracts.Results;
 [GenerateSerializer]
 public class Result<T>
 {
-    [Id(0)] public bool Succeeded { get; init; }
+    [Id(0)] public bool Succeeded { get; set; }
     [Id(1)] public T Value { get; set; }
     [Id(2)] public Error Error { get; set; }
 

@@ -2,7 +2,7 @@ namespace TheCodeKitchen.Application.Business.Grains.GameManagementGrain;
 
 public class GameManagementState
 {
-    public ICollection<Guid> Games { get; } = new List<Guid>();
+    public ICollection<Guid> Games { get; set; } = new List<Guid>();
 }
 
 public sealed partial class GameManagementGrain(
