@@ -1,26 +1,19 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public class KitchenOrder
+public class KitchenOrder(ICollection<FoodRequest>? requestedFoods, long number, Guid game, Guid kitchen)
 {
-    public KitchenOrder(ICollection<FoodRequest> requestedFoods, long number, Guid game, Guid kitchen)
-    {
-        Number = number;
-        Game = game;
-        Kitchen = kitchen;
-        FoodRequestRatings = requestedFoods
-            .Select(fr => new FoodRequestRating(fr.RequestedFood, fr.MinimumTimeToPrepareFood))
-            .ToList();
-    }
-
-    public long Number { get; set; }
+    public long Number { get; set; } = number;
     public TimeSpan Time { get; set; } = TimeSpan.Zero;
     public bool Completed { get; set; }
     public double CompletenessRating { get; set; } = 0.0;
 
-    public Guid Game { get; set; }
-    public Guid Kitchen { get; set; }
+    public Guid Game { get; set; } = game;
+    public Guid Kitchen { get; set; } = kitchen;
 
-    public ICollection<FoodRequestRating> FoodRequestRatings { get; set; }
+    public ICollection<FoodRequestRating> FoodRequestRatings { get; set; } =
+        requestedFoods?
+            .Select(fr => new FoodRequestRating(fr.RequestedFood, fr.MinimumTimeToPrepareFood))
+            .ToList() ?? [];
 
     public ICollection<FoodDelivery> DeliveredFoods { get; set; } = new List<FoodDelivery>();
 }
