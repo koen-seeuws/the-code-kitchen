@@ -9,7 +9,7 @@ public partial class CookBookGrain
     public async Task<Result<CreateRecipeResponse>> CreateRecipe(CreateRecipeRequest request)
     {
         var newRecipeName = request.Name.Trim().ToCamelCase();
-        
+
         // Check if recipe already exists
         var availableRecipes = state.State.Recipes.Select(r => r.Name).ToList();
 
@@ -24,12 +24,12 @@ public partial class CookBookGrain
         {
             return pantryIngredientsResult.Error;
         }
-        
+
         var availableIngredients = pantryIngredientsResult.Value.Select(i => i.Name).ToList();
 
         if (availableIngredients.Any(i => i.Equals(newRecipeName, StringComparison.OrdinalIgnoreCase)))
             return new AlreadyExistsError($"{newRecipeName} already exists as an ingredient in the pantry");
-        
+
         // Check if recipe ingredients combination is unique
         var newIngredientCombo = request.Ingredients
             .Select(i => i.Name)
@@ -40,46 +40,61 @@ public partial class CookBookGrain
             var ingredientCombo = recipe.Ingredients
                 .Select(i => i.Name)
                 .GetRecipeComboIdentifier();
-            
+
             if (ingredientCombo.Equals(newIngredientCombo, StringComparison.OrdinalIgnoreCase))
             {
-                return new AlreadyExistsError($"This combination of ingredients is already used for recipe {recipe.Name}");
+                return new AlreadyExistsError(
+                    $"This combination of ingredients is already used for recipe {recipe.Name}");
             }
         }
-        
+
         // Start crafting recipe
         var newRecipeIngredients = new List<RecipeIngredient>();
-        
+
         foreach (var necessaryIngredient in request.Ingredients)
         {
             var necessaryIngredientName = necessaryIngredient.Name.Trim().ToCamelCase();
-            
+
             var isRecipe = availableRecipes.Contains(necessaryIngredientName);
             var isIngredient = availableIngredients.Contains(necessaryIngredientName);
-            
+
             // Check if necessary ingredient is available in pantry or as a recipe
-            if(!isRecipe && !isIngredient)
+            if (!isRecipe && !isIngredient)
             {
-                return new InvalidRecipeError($"The ingredient {necessaryIngredientName} is not available in the pantry or as a recipe");
+                return new InvalidRecipeError(
+                    $"The ingredient {necessaryIngredientName} is not available in the pantry or as a recipe");
             }
 
-            if (isRecipe && necessaryIngredient.Steps.Length != 0)
+            if (isRecipe && necessaryIngredient.Steps.Count != 0)
             {
                 return new InvalidRecipeError("The subrecipes in a new recipe should not contain any steps");
             }
-            
-            var necessaryIngredientSteps = mapper.Map<List<RecipeStep>>(necessaryIngredient.Steps);
+
+            var necessaryIngredientSteps = necessaryIngredient.Steps
+                .Select(i =>
+                {
+                    var equipmentType = i.EquipmentType.Trim().ToCamelCase();
+                    return new RecipeStep(equipmentType, i.Time);
+                })
+                .ToList();
+
             var newRecipeIngredient = new RecipeIngredient(necessaryIngredientName, necessaryIngredientSteps);
             newRecipeIngredients.Add(newRecipeIngredient);
         }
 
-        var newRecipeSteps = mapper.Map<List<RecipeStep>>(request.Steps);
-        
+        var newRecipeSteps = request.Steps
+            .Select(i =>
+            {
+                var equipmentType = i.EquipmentType.Trim().ToCamelCase();
+                return new RecipeStep(equipmentType, i.Time);
+            })
+            .ToList();
+
         var newRecipe = new Recipe(newRecipeName, newRecipeIngredients, newRecipeSteps);
-        
+
         state.State.Recipes.Add(newRecipe);
         await state.WriteStateAsync();
-        
+
         return mapper.Map<CreateRecipeResponse>(newRecipe);
     }
 }

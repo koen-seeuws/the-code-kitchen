@@ -44,7 +44,7 @@ public partial class KitchenOrderGrain
         // Making sure the customer is no longer waiting for its food (wont be picked up anymore OnNextMoment)
         var foodRequestRating = state.State.FoodRequestRatings
             .Where(d => !d.Delivered)
-            .FirstOrDefault(d => d.RequestedFood == food.Name);
+            .FirstOrDefault(d => d.RequestedFood.Equals(food.Name, StringComparison.OrdinalIgnoreCase));
         
         if (foodRequestRating != null)
             foodRequestRating.Delivered = true;

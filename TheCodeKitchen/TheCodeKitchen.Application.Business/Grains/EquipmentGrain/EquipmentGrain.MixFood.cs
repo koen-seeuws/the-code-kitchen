@@ -77,7 +77,7 @@ public partial class EquipmentGrain
                         null
                     )
                 )
-                .ToArray()
+                .ToList()
         );
 
         var createFoodResult = await newFoodGrain.Initialize(createFoodRequest);

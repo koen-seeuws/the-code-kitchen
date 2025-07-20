@@ -22,8 +22,8 @@ public sealed partial class OrderGrain
         if (!getRecipesResult.Succeeded)
             return getRecipesResult.Error;
         var recipes = getRecipesResult.Value.ToArray();
-        
-        var amountOfDishes = Random.Shared.Next(1, 9);
+
+        var amountOfDishes = 1; //Random.Shared.Next(1, 9);
         var foodRequests = Random.Shared
             .GetItems(recipes, amountOfDishes)
             .Select(r =>

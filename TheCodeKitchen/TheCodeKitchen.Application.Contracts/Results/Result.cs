@@ -39,6 +39,6 @@ public class Result<T>
                 errors.Add(result.Error);
         }
 
-        return errors.Count == 0 ? values : new AggregateError(errors);
+        return errors.Count is 0 ? values : new AggregateError(errors);
     }
 }

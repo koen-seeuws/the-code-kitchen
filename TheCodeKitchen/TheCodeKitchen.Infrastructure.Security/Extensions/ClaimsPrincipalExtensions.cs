@@ -10,7 +10,7 @@ public static class ClaimsPrincipalExtensions
 
         var claim = principal.FindFirst(claimType);
         
-        if (claim == null)
+        if (claim is null)
             throw new InvalidOperationException($"{claimType} claim not found.");
         
         return claim.Value;

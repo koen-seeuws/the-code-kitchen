@@ -5,7 +5,7 @@ namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
 public partial class KitchenGrain
 {
-    public async Task<Result<IEnumerable<GetOrderResponse>>> GetOpenOrders()
+    public async Task<Result<IEnumerable<GetSimpleOrderResponse>>> GetOpenOrders()
     {
         if (!state.RecordExists)
             return new NotFoundError($"The kitchen with id {this.GetPrimaryKey()} does not exist");
@@ -18,7 +18,21 @@ public partial class KitchenGrain
         });
 
         var results = await Task.WhenAll(tasks);
+        var orders = results.Combine();
+        
+        if (!orders.Succeeded)
+            return orders.Error;
 
-        return results.Combine();
+        var simpleOrders = orders.Value
+            .Select(o =>
+            {
+                var requestedFoods = o.RequestedFoods
+                    .Select(f => f.Food)
+                    .ToList();
+                return new GetSimpleOrderResponse(o.Number, requestedFoods);
+            })
+            .ToList();
+
+        return simpleOrders;
     }
 }

@@ -6,7 +6,8 @@ public sealed partial class KitchenGrain
     {
         try
         {
-            await streamHandles.State.NextMomentStreamSubscriptionHandle.ResumeAsync(OnNextMomentEvent);
+            streamHandles.State.NextMomentStreamSubscriptionHandle = await streamHandles.State.NextMomentStreamSubscriptionHandle.ResumeAsync(OnNextMomentEvent);
+            await streamHandles.WriteStateAsync();
         }
         catch (Exception e) when (e is OrleansException or NullReferenceException)
         {

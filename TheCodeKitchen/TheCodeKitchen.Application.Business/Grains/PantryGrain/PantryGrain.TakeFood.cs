@@ -12,7 +12,7 @@ public partial class PantryGrain
         var ingredient = state.State.Ingredients.FirstOrDefault(i =>
             string.Equals(i.Name, request.Ingredient, StringComparison.InvariantCultureIgnoreCase));
 
-        if (ingredient == null)
+        if (ingredient is null)
             return new NotFoundError($"The ingredient with name {request.Ingredient} was not found in the pantry");
 
         var cookGrain = GrainFactory.GetGrain<ICookGrain>(request.Cook);

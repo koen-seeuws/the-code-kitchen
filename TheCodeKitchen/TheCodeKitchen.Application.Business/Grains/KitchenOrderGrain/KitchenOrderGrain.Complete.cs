@@ -13,7 +13,7 @@ public partial class KitchenOrderGrain
             var kitchenId = Guid.Parse(this.GetPrimaryKeyString().Split('+')[1]);
             return new NotFoundError($"The order with number {orderNumber} does not exist in kitchen {kitchenId}");
         }
-
+        
         if (streamHandles.State.NextMomentStreamSubscriptionHandle is not null)
             await streamHandles.State.NextMomentStreamSubscriptionHandle.UnsubscribeAsync();
 

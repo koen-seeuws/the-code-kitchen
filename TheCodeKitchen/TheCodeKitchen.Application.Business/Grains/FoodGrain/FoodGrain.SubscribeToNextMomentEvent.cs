@@ -6,7 +6,8 @@ public partial class FoodGrain
     {
         try
         {
-            await streamSubscriptionHandles.State.NextMomentStreamSubscriptionHandle.ResumeAsync(OnNextMomentEvent);
+            streamSubscriptionHandles.State.NextMomentStreamSubscriptionHandle = await streamSubscriptionHandles.State.NextMomentStreamSubscriptionHandle.ResumeAsync(OnNextMomentEvent);
+            await streamSubscriptionHandles.WriteStateAsync();
         }
         catch (Exception e) when (e is OrleansException or NullReferenceException)
         {

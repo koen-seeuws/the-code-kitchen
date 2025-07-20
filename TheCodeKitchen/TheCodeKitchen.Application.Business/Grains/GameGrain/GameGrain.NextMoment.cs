@@ -22,6 +22,9 @@ public sealed partial class GameGrain
         await stream.OnNextAsync(nextMomentEvent);
 
         // Order generation
+        if (_momentsUntilNewOrder is null)
+            await PickMomentsUntilNextOrder();
+        
         if (--_momentsUntilNewOrder <= 0)
         {
             await GenerateOrder();

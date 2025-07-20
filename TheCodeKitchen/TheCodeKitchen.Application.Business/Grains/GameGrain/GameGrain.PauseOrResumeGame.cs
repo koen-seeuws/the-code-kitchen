@@ -9,11 +9,11 @@ public sealed partial class GameGrain
         if (!state.RecordExists)
             return new NotFoundError($"The game with id {this.GetPrimaryKey()} has not been initialized");
         
-        var result = _nextMomentTimer == null ? await ResumeGame() : await PauseGame();
+        var result = _nextMomentTimer is null ? await ResumeGame() : await PauseGame();
 
         if (!result.Succeeded)
             return result.Error;
 
-        return new PauseOrResumeGameResponse(_nextMomentTimer == null);
+        return new PauseOrResumeGameResponse(_nextMomentTimer is null);
     }
 }
