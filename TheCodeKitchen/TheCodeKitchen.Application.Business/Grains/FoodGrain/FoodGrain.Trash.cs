@@ -5,8 +5,17 @@ public partial class FoodGrain
     public async Task<Result<TheCodeKitchenUnit>> Trash()
     {
         if (streamSubscriptionHandles.State.NextMomentStreamSubscriptionHandle is not null)
-            await streamSubscriptionHandles.State.NextMomentStreamSubscriptionHandle.UnsubscribeAsync();
-        
+        {
+            try
+            {
+                await streamSubscriptionHandles.State.NextMomentStreamSubscriptionHandle.UnsubscribeAsync();
+            }
+            catch
+            {
+                // Ignore
+            }
+        }
+
         await streamSubscriptionHandles.ClearStateAsync();
         await state.ClearStateAsync();
 
