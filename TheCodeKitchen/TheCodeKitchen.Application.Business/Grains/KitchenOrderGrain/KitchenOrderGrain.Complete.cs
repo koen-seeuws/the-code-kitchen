@@ -37,6 +37,9 @@ public partial class KitchenOrderGrain
 
         await state.WriteStateAsync();
 
+        // Update kitchen rating
+        await UpdateKitchenRating();
+
         DeactivateOnIdle();
 
         return TheCodeKitchenUnit.Value;

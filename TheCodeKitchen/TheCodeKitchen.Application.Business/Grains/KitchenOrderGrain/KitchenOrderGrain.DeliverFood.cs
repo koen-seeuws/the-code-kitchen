@@ -81,6 +81,9 @@ public partial class KitchenOrderGrain
 
         // Update state
         await state.WriteStateAsync();
+        
+        // Update kitchen rating
+        await UpdateKitchenRating();
 
         return TheCodeKitchenUnit.Value;
     }

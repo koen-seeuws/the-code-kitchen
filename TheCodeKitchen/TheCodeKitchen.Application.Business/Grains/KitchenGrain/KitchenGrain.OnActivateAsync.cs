@@ -6,6 +6,7 @@ public sealed partial class KitchenGrain
     {
         await SubscribeToNextMomentEvent();
         await SubscribeToNewOrderEvent();
+        await SubscribeToKitchenOrderRatingUpdatedEvent();
         await base.OnActivateAsync(cancellationToken);
     }
 }

@@ -28,5 +28,9 @@ public partial class KitchenOrderGrain
 
             foodRating.Rating = Math.Max(0, 1 - penaltyPercent); // Rating cannot go below 0
         }
+
+        // Update kitchen rating
+        if (nonDeliveredRequestedFoodRatings.Count > 0)
+            await UpdateKitchenRating();
     }
 }

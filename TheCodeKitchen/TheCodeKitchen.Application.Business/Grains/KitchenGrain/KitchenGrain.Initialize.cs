@@ -45,6 +45,7 @@ public sealed partial class KitchenGrain
         // Streams
         await SubscribeToNextMomentEvent();
         await SubscribeToNewOrderEvent();
+        await SubscribeToKitchenOrderRatingUpdatedEvent();
 
         return mapper.Map<CreateKitchenResponse>(kitchen);
     }

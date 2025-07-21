@@ -7,6 +7,7 @@ public class KitchenGrainStreamSubscriptionHandles
 {
     public StreamSubscriptionHandle<NextMomentEvent>? NextMomentStreamSubscriptionHandle { get; set; }
     public StreamSubscriptionHandle<NewOrderEvent>? NewOrderStreamSubscriptionHandle { get; set; }
+    public StreamSubscriptionHandle<KitchenOrderRatingUpdatedEvent>? KitchenOrderRatingUpdatedStreamSubscriptionHandle { get; set; }
 }
 
 [PreferLocalPlacement]

@@ -4,5 +4,7 @@ namespace TheCodeKitchen.Application.Contracts.Response.Kitchen;
 public record CreateKitchenResponse(
     Guid Id,
     string Name,
-    string Code
+    string Code,
+    string Rating,
+    Guid Game
 );
