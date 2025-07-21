@@ -22,8 +22,11 @@ public sealed partial class OrderGrain
         if (!getRecipesResult.Succeeded)
             return getRecipesResult.Error;
         var recipes = getRecipesResult.Value.ToArray();
+        
+        if (recipes.Length == 0)
+            return new EmptyError("There are no recipes available to generate an order");
 
-        var amountOfDishes = 1; //Random.Shared.Next(1, 9);
+        var amountOfDishes = Random.Shared.Next(1, 9);
         var foodRequests = Random.Shared
             .GetItems(recipes, amountOfDishes)
             .Select(r =>

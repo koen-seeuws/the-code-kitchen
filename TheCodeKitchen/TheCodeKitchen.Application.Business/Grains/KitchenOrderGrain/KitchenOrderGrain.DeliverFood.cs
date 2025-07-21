@@ -38,6 +38,15 @@ public partial class KitchenOrderGrain
         var qualityRating = 100.0; //TODO: calculate quality rating based on food properties
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
         var foodDelivery = new FoodDelivery(food.Id, food.Name, qualityRating);
         state.State.DeliveredFoods.Add(foodDelivery);
         
