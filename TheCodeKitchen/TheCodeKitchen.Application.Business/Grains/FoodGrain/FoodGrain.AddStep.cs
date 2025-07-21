@@ -11,7 +11,7 @@ public partial class FoodGrain
         
         var lastStep = state.State.Steps.LastOrDefault();
         
-        if (lastStep?.EquipmentType != request.EquipmentType)
+        if (lastStep is null || lastStep.EquipmentType != request.EquipmentType)
         {
             // If different equipment type in 2 consecutive steps -> Add new step
             var step = new RecipeStep(request.EquipmentType, request.Time);
@@ -19,8 +19,8 @@ public partial class FoodGrain
         }
         else
         {
-            // If same equipment type in 2 consecutive steps -> Add up time
-            lastStep.Time = lastStep.Time.Add(request.Time);
+            // If same equipment type in 2 consecutive steps -> Add up
+            lastStep.Time += request.Time;
         }
         
         await state.WriteStateAsync();

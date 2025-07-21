@@ -31,8 +31,6 @@ public partial class EquipmentGrain
                 return mixResult.Error;
         }
 
-        // TODO: Handling single/merged food item and/or steps from processing in this equipment
-
         var food = state.State.Foods.First();
 
         var foodGrain = GrainFactory.GetGrain<IFoodGrain>(food);
