@@ -4,12 +4,12 @@ public partial class KitchenOrderGrain
 {
     private async Task OnNextMomentEvent(NextMomentEvent nextMomentEvent, StreamSequenceToken _)
     {
-        if (state.State.Completed) 
+        if (state.State.Completed)
             return;
-        
+
         // Time order has been active
         var time = state.State.Time += TheCodeKitchenMomentDuration.Value;
-        
+
         // Rating down order when it takes too long
         var nonDeliveredRequestedFoodRatings = state.State.FoodRequestRatings
             .Where(fr => !fr.Delivered)
@@ -17,7 +17,7 @@ public partial class KitchenOrderGrain
 
         foreach (var foodRating in nonDeliveredRequestedFoodRatings)
         {
-            var margin = 0.1 * foodRating.MinimumTimeToPrepareFood;
+            var margin = foodRating.MinimumTimeToPrepareFood * TheCodeKitchenWaitingTimeMargin.Value;
             var graceTime = foodRating.MinimumTimeToPrepareFood + margin;
 
             if (time <= graceTime)

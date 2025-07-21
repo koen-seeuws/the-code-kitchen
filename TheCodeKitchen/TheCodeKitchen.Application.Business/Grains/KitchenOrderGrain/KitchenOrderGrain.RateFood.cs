@@ -1,6 +1,5 @@
 using TheCodeKitchen.Application.Contracts.Models;
 using TheCodeKitchen.Application.Contracts.Response.CookBook;
-using TheCodeKitchen.Application.Contracts.Response.Food;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
 
@@ -80,7 +79,7 @@ public partial class KitchenOrderGrain
                 // Time match (within 10% margin)
                 var expectedSeconds = expectedStep.Time.TotalSeconds;
                 var actualSeconds = actual.Time.TotalSeconds;
-                var margin = expectedSeconds * 0.1;
+                var margin = expectedSeconds * TheCodeKitchenStepTimeMargin.Value;
 
                 if (Math.Abs(expectedSeconds - actualSeconds) > margin)
                     score *= 0.5;
