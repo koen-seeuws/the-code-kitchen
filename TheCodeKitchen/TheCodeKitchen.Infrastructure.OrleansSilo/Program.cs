@@ -47,6 +47,7 @@ builder.UseOrleans(silo =>
         {
             options.TableServiceClient = tableClient;
             options.TableName = storage;
+            options.UseStringFormat = true;
         });
     }
 
