@@ -26,7 +26,7 @@ public sealed partial class OrderGrain
         if (recipes.Length == 0)
             return new EmptyError("There are no recipes available to generate an order");
 
-        var amountOfDishes = Random.Shared.Next(1, 9);
+        var amountOfDishes = Random.Shared.Next(1, TheCodeKitchenMaxItemsPerOrder.Value + 1);
         var foodRequests = Random.Shared
             .GetItems(recipes, amountOfDishes)
             .Select(r =>
