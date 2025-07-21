@@ -26,7 +26,7 @@ public partial class KitchenOrderGrain
             var overTime = time - graceTime;
             var penaltyPercent = overTime / foodRating.MinimumTimeToPrepareFood;
 
-            foodRating.Rating = Math.Max(0, 100 * (1 - penaltyPercent)); // Rating cannot go below 0
+            foodRating.Rating = Math.Max(0, 1 - penaltyPercent); // Rating cannot go below 0
         }
     }
 }

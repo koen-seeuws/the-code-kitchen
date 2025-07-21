@@ -77,7 +77,7 @@ public partial class KitchenOrderGrain
         var adjustedCorrectCount = correctFoods.Count - (wrongFoods.Count * penaltyWeight);
         adjustedCorrectCount = Math.Max(0, adjustedCorrectCount); // Avoid negative score
 
-        state.State.CompletenessRating = adjustedCorrectCount / requestedFoods.Count * 100;
+        state.State.CompletenessRating = adjustedCorrectCount / requestedFoods.Count;
 
         // Update state
         await state.WriteStateAsync();
