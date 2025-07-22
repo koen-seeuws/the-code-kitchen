@@ -18,13 +18,19 @@ var azureStorageConnectionString =
     builder.Configuration.GetConnectionString("AzureStorage") ??
     throw new InvalidOperationException("ConnectionStrings__AzureStorage is not configured.");
 
+var eventHubConnectionString =
+    builder.Configuration.GetConnectionString("EventHub") ??
+    throw new InvalidOperationException("ConnectionStrings__EventHub is not configured.");
+
 var tableClient = new TableServiceClient(azureStorageConnectionString);
 var queueClient = new QueueServiceClient(azureStorageConnectionString);
 
 // TODO: REMOVE, this is only for development purposes to ensure a clean state.
 
-foreach (var storage in TheCodeKitchenState.All){ tableClient.DeleteTable(storage); }
-
+foreach (var storage in TheCodeKitchenState.All)
+{
+    tableClient.DeleteTable(storage);
+}
 
 
 builder.UseOrleans(silo =>
@@ -59,15 +65,40 @@ builder.UseOrleans(silo =>
 
     silo
         .AddStreaming()
-        .AddAzureQueueStreams(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider,
-            options =>
+        .AddEventHubStreams(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider, eventHubConfigurator =>
+        {
+            eventHubConfigurator.ConfigureEventHub(eventHubBuilder =>
             {
-                options.Configure(azureQueueOptions =>
+                eventHubBuilder.Configure(options =>
                 {
-                    azureQueueOptions.QueueServiceClient = queueClient;
-                    azureQueueOptions.QueueNames = TheCodeKitchenStreams.AzureStorageQueues;
+                    options.ConfigureEventHubConnection(
+                        eventHubConnectionString,
+                        siloConfiguration.Streaming?.EventHub,
+                        siloConfiguration.Streaming?.ConsumerGroup
+                    );
                 });
             });
+
+            eventHubConfigurator.UseAzureTableCheckpointer(azureTableBuilder =>
+                azureTableBuilder.Configure(options =>
+                {
+                    options.TableServiceClient = tableClient;
+                    options.TableName = "TheCodeKitchenEventHubCheckpoints";
+                })
+            );
+        });
+
+    /*
+    .AddAzureQueueStreams(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider,
+        options =>
+        {
+            options.Configure(azureQueueOptions =>
+            {
+                azureQueueOptions.QueueServiceClient = queueClient;
+                azureQueueOptions.QueueNames = TheCodeKitchenStreams.AzureStorageQueues;
+            });
+        });
+        */
 
     silo.UseDashboard();
 });

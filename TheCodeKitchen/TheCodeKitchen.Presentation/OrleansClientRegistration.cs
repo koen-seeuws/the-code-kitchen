@@ -23,6 +23,10 @@ public static class OrleansClientRegistration
             configuration.GetConnectionString("AzureStorage") ??
             throw new InvalidOperationException("ConnectionStrings__AzureStorage is not configured.");
 
+        var eventHubConnectionString =
+            configuration.GetConnectionString("EventHub") ??
+            throw new InvalidOperationException("ConnectionStrings__EventHub is not configured.");
+
         var tableClient = new TableServiceClient(azureStorageConnectionString);
         var queueClient = new QueueServiceClient(azureStorageConnectionString);
 
@@ -42,15 +46,33 @@ public static class OrleansClientRegistration
 
             client
                 .AddStreaming()
-                .AddAzureQueueStreams(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider,
-                    options =>
+                .AddEventHubStreams(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider,
+                    eventHubConfigurator =>
                     {
-                        options.Configure(azureQueueOptions =>
+                        eventHubConfigurator.ConfigureEventHub(eventHubBuilder =>
                         {
-                            azureQueueOptions.QueueServiceClient = queueClient;
-                            azureQueueOptions.QueueNames = TheCodeKitchenStreams.AzureStorageQueues;
+                            eventHubBuilder.Configure(options =>
+                            {
+                                options.ConfigureEventHubConnection(
+                                    eventHubConnectionString,
+                                    clientConfiguration.Streaming?.EventHub,
+                                    clientConfiguration.Streaming?.ConsumerGroup
+                                );
+                            });
                         });
                     });
+
+            /*
+            .AddAzureQueueStreams(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider,
+                options =>
+                {
+                    options.Configure(azureQueueOptions =>
+                    {
+                        azureQueueOptions.QueueServiceClient = queueClient;
+                        azureQueueOptions.QueueNames = TheCodeKitchenStreams.AzureStorageQueues;
+                    });
+                });
+                */
         });
     }
 }
