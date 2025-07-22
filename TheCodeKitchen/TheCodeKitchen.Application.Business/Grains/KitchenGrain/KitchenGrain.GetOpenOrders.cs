@@ -27,7 +27,7 @@ public partial class KitchenGrain
             .Select(o =>
             {
                 var requestedFoods = o.RequestedFoods
-                    .Select(f => f.Food)
+                    .Select(f => f.RequestedFood)
                     .ToList();
                 return new GetSimpleOrderResponse(o.Number, requestedFoods);
             })

@@ -4,20 +4,18 @@ public sealed partial class KitchenGrain
 {
     private async Task SubscribeToNewOrderEvent()
     {
-        try
+        if (streamHandles.State.NewOrderStreamSubscriptionHandle is not null)
         {
-            streamHandles.State.NewOrderStreamSubscriptionHandle = await streamHandles.State.NewOrderStreamSubscriptionHandle.ResumeAsync(OnNewOrderEvent);
+            streamHandles.State.NewOrderStreamSubscriptionHandle =
+                await streamHandles.State.NewOrderStreamSubscriptionHandle.ResumeAsync(OnNewOrderEvent);
             await streamHandles.WriteStateAsync();
         }
-        catch (Exception e) when (e is OrleansException or NullReferenceException)
+        else if (state.RecordExists)
         {
-            if (state.RecordExists)
-            {
-                var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
-                var stream = streamProvider.GetStream<NewOrderEvent>(nameof(NewOrderEvent), state.State.Game);
-                streamHandles.State.NewOrderStreamSubscriptionHandle = await stream.SubscribeAsync(OnNewOrderEvent);
-                await streamHandles.WriteStateAsync();
-            }
+            var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
+            var stream = streamProvider.GetStream<NewOrderEvent>(nameof(NewOrderEvent), state.State.Game);
+            streamHandles.State.NewOrderStreamSubscriptionHandle = await stream.SubscribeAsync(OnNewOrderEvent);
+            await streamHandles.WriteStateAsync();
         }
     }
 }

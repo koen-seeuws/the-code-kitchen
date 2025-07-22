@@ -4,20 +4,22 @@ public sealed partial class KitchenGrain
 {
     private async Task SubscribeToKitchenOrderRatingUpdatedEvent()
     {
-        try
+        if (streamHandles.State.KitchenOrderRatingUpdatedStreamSubscriptionHandle is not null)
         {
-            streamHandles.State.KitchenOrderRatingUpdatedStreamSubscriptionHandle = await streamHandles.State.KitchenOrderRatingUpdatedStreamSubscriptionHandle.ResumeAsync(OnKitchenOrderRatingUpdatedEvent);
+            streamHandles.State.KitchenOrderRatingUpdatedStreamSubscriptionHandle =
+                await streamHandles.State.KitchenOrderRatingUpdatedStreamSubscriptionHandle.ResumeAsync(
+                    OnKitchenOrderRatingUpdatedEvent);
             await streamHandles.WriteStateAsync();
         }
-        catch (Exception e) when (e is OrleansException or NullReferenceException)
+        else if (state.RecordExists)
         {
-            if (state.RecordExists)
-            {
-                var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
-                var stream = streamProvider.GetStream<KitchenOrderRatingUpdatedEvent>(nameof(KitchenOrderRatingUpdatedEvent), state.State.Id);
-                streamHandles.State.KitchenOrderRatingUpdatedStreamSubscriptionHandle = await stream.SubscribeAsync(OnKitchenOrderRatingUpdatedEvent);
-                await streamHandles.WriteStateAsync();
-            }
+            var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
+            var stream =
+                streamProvider.GetStream<KitchenOrderRatingUpdatedEvent>(nameof(KitchenOrderRatingUpdatedEvent),
+                    state.State.Id);
+            streamHandles.State.KitchenOrderRatingUpdatedStreamSubscriptionHandle =
+                await stream.SubscribeAsync(OnKitchenOrderRatingUpdatedEvent);
+            await streamHandles.WriteStateAsync();
         }
     }
 }

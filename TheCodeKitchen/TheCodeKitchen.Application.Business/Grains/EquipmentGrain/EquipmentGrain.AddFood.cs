@@ -33,8 +33,7 @@ public partial class EquipmentGrain
         if (!setEquipmentResult.Succeeded)
             return setEquipmentResult.Error;
 
-        if (!state.State.Time.HasValue)
-            state.State.Time = TimeSpan.Zero;
+        state.State.Time ??= TimeSpan.Zero;
 
         state.State.Foods.Add(releaseFoodResult.Value.Food);
         await state.WriteStateAsync();
