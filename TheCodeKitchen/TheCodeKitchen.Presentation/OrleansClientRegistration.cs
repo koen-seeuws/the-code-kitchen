@@ -25,7 +25,7 @@ public static class OrleansClientRegistration
 
         var eventHubConnectionString =
             configuration.GetConnectionString("EventHub") ??
-            throw new InvalidOperationException("ConnectionStrings__EventHub is not configured.");
+            throw new InvalidOperationException("ConnectionStrings__EventHubNamespace is not configured.");
 
         var tableClient = new TableServiceClient(azureStorageConnectionString);
         var queueClient = new QueueServiceClient(azureStorageConnectionString);

@@ -20,7 +20,7 @@ var azureStorageConnectionString =
 
 var eventHubConnectionString =
     builder.Configuration.GetConnectionString("EventHub") ??
-    throw new InvalidOperationException("ConnectionStrings__EventHub is not configured.");
+    throw new InvalidOperationException("ConnectionStrings__EventHubNamespace is not configured.");
 
 var tableClient = new TableServiceClient(azureStorageConnectionString);
 var queueClient = new QueueServiceClient(azureStorageConnectionString);
