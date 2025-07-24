@@ -19,7 +19,7 @@ var azureStorageConnectionString =
     throw new InvalidOperationException("ConnectionStrings__AzureStorage is not configured.");
 
 var eventHubConnectionString =
-    builder.Configuration.GetConnectionString("EventHub") ??
+    builder.Configuration.GetConnectionString("EventHubNamespace") ??
     throw new InvalidOperationException("ConnectionStrings__EventHubNamespace is not configured.");
 
 var tableClient = new TableServiceClient(azureStorageConnectionString);
