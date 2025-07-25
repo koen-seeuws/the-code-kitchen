@@ -3,15 +3,16 @@ namespace TheCodeKitchen.Application.Contracts.Errors;
 [GenerateSerializer]
 public record AggregateError : Error
 {
-    public AggregateError(IEnumerable<Error> errors)
+    [Id(0)]
+    public ICollection<Error> Errors { get; set; }
+    
+    public AggregateError(ICollection<Error> errors)
     {
         Errors = errors;
     }
     
-    public AggregateError(string message, IEnumerable<Error> errors) : base(message)
+    public AggregateError(string message, ICollection<Error> errors) : base(message)
     {
         Errors = errors;
     }
-
-    public IEnumerable<Error> Errors { get; set; }
 }

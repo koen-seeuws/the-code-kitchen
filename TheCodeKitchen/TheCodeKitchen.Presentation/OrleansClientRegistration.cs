@@ -17,7 +17,7 @@ public static class OrleansClientRegistration
         var clientConfiguration =
             configuration
                 .BindAndValidateConfiguration<OrleansClientConfiguration, OrleansClientConfigurationValidator>(
-                    "Orleans");
+                    "TheCodeKitchenOrleans");
 
         var azureStorageConnectionString =
             configuration.GetConnectionString("AzureStorage") ??

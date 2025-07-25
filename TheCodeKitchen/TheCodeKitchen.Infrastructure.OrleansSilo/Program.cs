@@ -12,7 +12,7 @@ builder.Services.AddApplicationServices();
 
 var siloConfiguration =
     builder.Configuration
-        .BindAndValidateConfiguration<OrleansSiloConfiguration, OrleansSiloConfigurationValidator>("Orleans");
+        .BindAndValidateConfiguration<OrleansSiloConfiguration, OrleansSiloConfigurationValidator>("TheCodeKitchenOrleans");
 
 var azureStorageConnectionString =
     builder.Configuration.GetConnectionString("AzureStorage") ??
@@ -27,11 +27,7 @@ var queueClient = new QueueServiceClient(azureStorageConnectionString);
 
 // TODO: REMOVE, this is only for development purposes to ensure a clean state.
 
-foreach (var storage in TheCodeKitchenState.All)
-{
-    tableClient.DeleteTable(storage);
-}
-
+//foreach (var storage in TheCodeKitchenState.All) { tableClient.DeleteTable(storage); }
 
 builder.UseOrleans(silo =>
 {
@@ -83,7 +79,7 @@ builder.UseOrleans(silo =>
                 azureTableBuilder.Configure(options =>
                 {
                     options.TableServiceClient = tableClient;
-                    options.TableName = "TheCodeKitchenEventHubCheckpoints";
+                    options.TableName = TheCodeKitchenState.EventHubCheckpoints;
                 })
             );
         });

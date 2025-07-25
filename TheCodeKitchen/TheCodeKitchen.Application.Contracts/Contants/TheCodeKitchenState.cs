@@ -19,6 +19,7 @@ public static class TheCodeKitchenState
         
         // Persistent Streaming
         PubSubStore,
+        EventHubCheckpoints,
         StreamHandles
     ];
 
@@ -37,6 +38,7 @@ public static class TheCodeKitchenState
 
     // Persistent Streaming
     public const string PubSubStore = nameof(PubSubStore);
+    public const string EventHubCheckpoints = "TheCodeKitchenEventHubCheckpoints";
     public const string StreamHandles = "TheCodeKitchenStreamHandleState";
     
 }

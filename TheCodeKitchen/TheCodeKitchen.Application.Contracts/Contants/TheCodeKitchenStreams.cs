@@ -2,7 +2,7 @@ namespace TheCodeKitchen.Application.Contracts.Contants;
 
 public static class TheCodeKitchenStreams
 {
-    public const string DefaultTheCodeKitchenProvider = nameof(DefaultTheCodeKitchenProvider);
+    public const string DefaultTheCodeKitchenProvider = "Default";
 
     public static readonly List<string> AzureStorageQueues =
         Enumerable.Range(1, 10)
