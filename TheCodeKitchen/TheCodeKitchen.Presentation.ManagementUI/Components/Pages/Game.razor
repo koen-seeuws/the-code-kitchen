@@ -1,0 +1,48 @@
+@page "/games/{gameId:guid}"
+
+<PageTitle>Game</PageTitle>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <MudAlert Severity="Severity.Error">@ErrorMessage</MudAlert>
+}
+else if (GetGameResponse == null)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+}
+else
+{
+    <MudText Typo="Typo.h3" Class="mb-3">@GetGameResponse.Name</MudText>
+
+    if (GetGameResponse.Started == null)
+    {
+        <MudAlert Severity="Severity.Info">The game has not yet started.</MudAlert>
+    }
+
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               OnClick="@PauseOrUnpauseGame"
+               Disabled="@(Paused == null || GetGameResponse.Started == null)"
+               Class="mb-3">
+        @if (Paused == true)
+        {
+            <MudIcon Icon="@Icons.Material.Filled.PlayArrow"/>
+            <span>Unpause</span>
+        }
+        else
+        {
+            <MudIcon Icon="@Icons.Material.Filled.Pause"/>
+            <span>Pause</span>
+        }
+    </MudButton>
+    <MudButton Variant="Variant.Filled"
+               Color="Color.Primary"
+               OnClick="@NextMoment"
+               Disabled="@(Paused == false || GetGameResponse.Started == null || Advancing)"
+               Class="mb-3">
+            <MudIcon Icon="@Icons.Material.Filled.NextPlan"/>
+            Advance
+    </MudButton>
+
+    <div>TODO</div>
+}

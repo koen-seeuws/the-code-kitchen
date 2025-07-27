@@ -1,0 +1,17 @@
+<MudDialog>
+    <TitleContent>
+        Create Kitchen
+    </TitleContent>
+    <DialogContent>
+        <MudForm Model="@Model" @ref="Form">
+            <MudTextField Label="Name"
+                          @bind-Value="Model.Name"
+                          For="@(() => Model.Name)"
+                          Required/>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">OK</MudButton>
+    </DialogActions>
+</MudDialog>

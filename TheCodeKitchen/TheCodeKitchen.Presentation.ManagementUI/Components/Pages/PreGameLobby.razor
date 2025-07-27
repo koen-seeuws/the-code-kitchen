@@ -1,0 +1,65 @@
+@page "/games/{gameId:guid}/pre-game-lobby"
+
+<PageTitle>Pre-game Lobby</PageTitle>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <MudAlert Severity="Severity.Error">@ErrorMessage</MudAlert>
+}
+else if (GetGameResponse == null)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+}
+else
+{
+    <MudText Typo="Typo.h3" Class="mb-3">@GetGameResponse.Name</MudText>
+
+    if (GetGameResponse.Started == null)
+    {
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@CreateKitchen" Class="mb-3">
+            <MudIcon Icon="@Icons.Material.Filled.Add"/>
+            Create Kitchen
+        </MudButton>
+    }
+
+    <MudTable Items="@GetKitchenResponses"
+              Hover="true"
+              Breakpoint="Breakpoint.Sm"
+              Loading="@(GetKitchenResponses == null)"
+              LoadingProgressColor="Color.Primary"
+              Class="mb-3">
+        <NoRecordsContent>
+            No kitchens found.
+        </NoRecordsContent>
+        <HeaderContent>
+            <MudTh>Name</MudTh>
+            <MudTh>Code</MudTh>
+            <MudTh>Rating</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Code">@context.Code</MudTd>
+            <MudTd DataLabel="Rating">@context.Rating</MudTd>
+        </RowTemplate>
+    </MudTable>
+
+    if (GetGameResponse.Started == null)
+    {
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@StartGame" Class="mb-3">
+            <MudIcon Icon="@Icons.Material.Filled.PlayArrow"/>
+            Start Game
+        </MudButton>
+    }
+    else
+    {
+        <MudAlert Severity="Severity.Info">The game has already started, go <MudLink Href="@($"/games/{GameId}")" Color="Color.Info">here</MudLink>!</MudAlert>
+    }
+}
+    
+    
+    
+
+
+
+
+
