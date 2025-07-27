@@ -5,6 +5,6 @@ public record CreateKitchenResponse(
     Guid Id,
     string Name,
     string Code,
-    string Rating,
+    double Rating,
     Guid Game
 );

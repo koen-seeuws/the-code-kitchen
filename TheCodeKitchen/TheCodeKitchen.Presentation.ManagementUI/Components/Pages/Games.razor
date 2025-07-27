@@ -20,7 +20,7 @@ else
               Hover="true"
               Breakpoint="Breakpoint.Sm"
               Loading="@(GetGameResponses == null)"
-              LoadingProgressColor="Color.Info"
+              LoadingProgressColor="Color.Primary"
               OnRowClick="@((TableRowClickEventArgs<GetGameResponse> e) => NavigateToGame(e.Item!.Id, e.Item.Started != null))">
         <NoRecordsContent>
             No games found.

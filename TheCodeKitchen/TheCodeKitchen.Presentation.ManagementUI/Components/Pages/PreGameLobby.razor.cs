@@ -59,6 +59,14 @@ public partial class PreGameLobby(
 
         if (dialogResult is { Canceled: false, Data: CreateKitchenResponse createKitchenResponse })
         {
+            var kitchen = new GetKitchenResponse(
+                createKitchenResponse.Id,
+                createKitchenResponse.Name,
+                createKitchenResponse.Code,
+                createKitchenResponse.Rating,
+                createKitchenResponse.Game
+            );
+            GetKitchenResponses?.Add(kitchen);
         }
     }
 
