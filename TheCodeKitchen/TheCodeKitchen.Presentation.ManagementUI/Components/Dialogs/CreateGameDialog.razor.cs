@@ -15,15 +15,13 @@ public partial class CreateGameDialog(ISnackbar snackbar, IClusterClient cluster
 
     private async Task Submit()
     {
-        var request = new CreateGameRequest(Model.Name, Model.SpeedModifier, Model.Temperature);
-
         await Form.Validate();
-        
         if (!Form.IsValid)
             return;
 
         try
         {
+            var request = new CreateGameRequest(Model.Name, Model.SpeedModifier, Model.Temperature);
             var gameManagementGrain = clusterClient.GetGrain<IGameManagementGrain>(Guid.Empty);
             var createGameResult = await gameManagementGrain.CreateGame(request);
 

@@ -3,6 +3,8 @@ using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.CookBook;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
+using TheCodeKitchen.Application.Contracts.Response.CookBook;
+using TheCodeKitchen.Application.Contracts.Response.Pantry;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 
@@ -10,27 +12,73 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
 {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
 
-    private MudForm Form { get; set; } = new();
+    [Parameter] public ICollection<GetIngredientResponse>? Ingredients { get; set; }
+
+    [Parameter] public ICollection<GetRecipeResponse>? Recipes { get; set; }
     
+    private string? ErrorMessage { get; set; }
+
+    private MudForm Form { get; set; } = new();
+
     private CreateRecipeFormModel Model { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Recipes == null)
+        {
+            try
+            {
+                var cookBookGrain = clusterClient.GetGrain<ICookBookGrain>(Guid.Empty);
+
+                var getRecipesResult = await cookBookGrain.GetRecipes();
+                if (getRecipesResult.Succeeded)
+                    Recipes = getRecipesResult.Value.ToList();
+                else
+                    ErrorMessage = getRecipesResult.Error.Message;
+            }
+            catch
+            {
+                ErrorMessage = "An error occurred while retrieving the recipe.";
+            }
+        }
+
+        if (Ingredients == null)
+        {
+            try
+            {
+                var pantryGrain = clusterClient.GetGrain<IPantryGrain>(Guid.Empty);
+
+                var getIngredientsResult = await pantryGrain.GetIngredients();
+                if (getIngredientsResult.Succeeded)
+                    Ingredients = getIngredientsResult.Value.ToList();
+                else
+                    ErrorMessage = getIngredientsResult.Error.Message;
+            }
+            catch
+            {
+                ErrorMessage = "An error occurred while retrieving the ingredients.";
+            }
+        }
+
+        await base.OnInitializedAsync();
+    }
 
     private async Task Submit()
     {
         await Form.Validate();
-        
         if (!Form.IsValid)
             return;
-        
+
         //TODO
         //var request = new CreateRecipeRequest(Model.Name);
 
         try
         {
             var cookBookGrain = clusterClient.GetGrain<ICookBookGrain>(Guid.Empty);
-            
+
             /*
             TODO
-            
+
             var createRecipeResult = await cookBookGrain.CreateRecipe(request);
 
             if (createRecipeResult.Succeeded)
@@ -38,7 +86,7 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
                 snackbar.Add("Successfully created recipe.", Severity.Success);
                 MudDialog.Close(DialogResult.Ok(createRecipeResult.Value));
             }
-                
+
             else
                 snackbar.Add(createRecipeResult.Error.Message, Severity.Error);
                 */

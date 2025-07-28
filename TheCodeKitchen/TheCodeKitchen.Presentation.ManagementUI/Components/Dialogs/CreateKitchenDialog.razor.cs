@@ -17,15 +17,13 @@ public partial class CreateKitchenDialog(ISnackbar snackbar, IClusterClient clus
 
     private async Task Submit()
     {
-        var request = new CreateKitchenRequest(Model.Name, GameId);
-
         await Form.Validate();
-        
         if (!Form.IsValid)
             return;
-
+        
         try
         {
+            var request = new CreateKitchenRequest(Model.Name, GameId);
             var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
             var createKitchenResult = await gameGrain.CreateKitchen(request);
 

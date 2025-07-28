@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Response.CookBook;
+using TheCodeKitchen.Application.Contracts.Response.Pantry;
 using TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Pages;
@@ -13,22 +14,39 @@ public partial class Recipes(
 ) : ComponentBase
 {
     private ICollection<GetRecipeResponse>? GetRecipeResponses { get; set; }
+    private ICollection<GetIngredientResponse>? GetIngredientResponses { get; set; }
     private string? ErrorMessage { get; set; }
-    
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
             var cookBookGrain = clusterClient.GetGrain<ICookBookGrain>(Guid.Empty);
-            var result = await cookBookGrain.GetRecipes();
-            if (result.Succeeded)
-                GetRecipeResponses = result.Value.ToList();
+
+            var getRecipesResult = await cookBookGrain.GetRecipes();
+            if (getRecipesResult.Succeeded)
+                GetRecipeResponses = getRecipesResult.Value.ToList();
             else
-                ErrorMessage = result.Error.Message;
+                ErrorMessage = getRecipesResult.Error.Message;
         }
         catch
         {
             ErrorMessage = "An error occurred while retrieving the recipe.";
+        }
+
+        try
+        {
+            var pantryGrain = clusterClient.GetGrain<IPantryGrain>(Guid.Empty);
+
+            var getIngredientsResult = await pantryGrain.GetIngredients();
+            if (getIngredientsResult.Succeeded)
+                GetIngredientResponses = getIngredientsResult.Value.ToList();
+            else
+                ErrorMessage = getIngredientsResult.Error.Message;
+        }
+        catch
+        {
+            ErrorMessage = "An error occurred while retrieving the ingredients.";
         }
 
         await base.OnInitializedAsync();
@@ -37,8 +55,14 @@ public partial class Recipes(
 
     private async Task CreateRecipe()
     {
-        var dialogParameters = new DialogParameters();
+        var dialogParameters = new DialogParameters
+        {
+            { nameof(CreateRecipeDialog.Ingredients), GetIngredientResponses },
+            { nameof(CreateRecipeDialog.Recipes), GetRecipeResponses }
+        };
+        
         var dialogOptions = new DialogOptions { CloseOnEscapeKey = true };
+        
         var dialog = await dialogService.ShowAsync<CreateRecipeDialog>(
             "Create Recipe",
             dialogParameters,

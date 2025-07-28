@@ -16,15 +16,13 @@ public partial class CreateIngredientDialog(ISnackbar snackbar, IClusterClient c
 
     private async Task Submit()
     {
-        var request = new CreateIngredientRequest(Model.Name);
-
         await Form.Validate();
-        
         if (!Form.IsValid)
             return;
-
+        
         try
         {
+            var request = new CreateIngredientRequest(Model.Name);
             var pantryGrain = clusterClient.GetGrain<IPantryGrain>(Guid.Empty);
             var createIngredientResult = await pantryGrain.CreateIngredient(request);
 

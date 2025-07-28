@@ -3,15 +3,27 @@
         Create Kitchen
     </TitleContent>
     <DialogContent>
-        <MudForm Model="@Model" @ref="Form">
-            <MudTextField Label="Name"
-                          @bind-Value="Model.Name"
-                          For="@(() => Model.Name)"
-                          Required/>
-            
-            @(/* TODO */)
-            
-        </MudForm>
+        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        {
+            <MudAlert Severity="Severity.Error">@ErrorMessage</MudAlert>
+        }
+        else if (Ingredients == null || Recipes == null)
+        {
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+        }
+        else
+        {
+            <MudForm Model="@Model" @ref="Form">
+                <MudTextField Label="Name"
+                              @bind-Value="Model.Name"
+                              For="@(() => Model.Name)"
+                              Required/>
+                
+
+
+
+            </MudForm>
+        }
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
