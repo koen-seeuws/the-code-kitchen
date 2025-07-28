@@ -1,4 +1,4 @@
-namespace TheCodeKitchen.Application.Contracts.Contants;
+namespace TheCodeKitchen.Application.Contracts.Constants;
 
 public readonly record struct TheCodeKitchenMomentDuration
 {

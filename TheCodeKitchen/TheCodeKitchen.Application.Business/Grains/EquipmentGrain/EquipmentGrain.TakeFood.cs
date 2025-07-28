@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Contracts.Constants;
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
 using TheCodeKitchen.Application.Contracts.Requests.Food;
@@ -46,11 +47,18 @@ public partial class EquipmentGrain
 
         if (state.State.Time.HasValue)
         {
-            var addStepRequest = new AddStepRequest(state.State.EquipmentType, state.State.Time.Value);
-            var addStepResult = await foodGrain.AddStep(addStepRequest);
+            var isSteppable = TheCodeKitchenEquipmentTypeConstants.Stepable
+                .Any(et => et.Equals(state.State.EquipmentType, StringComparison.OrdinalIgnoreCase)
+                );
 
-            if (!addStepResult.Succeeded)
-                return addStepResult.Error;
+            if (isSteppable)
+            {
+                var addStepRequest = new AddStepRequest(state.State.EquipmentType, state.State.Time.Value);
+                var addStepResult = await foodGrain.AddStep(addStepRequest);
+
+                if (!addStepResult.Succeeded)
+                    return addStepResult.Error;
+            }
 
             state.State.Time = null;
         }

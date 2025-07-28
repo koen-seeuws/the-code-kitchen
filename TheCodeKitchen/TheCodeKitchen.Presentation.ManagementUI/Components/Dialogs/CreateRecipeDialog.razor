@@ -1,3 +1,4 @@
+@using TheCodeKitchen.Application.Contracts.Constants
 <MudDialog>
     <TitleContent>
         Create Kitchen
@@ -18,10 +19,61 @@
                               @bind-Value="Model.Name"
                               For="@(() => Model.Name)"
                               Required/>
-                
+                @foreach (var recipeStep in Model.Steps)
+                {
+                    <MudSelect Label="Equipment Type"
+                               @bind-Value="@recipeStep.EquipmentType"
+                               For="@(() => recipeStep.EquipmentType)"
+                               Required>
+                        @foreach (var equipmentType in TheCodeKitchenEquipmentTypeConstants.Stepable)
+                        {
+                            <MudSelectItem Value="@equipmentType">@equipmentType</MudSelectItem>
+                        }
+                    </MudSelect>
+                    <MudTimePicker Label="Time"
+                                   @bind-Time="@recipeStep.Time"
+                                   For="@(() => @recipeStep.Time)"
+                                   Required/>
+                }
+                <MudButton Color="Color.Primary" OnClick="() => Model.Steps.Add(new StepFormModel())">
+                    Add Step
+                </MudButton>
+                <MudText Typo="Typo.h4">Ingredients</MudText>
+                <MudButton Color="Color.Primary" OnClick="() => Model.Ingredients.Add(new IngredientFormModel())">
+                    Add Ingredient
+                </MudButton>
+                @foreach (var recipeIngredient in Model.Ingredients)
+                {
+                    <MudSelect Label="Ingredient"
+                               @bind-Value="@recipeIngredient.Name"
+                               For="@(() => recipeIngredient.Name)"
+                               Required>
+                        @foreach (var ingredient in AllIngredients)
+                        {
+                            <MudSelectItem Value="@ingredient">@ingredient</MudSelectItem>
+                        }
+                    </MudSelect>
+                    @foreach (var ingredientStep in recipeIngredient.Steps)
+                    {
+                        <MudSelect Label="Equipment Type"
+                                   @bind-Value="@ingredientStep.EquipmentType"
+                                   For="@(() => ingredientStep.EquipmentType)"
+                                   Required>
+                            @foreach (var equipmentType in TheCodeKitchenEquipmentTypeConstants.Stepable)
+                            {
+                                <MudSelectItem Value="@equipmentType">@equipmentType</MudSelectItem>
+                            }
+                        </MudSelect>
+                        <MudTimePicker Label="Time"
+                                       @bind-Time="@ingredientStep.Time"
+                                       For="@(() => ingredientStep.Time)"
+                                       Required/>
+                    }
 
-
-
+                    <MudButton Color="Color.Primary" OnClick="() => recipeIngredient.Steps.Add(new StepFormModel())">
+                        Add Step
+                    </MudButton>
+                }
             </MudForm>
         }
     </DialogContent>

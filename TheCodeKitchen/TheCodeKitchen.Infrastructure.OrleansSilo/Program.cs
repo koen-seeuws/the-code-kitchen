@@ -2,7 +2,7 @@ using Azure.Data.Tables;
 using Azure.Storage.Queues;
 using Orleans.Configuration;
 using TheCodeKitchen.Application.Business;
-using TheCodeKitchen.Application.Contracts.Contants;
+using TheCodeKitchen.Application.Contracts.Constants;
 using TheCodeKitchen.Infrastructure.Extensions;
 using TheCodeKitchen.Infrastructure.OrleansSilo;
 

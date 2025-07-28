@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Orleans.Configuration;
-using TheCodeKitchen.Application.Contracts.Contants;
+using TheCodeKitchen.Application.Contracts.Constants;
 using TheCodeKitchen.Infrastructure.Extensions;
 
 namespace TheCodeKitchen.Presentation;

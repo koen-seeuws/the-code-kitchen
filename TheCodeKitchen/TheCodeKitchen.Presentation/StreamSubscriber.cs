@@ -1,5 +1,5 @@
 using Orleans.Streams;
-using TheCodeKitchen.Application.Contracts.Contants;
+using TheCodeKitchen.Application.Contracts.Constants;
 
 namespace TheCodeKitchen.Presentation;
 

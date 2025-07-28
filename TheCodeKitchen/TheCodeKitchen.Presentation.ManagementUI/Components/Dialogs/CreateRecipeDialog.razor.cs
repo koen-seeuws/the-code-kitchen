@@ -18,6 +18,8 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
     
     private string? ErrorMessage { get; set; }
 
+    private ICollection<string> AllIngredients = new List<string>();
+
     private MudForm Form { get; set; } = new();
 
     private CreateRecipeFormModel Model { get; set; } = new();
@@ -60,6 +62,13 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
             }
         }
 
+        if (Recipes != null && Ingredients != null)
+        {
+            var recipeNames = Recipes.Select(r => r.Name).ToList();
+            var ingredientNames = Ingredients.Select(i => i.Name).ToList();
+            AllIngredients = recipeNames.Concat(ingredientNames).ToList();
+        } 
+
         await base.OnInitializedAsync();
     }
 
@@ -100,7 +109,23 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
     private void Cancel() => MudDialog.Cancel();
 }
 
+
+
 public class CreateRecipeFormModel
 {
     public string Name { get; set; } = string.Empty;
+    public ICollection<StepFormModel> Steps { get; set; } = new List<StepFormModel>();
+    public ICollection<IngredientFormModel> Ingredients { get; set; } = new List<IngredientFormModel>();
+}
+
+public class IngredientFormModel
+{
+    public string Name { get; set; } = string.Empty;
+    public ICollection<StepFormModel> Steps { get; set; } = new List<StepFormModel>();
+}
+
+public class StepFormModel
+{
+    public string EquipmentType { get; set; } = string.Empty;
+    public TimeSpan? Time { get; set; } = TimeSpan.Zero;
 }

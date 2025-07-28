@@ -1,3 +1,5 @@
+using TheCodeKitchen.Application.Contracts.Constants;
+
 namespace TheCodeKitchen.Application.Business.Grains.KitchenManagementGrain;
 
 public class KitchenManagementState
