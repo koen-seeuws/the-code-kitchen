@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
 
@@ -15,5 +16,12 @@
     <ItemGroup>
       <ProjectReference Include="..\TheCodeKitchen.Infrastructure.AzureSignalR\TheCodeKitchen.Infrastructure.AzureSignalR.csproj" />
       <ProjectReference Include="..\TheCodeKitchen.Presentation\TheCodeKitchen.Presentation.csproj" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 </Project>
