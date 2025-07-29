@@ -8,8 +8,14 @@ public partial class KitchenOrderGrain
     {
         ICollection<double> ratings =
         [
-            state.State.FoodRequestRatings.Select(r => r.Rating).Average(),
-            state.State.DeliveredFoods.Select(r => r.Rating).Average(),
+            state.State.FoodRequestRatings
+                .Select(r => r.Rating)
+                .DefaultIfEmpty(1.0)
+                .Average(),
+            state.State.DeliveredFoods
+                .Select(r => r.Rating)
+                .DefaultIfEmpty(0.0)
+                .Average(),
             state.State.CompletenessRating
         ];
 
