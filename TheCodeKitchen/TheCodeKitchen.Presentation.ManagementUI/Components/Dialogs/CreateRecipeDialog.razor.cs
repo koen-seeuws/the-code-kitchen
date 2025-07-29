@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Grains;
+using TheCodeKitchen.Application.Contracts.Models;
+using TheCodeKitchen.Application.Contracts.Requests.CookBook;
 using TheCodeKitchen.Application.Contracts.Response.CookBook;
 using TheCodeKitchen.Application.Contracts.Response.Pantry;
 
@@ -13,7 +15,7 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
     [Parameter] public ICollection<GetIngredientResponse>? Ingredients { get; set; }
 
     [Parameter] public ICollection<GetRecipeResponse>? Recipes { get; set; }
-    
+
     private string? ErrorMessage { get; set; }
 
     private ICollection<string> AllIngredients { get; set; } = new List<string>();
@@ -65,16 +67,16 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
             var recipeNames = Recipes.Select(r => r.Name).ToList();
             var ingredientNames = Ingredients.Select(i => i.Name).ToList();
             AllIngredients = recipeNames.Concat(ingredientNames).ToList();
-        } 
+        }
 
         await base.OnInitializedAsync();
     }
-    
+
     private void AddStep(ICollection<StepFormModel> steps)
     {
         steps.Add(new StepFormModel());
     }
-    
+
     private void RemoveStep(ICollection<StepFormModel> steps, StepFormModel step)
     {
         steps.Remove(step);
@@ -84,12 +86,12 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
     {
         Model.Ingredients.Add(new IngredientFormModel());
     }
-    
+
     private void RemoveIngredient(IngredientFormModel ingredient)
     {
         Model.Ingredients.Remove(ingredient);
     }
-    
+
     private async Task OnIngredientNameChanged(IngredientFormModel ingredient, string value)
     {
         ingredient.Name = value;
@@ -101,7 +103,7 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
 
         await InvokeAsync(StateHasChanged);
     }
-    
+
 
     private async Task Submit()
     {
@@ -109,16 +111,25 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
         if (!Form.IsValid)
             return;
 
-        //TODO
-        //var request = new CreateRecipeRequest(Model.Name);
-
         try
         {
+            var steps = Model.Steps
+                .Select(s => new RecipeStepDto(s.EquipmentType, s.Time!.Value))
+                .ToList();
+
+            var ingredients = Model.Ingredients
+                .Select(i =>
+                    new RecipeIngredientDto(
+                        i.Name,
+                        i.Steps
+                            .Select(s => new RecipeStepDto(s.EquipmentType, s.Time!.Value))
+                            .ToList()
+                    )
+                )
+                .ToList();
+
+            var request = new CreateRecipeRequest(Model.Name, steps, ingredients);
             var cookBookGrain = clusterClient.GetGrain<ICookBookGrain>(Guid.Empty);
-
-            /*
-            TODO
-
             var createRecipeResult = await cookBookGrain.CreateRecipe(request);
 
             if (createRecipeResult.Succeeded)
@@ -126,10 +137,8 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
                 snackbar.Add("Successfully created recipe.", Severity.Success);
                 MudDialog.Close(DialogResult.Ok(createRecipeResult.Value));
             }
-
             else
                 snackbar.Add(createRecipeResult.Error.Message, Severity.Error);
-                */
         }
         catch
         {
@@ -139,8 +148,6 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
 
     private void Cancel() => MudDialog.Cancel();
 }
-
-
 
 public class CreateRecipeFormModel
 {
