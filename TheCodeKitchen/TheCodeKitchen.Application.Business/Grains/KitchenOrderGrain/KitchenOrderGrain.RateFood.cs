@@ -9,7 +9,10 @@ public partial class KitchenOrderGrain
     private double RateFood(string food, ICollection<RecipeStepDto> executedSteps, ICollection<FoodDto> ingredients,
         ICollection<GetRecipeResponse> recipes)
     {
-        var recipe = recipes.First(r => r.Name.Equals(food, StringComparison.OrdinalIgnoreCase));
+        var recipe = recipes.FirstOrDefault(r => r.Name.Equals(food, StringComparison.OrdinalIgnoreCase));
+
+        if (recipe == null)
+            return 0.0; // If someone tries to rate a food that isn't a recipe, rate 0
 
         var recipeRating = RateSteps(executedSteps, recipe.Steps);
 
