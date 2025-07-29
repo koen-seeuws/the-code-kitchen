@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Grains;
-using TheCodeKitchen.Application.Contracts.Requests.CookBook;
-using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 using TheCodeKitchen.Application.Contracts.Response.CookBook;
 using TheCodeKitchen.Application.Contracts.Response.Pantry;
 
@@ -18,7 +16,7 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
     
     private string? ErrorMessage { get; set; }
 
-    private ICollection<string> AllIngredients = new List<string>();
+    private ICollection<string> AllIngredients { get; set; } = new List<string>();
 
     private MudForm Form { get; set; } = new();
 
@@ -71,6 +69,39 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
 
         await base.OnInitializedAsync();
     }
+    
+    private void AddStep(ICollection<StepFormModel> steps)
+    {
+        steps.Add(new StepFormModel());
+    }
+    
+    private void RemoveStep(ICollection<StepFormModel> steps, StepFormModel step)
+    {
+        steps.Remove(step);
+    }
+
+    private void AddIngredient()
+    {
+        Model.Ingredients.Add(new IngredientFormModel());
+    }
+    
+    private void RemoveIngredient(IngredientFormModel ingredient)
+    {
+        Model.Ingredients.Remove(ingredient);
+    }
+    
+    private async Task OnIngredientNameChanged(IngredientFormModel ingredient, string value)
+    {
+        ingredient.Name = value;
+
+        if (Recipes?.Select(r => r.Name).Contains(value) == true)
+        {
+            ingredient.Steps.Clear();
+        }
+
+        await InvokeAsync(StateHasChanged);
+    }
+    
 
     private async Task Submit()
     {

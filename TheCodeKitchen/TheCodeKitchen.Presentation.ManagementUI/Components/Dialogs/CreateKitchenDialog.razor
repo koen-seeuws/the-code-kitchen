@@ -1,13 +1,14 @@
 <MudDialog>
     <TitleContent>
-        Create Kitchen
+        <MudText Typo="Typo.h4">Create Kitchen</MudText>
     </TitleContent>
     <DialogContent>
         <MudForm Model="@Model" @ref="Form">
             <MudTextField Label="Name"
                           @bind-Value="Model.Name"
                           For="@(() => Model.Name)"
-                          Required/>
+                          Required
+                          Variant="Variant.Outlined"/>
         </MudForm>
     </DialogContent>
     <DialogActions>

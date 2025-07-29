@@ -45,8 +45,7 @@ public partial class Games(
 
     private async Task CreateGame()
     {
-        var dialogOptions = new DialogOptions { CloseOnEscapeKey = true };
-        var dialog = await dialogService.ShowAsync<CreateGameDialog>("Create Game", dialogOptions);
+        var dialog = await dialogService.ShowAsync<CreateGameDialog>("Create Game");
         var dialogResult = await dialog.Result;
 
         if (dialogResult is { Canceled: false, Data: CreateGameResponse createGameResponse })

@@ -1,23 +1,29 @@
 <MudDialog>
     <TitleContent>
-        Create Game
+        <MudText Typo="Typo.h4">Create Game</MudText>
     </TitleContent>
     <DialogContent>
         <MudForm Model="@Model" @ref="Form">
             <MudTextField Label="Name"
                           @bind-Value="Model.Name"
                           For="@(() => Model.Name)"
-                          Required/>
+                          Required
+                          Variant="Variant.Outlined"
+                          Class="mb-1"/>
             <MudTextField Label="SpeedModifier"
                           InputType="InputType.Number"
                           @bind-Value="Model.SpeedModifier"
                           For="@(() => Model.SpeedModifier)"
-                          Required/>
+                          Required
+                          Variant="Variant.Outlined"
+                          Class="mb-1"/>
             <MudTextField Label="Temperature"
                           InputType="InputType.Number"
                           @bind-Value="Model.Temperature"
                           For="@(() => Model.Temperature)"
-                          Required/>
+                          Required
+                          Variant="Variant.Outlined"
+                          Class="mb-1"/>
         </MudForm>
     </DialogContent>
     <DialogActions>

@@ -51,10 +51,9 @@ public partial class PreGameLobby(
     private async Task CreateKitchen()
     {
         var dialogParameters = new DialogParameters { { nameof(CreateKitchenDialog.GameId), GameId } };
-        var dialogOptions = new DialogOptions { CloseOnEscapeKey = true };
 
         var dialog =
-            await dialogService.ShowAsync<CreateKitchenDialog>("Create Kitchen", dialogParameters, dialogOptions);
+            await dialogService.ShowAsync<CreateKitchenDialog>("Create Kitchen", dialogParameters);
         var dialogResult = await dialog.Result;
 
         if (dialogResult is { Canceled: false, Data: CreateKitchenResponse createKitchenResponse })

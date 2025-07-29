@@ -37,9 +37,8 @@ public partial class Pantry(
     }
 
     private async Task CreateIngredient()
-    {
-        var dialogOptions = new DialogOptions { CloseOnEscapeKey = true };
-        var dialog = await dialogService.ShowAsync<CreateIngredientDialog>("Create Ingredient", dialogOptions);
+    { ;
+        var dialog = await dialogService.ShowAsync<CreateIngredientDialog>("Create Ingredient");
         var dialogResult = await dialog.Result;
 
         if (dialogResult is { Canceled: false, Data: CreateIngredientResponse createIngredientResponse })

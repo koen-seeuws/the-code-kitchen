@@ -61,13 +61,7 @@ public partial class Recipes(
             { nameof(CreateRecipeDialog.Recipes), GetRecipeResponses }
         };
         
-        var dialogOptions = new DialogOptions { CloseOnEscapeKey = true };
-        
-        var dialog = await dialogService.ShowAsync<CreateRecipeDialog>(
-            "Create Recipe",
-            dialogParameters,
-            dialogOptions
-        );
+        var dialog = await dialogService.ShowAsync<CreateRecipeDialog>("Create Recipe", dialogParameters);
         var dialogResult = await dialog.Result;
 
         if (dialogResult is { Canceled: false, Data: CreateRecipeResponse createRecipeResponse })
