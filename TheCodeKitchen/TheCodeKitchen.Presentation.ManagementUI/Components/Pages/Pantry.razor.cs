@@ -19,8 +19,15 @@ public partial class Pantry(
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadIngredients();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LoadIngredients()
+    {
         try
         {
+            GetIngredientResponses = null;
             var pantryGrain = clusterClient.GetGrain<IPantryGrain>(Guid.Empty);
             var result = await pantryGrain.GetIngredients();
             if (result.Succeeded)
@@ -32,19 +39,14 @@ public partial class Pantry(
         {
             ErrorMessage = "An error occurred while retrieving the ingredients.";
         }
-
-        await base.OnInitializedAsync();
     }
 
     private async Task CreateIngredient()
-    { ;
+    {
         var dialog = await dialogService.ShowAsync<CreateIngredientDialog>("Create Ingredient");
         var dialogResult = await dialog.Result;
 
-        if (dialogResult is { Canceled: false, Data: CreateIngredientResponse createIngredientResponse })
-        {
-            var ingredient = new GetIngredientResponse(createIngredientResponse.Name);
-            GetIngredientResponses?.Add(ingredient);
-        }
+        if (dialogResult is { Canceled: false })
+            await LoadIngredients();
     }
 }

@@ -24,16 +24,35 @@ public partial class PreGameLobby(
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadGame();
+        await LoadKitchens();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LoadGame()
+    {
         try
         {
+            GetGameResponse = null;
             var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
-
             var getGameResult = await gameGrain.GetGame();
             if (getGameResult.Succeeded)
                 GetGameResponse = getGameResult.Value;
             else
                 ErrorMessage = getGameResult.Error.Message;
+        }
+        catch
+        {
+            ErrorMessage = "An error occurred while retrieving the game.";
+        }
+    }
 
+    private async Task LoadKitchens()
+    {
+        try
+        {
+            GetKitchenResponses = null;
+            var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
             var getKitchensResult = await gameGrain.GetKitchens();
             if (getKitchensResult.Succeeded)
                 GetKitchenResponses = getKitchensResult.Value.ToList();
@@ -42,10 +61,8 @@ public partial class PreGameLobby(
         }
         catch
         {
-            ErrorMessage = "An error occurred while retrieving the necessary game information";
+            ErrorMessage = "An error occurred while retrieving the kitchens.";
         }
-
-        await base.OnInitializedAsync();
     }
 
     private async Task CreateKitchen()
@@ -58,14 +75,7 @@ public partial class PreGameLobby(
 
         if (dialogResult is { Canceled: false, Data: CreateKitchenResponse createKitchenResponse })
         {
-            var kitchen = new GetKitchenResponse(
-                createKitchenResponse.Id,
-                createKitchenResponse.Name,
-                createKitchenResponse.Code,
-                createKitchenResponse.Rating,
-                createKitchenResponse.Game
-            );
-            GetKitchenResponses?.Add(kitchen);
+            await LoadKitchens();
         }
     }
 

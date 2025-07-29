@@ -19,8 +19,16 @@ public partial class Recipes(
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadRecipes();
+        await LoadIngredients();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LoadRecipes()
+    {
         try
         {
+            GetRecipeResponses = null;
             var cookBookGrain = clusterClient.GetGrain<ICookBookGrain>(Guid.Empty);
 
             var getRecipesResult = await cookBookGrain.GetRecipes();
@@ -33,9 +41,13 @@ public partial class Recipes(
         {
             ErrorMessage = "An error occurred while retrieving the recipe.";
         }
+    }
 
+    private async Task LoadIngredients()
+    {
         try
         {
+            GetIngredientResponses = null;
             var pantryGrain = clusterClient.GetGrain<IPantryGrain>(Guid.Empty);
 
             var getIngredientsResult = await pantryGrain.GetIngredients();
@@ -48,11 +60,8 @@ public partial class Recipes(
         {
             ErrorMessage = "An error occurred while retrieving the ingredients.";
         }
-
-        await base.OnInitializedAsync();
     }
-
-
+    
     private async Task CreateRecipe()
     {
         var dialogParameters = new DialogParameters
@@ -60,11 +69,11 @@ public partial class Recipes(
             { nameof(CreateRecipeDialog.Ingredients), GetIngredientResponses },
             { nameof(CreateRecipeDialog.Recipes), GetRecipeResponses }
         };
-        
+
         var dialog = await dialogService.ShowAsync<CreateRecipeDialog>("Create Recipe", dialogParameters);
         var dialogResult = await dialog.Result;
 
-        if (dialogResult is { Canceled: false, Data: CreateRecipeResponse createRecipeResponse })
-            return;
+        if (dialogResult is { Canceled: false })
+            await LoadRecipes();
     }
 }

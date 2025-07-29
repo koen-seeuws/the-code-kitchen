@@ -24,10 +24,17 @@ public partial class Game(
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadGame();
+        await LoadKitchens();
+        await base.OnInitializedAsync();
+    }
+
+    private async Task LoadGame()
+    {
         try
         {
+            GetGameResponse = null;
             var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
-
             var getGameResult = await gameGrain.GetGame();
             if (getGameResult.Succeeded)
             {
@@ -36,7 +43,19 @@ public partial class Game(
             }
             else
                 ErrorMessage = getGameResult.Error.Message;
+        }
+        catch
+        {
+            ErrorMessage = "An error occurred while retrieving the game.";
+        }
+    }
 
+    private async Task LoadKitchens()
+    {
+        try
+        {
+            GetKitchenResponses = null;
+            var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
             var getKitchensResult = await gameGrain.GetKitchens();
             if (getKitchensResult.Succeeded)
                 GetKitchenResponses = getKitchensResult.Value.ToList();
@@ -45,10 +64,8 @@ public partial class Game(
         }
         catch
         {
-            ErrorMessage = "An error occurred while retrieving the necessary game information";
+            ErrorMessage = "An error occurred while retrieving the kitchens.";
         }
-
-        await base.OnInitializedAsync();
     }
 
     private async Task PauseOrUnpauseGame()

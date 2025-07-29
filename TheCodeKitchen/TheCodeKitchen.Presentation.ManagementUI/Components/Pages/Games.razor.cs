@@ -18,8 +18,15 @@ public partial class Games(
 
     protected override async Task OnInitializedAsync()
     {
+        await LoadGames();
+        await base.OnInitializedAsync();
+    }
+    
+    private async Task LoadGames()
+    {
         try
         {
+            GetGameResponses = null;
             var gameManagementGrain = clusterClient.GetGrain<IGameManagementGrain>(Guid.Empty);
             var result = await gameManagementGrain.GetGames();
             if (result.Succeeded)
@@ -31,8 +38,6 @@ public partial class Games(
         {
             ErrorMessage = "An error occurred while retrieving the games.";
         }
-
-        await base.OnInitializedAsync();
     }
 
     private void NavigateToGame(Guid gameId, bool started)

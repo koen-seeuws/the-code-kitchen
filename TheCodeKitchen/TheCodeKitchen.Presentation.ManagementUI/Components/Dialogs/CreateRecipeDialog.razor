@@ -59,9 +59,9 @@
                     Add Step
                 </MudButton>
                 <MudText Typo="Typo.h5" Class="mb-1">Ingredients</MudText>
-                @foreach (var (recipeIngredient, index) in Model.Ingredients.Select((recipeIngredient, index) => (recipeIngredient, index)))
+                @foreach (var (recipeIngredient, number) in Model.Ingredients.Select((recipeIngredient, index) => (recipeIngredient, index + 1)))
                 {
-                    <MudText Typo="Typo.h6" Class="">Ingredient @(index + 1)</MudText>
+                    <MudText Typo="Typo.h6" Class="">Ingredient @number</MudText>
                     <div class="d-flex justify-space-between align-center gap-3 mb-3">
                         <MudSelect Label="Ingredient"
                                    Value="@recipeIngredient.Name"
