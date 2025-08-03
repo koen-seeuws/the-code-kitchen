@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Contracts.Constants;
 using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
 using TheCodeKitchen.Application.Contracts.Response.KitchenOrder;
 
@@ -20,6 +21,11 @@ public sealed partial class KitchenOrderGrain
         await state.WriteStateAsync();
 
         await SubscribeToNextMomentEvent();
+        
+        var kitchenOrderStreamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
+        var kitchenOrderStream = kitchenOrderStreamProvider.GetStream<NewKitchenOrderEvent>(nameof(NewKitchenOrderEvent), $"{kitchen}");
+        var @event = new NewKitchenOrderEvent(request.OrderNumber, request.RequestedFoods);
+        await kitchenOrderStream.OnNextAsync(@event);
         
         return mapper.Map<CreateKitchenOrderResponse>(kitchenOrder);
     }
