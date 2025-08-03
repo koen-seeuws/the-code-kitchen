@@ -7,7 +7,7 @@ public class EquipmentGrainStreamSubscriptionHandles
     public StreamSubscriptionHandle<NextMomentEvent>? NextMomentStreamSubscriptionHandle { get; set; }
 }
 
-public partial class EquipmentGrain(
+public sealed partial class EquipmentGrain(
     [PersistentState(TheCodeKitchenState.Equipment, TheCodeKitchenState.Equipment)]
     IPersistentState<Equipment> state,
     [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]

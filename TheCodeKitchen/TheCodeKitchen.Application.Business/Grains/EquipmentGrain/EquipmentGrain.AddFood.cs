@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Contracts.Requests.Food;
 
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
-public partial class EquipmentGrain
+public sealed partial class EquipmentGrain
 {
     public async Task<Result<TheCodeKitchenUnit>> AddFood(AddFoodRequest request)
     {

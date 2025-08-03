@@ -5,7 +5,7 @@ using TheCodeKitchen.Application.Contracts.Response.Food;
 
 namespace TheCodeKitchen.Application.Business.Grains.PantryGrain;
 
-public partial class PantryGrain
+public sealed partial class PantryGrain
 {
     public async Task<Result<TakeFoodResponse>> TakeFood(TakeFoodFromPantryRequest request)
     {

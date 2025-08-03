@@ -4,7 +4,7 @@ using TheCodeKitchen.Application.Contracts.Response.Food;
 
 namespace TheCodeKitchen.Application.Business.Grains.FoodGrain;
 
-public partial class FoodGrain
+public sealed partial class FoodGrain
 {
     public async Task<Result<CreateFoodResponse>> Initialize(CreateFoodRequest request)
     {

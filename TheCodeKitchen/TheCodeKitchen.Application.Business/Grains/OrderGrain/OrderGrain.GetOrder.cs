@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Response.Order;
 
 namespace TheCodeKitchen.Application.Business.Grains.OrderGrain;
 
-public partial class OrderGrain
+public sealed partial class OrderGrain
 {
     public async Task<Result<GetOrderResponse>> GetOrder()
     {

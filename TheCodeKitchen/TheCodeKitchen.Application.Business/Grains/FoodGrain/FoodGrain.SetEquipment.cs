@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Requests.Food;
 
 namespace TheCodeKitchen.Application.Business.Grains.FoodGrain;
 
-public partial class FoodGrain
+public sealed partial class FoodGrain
 {
     public async Task<Result<TheCodeKitchenUnit>> SetEquipment(SetEquipmentRequest request)
     {

@@ -1,8 +1,8 @@
 using TheCodeKitchen.Application.Contracts.Constants;
 
-namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
+namespace TheCodeKitchen.Application.Business.Grains.CookGrain;
 
-public sealed partial class EquipmentGrain
+public sealed partial class CookGrain
 {
     private async Task SubscribeToNextMomentEvent()
     {

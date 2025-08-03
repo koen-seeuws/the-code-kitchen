@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Business.Grains.FoodGrain;
 
-public partial class FoodGrain
+public sealed partial class FoodGrain
 {
     public async Task<Result<TheCodeKitchenUnit>> Trash()
     {

@@ -4,7 +4,7 @@ using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
 
-public partial class KitchenOrderGrain
+public sealed partial class KitchenOrderGrain
 {
     public async Task<Result<TheCodeKitchenUnit>> DeliverFood(DeliverFoodRequest request)
     {

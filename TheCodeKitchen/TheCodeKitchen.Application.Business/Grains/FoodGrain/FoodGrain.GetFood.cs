@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Response.Food;
 
 namespace TheCodeKitchen.Application.Business.Grains.FoodGrain;
 
-public partial class FoodGrain
+public sealed partial class FoodGrain
 {
     public Task<Result<GetFoodResponse>> GetFood()
     {

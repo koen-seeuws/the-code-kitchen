@@ -39,7 +39,7 @@ public sealed partial class KitchenGrain
                 $"The game with id {state.State.Game} has already started, you can't join a game that has already started!");
 
         var createCookResult =
-            await CreateCook(new CreateCookRequest(request.Username, request.PasswordHash, this.GetPrimaryKey()));
+            await CreateCook(new CreateCookRequest(request.Username, request.PasswordHash, state.State.Game, state.State.Id));
         
         if (!createCookResult.Succeeded)
             return createCookResult.Error;

@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Constants;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
 
-public partial class KitchenOrderGrain
+public sealed partial class KitchenOrderGrain
 {
     private async Task OnNextMomentEvent(NextMomentEvent nextMomentEvent, StreamSequenceToken _)
     {

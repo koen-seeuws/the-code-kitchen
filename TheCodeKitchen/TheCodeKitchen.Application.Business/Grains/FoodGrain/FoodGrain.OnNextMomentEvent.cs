@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Business.Grains.FoodGrain;
 
-public partial class FoodGrain
+public sealed partial class FoodGrain
 {
     private async Task OnNextMomentEvent(NextMomentEvent nextMomentEvent, StreamSequenceToken _)
     {

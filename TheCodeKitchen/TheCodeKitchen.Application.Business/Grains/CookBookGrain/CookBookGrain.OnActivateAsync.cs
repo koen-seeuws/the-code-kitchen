@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Business.Grains.CookBookGrain;
 
-public partial class CookBookGrain
+public sealed partial class CookBookGrain
 {
     public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {

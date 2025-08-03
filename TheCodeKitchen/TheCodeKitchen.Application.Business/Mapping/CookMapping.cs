@@ -9,5 +9,6 @@ public class CookMapping : Profile
         CreateMap<Cook, CreateCookResponse>();
         CreateMap<Cook, GetCookResponse>();
         CreateMap<Message, ReadMessageResponse>();
+        CreateMap<Core.Domain.Timer, GetTimerResponse>();
     }
 }

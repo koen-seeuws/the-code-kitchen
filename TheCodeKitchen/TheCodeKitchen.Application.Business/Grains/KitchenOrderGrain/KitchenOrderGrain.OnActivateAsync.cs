@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
 
-public partial class KitchenOrderGrain
+public sealed partial class KitchenOrderGrain
 {
     public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {

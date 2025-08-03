@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Business.Grains.PantryGrain;
 
-public partial class PantryGrain
+public sealed partial class PantryGrain
 {
     public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {

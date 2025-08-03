@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
-public partial class KitchenGrain
+public sealed partial class KitchenGrain
 {
     public async Task<Result<TheCodeKitchenUnit>> CloseOrder(CloseOrderRequest request)
     {

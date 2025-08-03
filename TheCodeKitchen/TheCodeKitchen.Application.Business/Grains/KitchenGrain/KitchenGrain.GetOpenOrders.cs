@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Contracts.Response.Order;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
-public partial class KitchenGrain
+public sealed partial class KitchenGrain
 {
     public async Task<Result<IEnumerable<GetSimpleOrderResponse>>> GetOpenOrders()
     {

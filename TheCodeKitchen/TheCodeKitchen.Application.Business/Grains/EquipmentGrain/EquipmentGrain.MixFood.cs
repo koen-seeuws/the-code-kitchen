@@ -4,7 +4,7 @@ using TheCodeKitchen.Application.Contracts.Requests.Food;
 
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
-public partial class EquipmentGrain
+public sealed partial class EquipmentGrain
 {
     private async Task<Result<TheCodeKitchenUnit>> MixFood()
     {

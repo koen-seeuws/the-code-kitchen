@@ -4,20 +4,21 @@ namespace TheCodeKitchen.Application.Business.Grains.CookGrain;
 
 public sealed partial class CookGrain
 {
-    public async Task<Result<TheCodeKitchenUnit>> ConfirmMessage(ConfirmMessageRequest request)
+    public async Task<Result<TheCodeKitchenUnit>> StopTimer(StopTimerRequest request)
     {
         if(!state.RecordExists)
             return new NotFoundError($"The cook with username {this.GetPrimaryKeyString()} does not exist in kitchen {this.GetPrimaryKey()}");
         
-        var message = state.State.Messages.FirstOrDefault(m => m.Number == request.Number);
+        var timer = state.State.Timers.FirstOrDefault(t => t.Number == request.Number);
         
-        if (message is null)
-            return new NotFoundError($"You no longer have a message with number {request.Number} addressed to you");
+        if (timer is null)
+            return new NotFoundError($"You no longer have a timer with number {request.Number} addressed to you");
         
-        state.State.Messages.Remove(message);
+        state.State.Timers.Remove(timer);
         
         await state.WriteStateAsync();
         
         return new TheCodeKitchenUnit();
     }
 }
+    

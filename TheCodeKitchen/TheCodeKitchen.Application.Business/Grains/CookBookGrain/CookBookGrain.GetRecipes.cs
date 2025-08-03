@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Response.CookBook;
 
 namespace TheCodeKitchen.Application.Business.Grains.CookBookGrain;
 
-public partial class CookBookGrain
+public sealed partial class CookBookGrain
 {
     public Task<Result<IEnumerable<GetRecipeResponse>>> GetRecipes()
     {

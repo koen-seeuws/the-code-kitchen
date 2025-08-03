@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Constants;
 
 namespace TheCodeKitchen.Application.Business.Grains.CookBookGrain;
 
-public partial class CookBookGrain(
+public sealed partial class CookBookGrain(
     [PersistentState(TheCodeKitchenState.CookBook, TheCodeKitchenState.CookBook)]
     IPersistentState<CookBook> state,
     IMapper mapper

@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Response.Kitchen;
 
 namespace TheCodeKitchen.Application.Business.Grains.CookGrain;
 
-public partial class CookGrain
+public sealed partial class CookGrain
 {
     public async Task<Result<GetKitchenResponse>> GetKitchen()
     {

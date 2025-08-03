@@ -4,7 +4,7 @@ using TheCodeKitchen.Application.Contracts.Response.CookBook;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
 
-public partial class KitchenOrderGrain
+public sealed partial class KitchenOrderGrain
 {
     private double RateFood(string food, ICollection<RecipeStepDto> executedSteps, ICollection<FoodDto> ingredients,
         ICollection<GetRecipeResponse> recipes)

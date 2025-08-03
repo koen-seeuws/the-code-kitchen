@@ -10,7 +10,7 @@ public class Food(Guid id, string name, double temperature, Guid game, Guid kitc
     public Guid Game { get; set; } = game;
     public Guid Kitchen { get; set; } = kitchen;
 
-    public Guid? Cook { get; set; }
+    public string? Cook { get; set; }
     public string? CurrentEquipmentType { get; set; }
     public int? CurrentEquipmentNumber { get; set; }
 

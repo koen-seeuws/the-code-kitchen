@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Response.Pantry;
 
 namespace TheCodeKitchen.Application.Business.Grains.PantryGrain;
 
-public partial class PantryGrain
+public sealed partial class PantryGrain
 {
     public Task<Result<IEnumerable<GetIngredientResponse>>> GetIngredients()
     {
