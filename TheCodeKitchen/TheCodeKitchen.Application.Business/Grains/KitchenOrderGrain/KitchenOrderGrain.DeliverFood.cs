@@ -19,7 +19,7 @@ public partial class KitchenOrderGrain
             return new OrderAlreadyCompletedError(
                 $"The order with number {state.State.Number} has already been completed, you cannot deliver any more food to it");
 
-        var cookGrain = GrainFactory.GetGrain<ICookGrain>(request.Cook);
+        var cookGrain = GrainFactory.GetGrain<ICookGrain>(state.State.Kitchen, request.Cook);
         var releaseFoodResult = await cookGrain.ReleaseFood();
         if (!releaseFoodResult.Succeeded)
             return releaseFoodResult.Error;

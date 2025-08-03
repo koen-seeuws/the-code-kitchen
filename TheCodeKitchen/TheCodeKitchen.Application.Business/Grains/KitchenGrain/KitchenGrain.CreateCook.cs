@@ -17,12 +17,16 @@ public sealed partial class KitchenGrain
         var cook = cookResult.Value.FirstOrDefault();
         if(cook is not null)
             return new AlreadyExistsError($"The cook with username {request.Username} already exists");
-
-        var id = Guid.CreateVersion7();
-        state.State.Cooks.Add(id);
+        
+        var cookGrain = GrainFactory.GetGrain<ICookGrain>(state.State.Id, request.Username);
+        var createCookResult = await cookGrain.Initialize(request);
+        
+        if(!createCookResult.Succeeded)
+            return createCookResult.Error;
+        
+        state.State.Cooks.Add(createCookResult.Value.Username);
         await state.WriteStateAsync();
-        var cookGrain = GrainFactory.GetGrain<ICookGrain>(id);
-        var result = await cookGrain.Initialize(request);
-        return result;
+        
+        return createCookResult;
     }
 }

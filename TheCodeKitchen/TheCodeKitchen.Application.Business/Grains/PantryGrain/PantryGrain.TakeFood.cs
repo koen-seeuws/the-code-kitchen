@@ -15,7 +15,7 @@ public partial class PantryGrain
         if (ingredient is null)
             return new NotFoundError($"The ingredient with name {request.Ingredient} was not found in the pantry");
 
-        var cookGrain = GrainFactory.GetGrain<ICookGrain>(request.Cook);
+        var cookGrain = GrainFactory.GetGrain<ICookGrain>(request.Kitchen, request.Cook);
         
         var getKitchenResult = await cookGrain.GetKitchen();
 

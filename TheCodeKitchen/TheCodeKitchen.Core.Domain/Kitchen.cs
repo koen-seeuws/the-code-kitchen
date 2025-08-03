@@ -9,7 +9,7 @@ public class Kitchen(Guid id, string name, string code, Guid game)
     public string? Code { get; set; } = code;
     public double Rating { get; set; } = 1.0;
     public Guid Game { get; set; } = game;
-    public ICollection<Guid> Cooks { get; set; } = new List<Guid>();
+    public ICollection<string> Cooks { get; set; } = new List<string>();
     public IDictionary<string, int> Equipment { get; set; } = new Dictionary<string, int>
     {
         { EquipmentType.Bbq, 6 },

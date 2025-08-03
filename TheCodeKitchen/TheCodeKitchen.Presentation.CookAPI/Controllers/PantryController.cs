@@ -22,8 +22,9 @@ public class PantryController(IClusterClient clusterClient) : ControllerBase
     [HttpGet("{ingredient}/[action]")]
     public async Task<IActionResult> TakeFood([FromRoute] string ingredient)
     {
-        var cook = HttpContext.User.GetCookId();
-        var request = new TakeFoodFromPantryRequest(ingredient, cook);
+        var kitchen = HttpContext.User.GetKitchenId();
+        var cook = HttpContext.User.GetUsername();
+        var request = new TakeFoodFromPantryRequest(ingredient, kitchen, cook);
         var pantryGrain = clusterClient.GetGrain<IPantryGrain>(Guid.Empty);
         var result = await pantryGrain.TakeFood(request);
         return this.MatchActionResult(result);

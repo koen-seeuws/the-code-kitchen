@@ -11,9 +11,9 @@ public sealed partial class KitchenGrain
         if (!state.RecordExists)
             return new NotFoundError($"The game with id {this.GetPrimaryKey()} has not been initialized");
 
-        var tasks = state.State.Cooks.Select(async id =>
+        var tasks = state.State.Cooks.Select(async username =>
         {
-            var kitchenGrain = GrainFactory.GetGrain<ICookGrain>(id);
+            var kitchenGrain = GrainFactory.GetGrain<ICookGrain>(state.State.Id, username);
             var result = await kitchenGrain.GetCook();
             return result;
         });

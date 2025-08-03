@@ -16,7 +16,7 @@ public abstract class EquipmentController(IClusterClient clusterClient, string e
     public async Task<IActionResult> AddFood(int number)
     {
         var kitchen = HttpContext.User.GetKitchenId();
-        var cook = HttpContext.User.GetCookId();
+        var cook = HttpContext.User.GetUsername();
         var equipmentGrainIdExtension = EquipmentGrainIdHelper.CreateId(equipmentType, number);
         var grain = clusterClient.GetGrain<IEquipmentGrain>(kitchen, equipmentGrainIdExtension);
         var addFoodRequest = new AddFoodRequest(cook);
@@ -28,7 +28,7 @@ public abstract class EquipmentController(IClusterClient clusterClient, string e
     public async Task<IActionResult> TakeFood(int number)
     {
         var kitchen = HttpContext.User.GetKitchenId();
-        var cook = HttpContext.User.GetCookId();
+        var cook = HttpContext.User.GetUsername();
         var equipmentGrainIdExtension = EquipmentGrainIdHelper.CreateId(equipmentType, number);
         var grain = clusterClient.GetGrain<IEquipmentGrain>(kitchen, equipmentGrainIdExtension);
         var takeFoodRequest =  new TakeFoodFromEquipmentRequest(cook);

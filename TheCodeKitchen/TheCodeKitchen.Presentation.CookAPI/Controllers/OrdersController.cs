@@ -24,7 +24,7 @@ public class OrdersController(IClusterClient clusterClient) : ControllerBase
     public async Task<IActionResult> Deliver([FromRoute] long orderNumber)
     {
         var kitchen = HttpContext.User.GetKitchenId();
-        var cook = HttpContext.User.GetCookId();
+        var cook = HttpContext.User.GetUsername();
         var kitchenOrderGrain = clusterClient.GetGrain<IKitchenOrderGrain>(orderNumber, kitchen.ToString());
         var deliverFoodRequest = new DeliverFoodRequest(cook);
         var result = await kitchenOrderGrain.DeliverFood(deliverFoodRequest);

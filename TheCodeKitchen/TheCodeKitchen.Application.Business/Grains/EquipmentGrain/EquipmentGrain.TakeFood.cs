@@ -37,7 +37,7 @@ public partial class EquipmentGrain
         var foodGrain = GrainFactory.GetGrain<IFoodGrain>(food);
 
 
-        var cookGrain = GrainFactory.GetGrain<ICookGrain>(request.Cook);
+        var cookGrain = GrainFactory.GetGrain<ICookGrain>(state.State.Kitchen, request.Cook);
         var holdFoodRequest = new HoldFoodRequest(food);
 
         var holdFoodResult = await cookGrain.HoldFood(holdFoodRequest);

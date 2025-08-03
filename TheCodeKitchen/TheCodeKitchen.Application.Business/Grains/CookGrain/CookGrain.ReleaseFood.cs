@@ -7,7 +7,7 @@ public partial class CookGrain
     public async Task<Result<ReleaseFoodResponse>> ReleaseFood()
     {
         if (!state.RecordExists)
-            return new NotFoundError($"The cook with id {this.GetPrimaryKey()} does not exist");
+            return new NotFoundError($"The cook with username {this.GetPrimaryKeyString()} does not exist in kitchen {this.GetPrimaryKey()}");
 
         if (!state.State.Food.HasValue)
             return new NotHoldingFoodError(

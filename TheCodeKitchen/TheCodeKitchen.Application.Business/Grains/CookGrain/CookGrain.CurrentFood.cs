@@ -8,7 +8,7 @@ public partial class CookGrain
     {
         Result<CurrentFoodResponse> result = state.RecordExists
             ? new CurrentFoodResponse(state.State.Food)
-            : new NotFoundError($"The cook with id {this.GetPrimaryKey()} does not exist");
+            : new NotFoundError($"The cook with username {this.GetPrimaryKeyString()} does not exist in kitchen {this.GetPrimaryKey()}");
         
         return Task.FromResult(result);
     }

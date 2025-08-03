@@ -8,14 +8,14 @@ public partial class CookGrain
     public async Task<Result<TheCodeKitchenUnit>> HoldFood(HoldFoodRequest request)
     {
         if (!state.RecordExists)
-            return new NotFoundError($"The cook with id {this.GetPrimaryKey()} does not exist");
+            return new NotFoundError($"The cook with username {this.GetPrimaryKeyString()} does not exist in kitchen {this.GetPrimaryKey()}");
 
         if (state.State.Food != null)
             return new AlreadyHoldingFoodError(
                 $"The cook with name {state.State.Username} is already holding food");
 
         var foodGrain = GrainFactory.GetGrain<IFoodGrain>(request.FoodId);
-        var setCookRequest = new SetCookRequest(state.State.Id);
+        var setCookRequest = new SetCookRequest(state.State.Username);
         var setCookResult = await foodGrain.SetCook(setCookRequest);
         
         if(!setCookResult.Succeeded)

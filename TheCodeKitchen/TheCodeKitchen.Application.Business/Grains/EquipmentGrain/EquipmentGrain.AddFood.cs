@@ -18,7 +18,7 @@ public partial class EquipmentGrain
                 $"The equipment {equipmentType} {number} does not exist in kitchen {kitchen}");
         }
 
-        var cookGrain = GrainFactory.GetGrain<ICookGrain>(request.Cook);
+        var cookGrain = GrainFactory.GetGrain<ICookGrain>(state.State.Kitchen, request.Cook);
         var releaseFoodResult = await cookGrain.ReleaseFood();
 
         if (!releaseFoodResult.Succeeded)
