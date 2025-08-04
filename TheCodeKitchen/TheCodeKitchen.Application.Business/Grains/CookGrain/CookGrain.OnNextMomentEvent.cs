@@ -6,11 +6,7 @@ public sealed partial class CookGrain
 {
     private async Task OnNextMomentEvent(NextMomentEvent nextMomentEvent, StreamSequenceToken _)
     {
-        var timerStreamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
-        var timerFinishedStream = timerStreamProvider.GetStream<TimerFinishedEvent>(nameof(TimerFinishedEvent),
-            $"{state.State.Kitchen}+{state.State.Username}");
-
-        var timerFinishedTasks = new List<Task>();
+        var timerElapsedTasks = new List<Task>();
 
         foreach (var timer in state.State.Timers)
         {
@@ -20,11 +16,13 @@ public sealed partial class CookGrain
             }
             else
             {
-                var timerFinishedEvent = new TimerFinishedEvent(timer.Number, timer.Note);
-                timerFinishedTasks.Add(timerFinishedStream.OnNextAsync(timerFinishedEvent));
+                var timerElapsedEvent = new TimerElapsedEvent(timer.Number, timer.Note);
+                var sendTimerElapsedTask =
+                    realTimeCookService.SendTimerElapsedEvent(state.State.Username, timerElapsedEvent);
+                timerElapsedTasks.Add(sendTimerElapsedTask);
             }
         }
 
-        await Task.WhenAll(timerFinishedTasks);
+        await Task.WhenAll(timerElapsedTasks);
     }
 }

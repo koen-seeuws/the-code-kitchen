@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Infrastructure services
 builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration, builder.Environment);
-builder.Services.AddSignalRServices(builder.Configuration, builder.Environment);
+//builder.Services.AddAzureSignalRServices(builder.Configuration);
 
 // Presentation services
 builder.Services.AddMudServices();

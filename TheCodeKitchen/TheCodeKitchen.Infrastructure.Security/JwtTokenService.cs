@@ -25,6 +25,7 @@ public class JwtTokenService(JwtSecurityOptions jwtSecurityOptions) : ISecurityT
             new Claim(TheCodeKitchenClaimTypes.CookId, cookId.ToString()),
             new Claim(TheCodeKitchenClaimTypes.Username, username),
             new Claim(TheCodeKitchenClaimTypes.KitchenId, kitchenId.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, username) //Used by SignalR
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor

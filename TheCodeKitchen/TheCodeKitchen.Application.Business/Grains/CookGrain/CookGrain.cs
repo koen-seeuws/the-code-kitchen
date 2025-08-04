@@ -1,4 +1,5 @@
 using TheCodeKitchen.Application.Contracts.Constants;
+using TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
 
 namespace TheCodeKitchen.Application.Business.Grains.CookGrain;
 
@@ -11,5 +12,6 @@ public sealed partial class CookGrain(
     [PersistentState(TheCodeKitchenState.Cooks, TheCodeKitchenState.Cooks)] IPersistentState<Cook> state,
     [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
     IPersistentState<EquipmentGrainStreamSubscriptionHandles> streamSubscriptionHandles,
-    IMapper mapper
+    IMapper mapper,
+    IRealTimeCookService realTimeCookService
 ) : Grain, ICookGrain;

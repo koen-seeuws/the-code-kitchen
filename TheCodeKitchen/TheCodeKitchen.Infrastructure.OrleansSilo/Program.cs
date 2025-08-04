@@ -3,6 +3,7 @@ using Azure.Storage.Queues;
 using Orleans.Configuration;
 using TheCodeKitchen.Application.Business;
 using TheCodeKitchen.Application.Contracts.Constants;
+using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Infrastructure.Extensions;
 using TheCodeKitchen.Infrastructure.OrleansSilo;
 
@@ -29,6 +30,8 @@ var queueClient = new QueueServiceClient(azureStorageConnectionString);
 // TODO: REMOVE, this is only for development purposes to ensure a clean state.
 // foreach (var storage in TheCodeKitchenState.All) { tableClient.DeleteTable(storage); }
 #endif
+
+builder.Services.AddSignalRManagementServices(builder.Configuration);
 
 builder.UseOrleans(silo =>
 {

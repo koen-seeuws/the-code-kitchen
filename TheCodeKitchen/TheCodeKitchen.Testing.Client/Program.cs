@@ -22,19 +22,37 @@ ArgumentException.ThrowIfNullOrWhiteSpace(response.Token);
 apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", response.Token);
 
 //SignalR
-var connection = new HubConnectionBuilder()
+var kitchenConnection = new HubConnectionBuilder()
     .WithUrl($"{apiUrl}kitchenhub", options =>
     {
         options.AccessTokenProvider = () => Task.FromResult(response.Token)!;
     })
     .WithAutomaticReconnect()
     .Build();
+var cookConnection = new HubConnectionBuilder()
+    .WithUrl($"{apiUrl}cookhub", options =>
+    {
+        options.AccessTokenProvider = () => Task.FromResult(response.Token)!;
+    })
+    .WithAutomaticReconnect()
+    .Build();
 
-connection.On<NextMomentEvent>(nameof(NextMomentEvent), nextMomentEvent =>
+kitchenConnection.On<NewKitchenOrderEvent>(nameof(NewKitchenOrderEvent), kitchenOrderEvent =>
 {
-    Console.WriteLine($"Kitchen: {nextMomentEvent.GameId} - Moment: {nextMomentEvent.Moment}");
+    Console.WriteLine($"KitchenOrder: {kitchenOrderEvent.Number} ");
 });
 
-await connection.StartAsync();
+cookConnection.On<TimerElapsedEvent>(nameof(TimerElapsedEvent), timerElapsedEvent =>
+{
+    Console.WriteLine($"Timer elapsed: {timerElapsedEvent.Number} ");
+});
+
+cookConnection.On<MessageReceivedEvent>(nameof(MessageReceivedEvent), messageReceivedEvent =>
+{
+    Console.WriteLine($"Message received: {messageReceivedEvent.Number} ");
+});
+
+await kitchenConnection.StartAsync();
+await cookConnection.StartAsync();
 
 Console.ReadLine();
