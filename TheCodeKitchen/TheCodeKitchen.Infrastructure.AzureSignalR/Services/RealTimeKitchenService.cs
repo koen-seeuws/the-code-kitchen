@@ -10,8 +10,8 @@ public class RealTimeKitchenService(HubContextProvider hubContextProvider) : IRe
     
     public async Task SendNewKitchenOrderEvent(Guid kitchenId, NewKitchenOrderEvent @event)
     {
-        var cookHubContext = await hubContextProvider.GetHubContextAsync(HubName);
+        var kitchenHubContext = await hubContextProvider.GetHubContextAsync(HubName);
         var kitchenGroup = kitchenId.ToString();
-        await cookHubContext.Clients.Group(kitchenGroup).SendAsync(nameof(NewKitchenOrderEvent), @event);
+        await kitchenHubContext.Clients.Group(kitchenGroup).SendAsync(nameof(NewKitchenOrderEvent), @event);
     }
 }

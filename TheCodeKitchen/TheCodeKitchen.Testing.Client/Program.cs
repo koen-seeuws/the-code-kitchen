@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.SignalR.Client;
 using TheCodeKitchen.Application.Contracts.Events;
 using TheCodeKitchen.Presentation.API.Cook.Models;
 
-const string apiUrl = "https://ca-tck-cook-api.proudbeach-fbb36fdd.westeurope.azurecontainerapps.io/";
-const string kitchenCode = "Y972";
-const string username = "KOEN1";
+const string apiUrl = "http://localhost:5169/";
+const string kitchenCode = "N6ET";
+const string username = "KOEN";
 const string password = "TEST";
 
 var apiClient = new HttpClient { BaseAddress = new Uri(apiUrl) };
@@ -39,17 +39,17 @@ var cookConnection = new HubConnectionBuilder()
 
 kitchenConnection.On<NewKitchenOrderEvent>(nameof(NewKitchenOrderEvent), kitchenOrderEvent =>
 {
-    Console.WriteLine($"KitchenOrder: {kitchenOrderEvent.Number} ");
+    Console.WriteLine($"New Kitchen Order: {kitchenOrderEvent.Number} ");
 });
 
 cookConnection.On<TimerElapsedEvent>(nameof(TimerElapsedEvent), timerElapsedEvent =>
 {
-    Console.WriteLine($"Timer elapsed: {timerElapsedEvent.Number} ");
+    Console.WriteLine($"Timer elapsed: {timerElapsedEvent.Number} - {timerElapsedEvent.Note}");
 });
 
 cookConnection.On<MessageReceivedEvent>(nameof(MessageReceivedEvent), messageReceivedEvent =>
 {
-    Console.WriteLine($"Message received: {messageReceivedEvent.Number} ");
+    Console.WriteLine($"Message received: {messageReceivedEvent.Number} - {messageReceivedEvent.From} - {messageReceivedEvent.Content}");
 });
 
 await kitchenConnection.StartAsync();

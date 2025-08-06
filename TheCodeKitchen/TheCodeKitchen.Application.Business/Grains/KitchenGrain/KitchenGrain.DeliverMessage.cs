@@ -1,4 +1,3 @@
-using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 
@@ -20,15 +19,18 @@ public sealed partial class KitchenGrain
 
         var timestamp = DateTime.UtcNow;
 
-        var tasks = cooks.Select(cook =>
-        {
-            var cookGrain = GrainFactory.GetGrain<ICookGrain>(state.State.Id, cook);
-            var deliverMessageRequest = new DeliverMessageToCookRequest(request.From, cook, request.Content, timestamp);
-            return cookGrain.DeliverMessage(deliverMessageRequest);
-        });
+        var tasks = cooks
+            .Where(cook => !cook.Equals(request.From, StringComparison.OrdinalIgnoreCase))
+            .Select(cook =>
+            {
+                var cookGrain = GrainFactory.GetGrain<ICookGrain>(state.State.Id, cook);
+                var deliverMessageRequest =
+                    new DeliverMessageToCookRequest(request.From, cook, request.Content, timestamp);
+                return cookGrain.DeliverMessage(deliverMessageRequest);
+            });
 
         await Task.WhenAll(tasks);
 
-        return new Result<TheCodeKitchenUnit>();
+        return TheCodeKitchenUnit.Value;
     }
 }

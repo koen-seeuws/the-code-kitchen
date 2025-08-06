@@ -1,12 +1,7 @@
-using Microsoft.Azure.SignalR.Management;
-
-namespace TheCodeKitchen.Infrastructure.AzureSignalR.Services;
-
-using System;
 using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.Azure.SignalR.Management;
+
+namespace TheCodeKitchen.Infrastructure.AzureSignalR;
 
 public class HubContextProvider(ServiceManager serviceManager) : IAsyncDisposable
 {
