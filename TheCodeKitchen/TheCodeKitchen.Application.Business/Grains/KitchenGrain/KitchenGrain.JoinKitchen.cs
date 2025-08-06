@@ -23,7 +23,6 @@ public sealed partial class KitchenGrain
         if (foundCook is not null)
             return new JoinKitchenResponse(state.State.Game,
                 state.State.Id,
-                foundCook.Id,
                 foundCook.Username,
                 foundCook.PasswordHash,
                 false
@@ -49,7 +48,6 @@ public sealed partial class KitchenGrain
         return new JoinKitchenResponse(
             state.State.Game,
             state.State.Id,
-            createdCook.Id,
             createdCook.Username,
             request.PasswordHash,
             true

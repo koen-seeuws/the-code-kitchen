@@ -11,16 +11,14 @@ public sealed partial class CookGrain
         foreach (var timer in state.State.Timers)
         {
             if (timer.Time > TimeSpan.Zero)
-            {
                 timer.Time -= TheCodeKitchenMomentDuration.Value;
-            }
-            else
-            {
-                var timerElapsedEvent = new TimerElapsedEvent(timer.Number, timer.Note);
-                var sendTimerElapsedTask =
-                    realTimeCookService.SendTimerElapsedEvent(state.State.Username, timerElapsedEvent);
-                timerElapsedTasks.Add(sendTimerElapsedTask);
-            }
+
+            if (timer.Time > TimeSpan.Zero)
+                continue;
+
+            var @event = new TimerElapsedEvent(timer.Number, timer.Note);
+            var sendTimerElapsedTask = realTimeCookService.SendTimerElapsedEvent(state.State.Username, @event);
+            timerElapsedTasks.Add(sendTimerElapsedTask);
         }
 
         await Task.WhenAll(timerElapsedTasks);
