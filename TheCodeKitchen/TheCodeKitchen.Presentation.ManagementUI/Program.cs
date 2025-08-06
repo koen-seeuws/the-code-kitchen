@@ -1,17 +1,19 @@
 using MudBlazor.Services;
+using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Presentation;
 using TheCodeKitchen.Presentation.ManagementUI.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Infrastructure services
-builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration, builder.Environment);
-//builder.Services.AddAzureSignalRServices(builder.Configuration);
+builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);
+builder.Services.AddAzureSignalRServices(builder.Configuration);
 
 // Presentation services
 builder.Services.AddMudServices();
 
-builder.Services.AddRazorComponents()
+builder.Services
+    .AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();

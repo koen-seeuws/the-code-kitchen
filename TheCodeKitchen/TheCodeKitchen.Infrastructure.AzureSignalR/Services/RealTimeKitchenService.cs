@@ -1,17 +1,16 @@
 using Microsoft.AspNetCore.SignalR;
 using TheCodeKitchen.Application.Contracts.Events;
 using TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
+using TheCodeKitchen.Infrastructure.AzureSignalR.Constants;
 
 namespace TheCodeKitchen.Infrastructure.AzureSignalR.Services;
 
 public class RealTimeKitchenService(HubContextProvider hubContextProvider) : IRealTimeKitchenService
 {
-    private const string HubName = "KitchenHub";
-    
     public async Task SendNewKitchenOrderEvent(Guid kitchenId, NewKitchenOrderEvent @event)
     {
-        var kitchenHubContext = await hubContextProvider.GetHubContextAsync(HubName);
-        var kitchenGroup = kitchenId.ToString();
+        var kitchenHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.CookHub);
+        var kitchenGroup = GroupConstants.GetKitchenGroup(kitchenId);
         await kitchenHubContext.Clients.Group(kitchenGroup).SendAsync(nameof(NewKitchenOrderEvent), @event);
     }
 }

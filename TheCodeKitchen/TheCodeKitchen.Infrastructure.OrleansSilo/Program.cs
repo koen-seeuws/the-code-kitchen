@@ -1,5 +1,4 @@
 using Azure.Data.Tables;
-using Azure.Storage.Queues;
 using Orleans.Configuration;
 using TheCodeKitchen.Application.Business;
 using TheCodeKitchen.Application.Contracts.Constants;
@@ -13,7 +12,8 @@ builder.Services.AddApplicationServices();
 
 var siloConfiguration =
     builder.Configuration
-        .BindAndValidateConfiguration<OrleansSiloConfiguration, OrleansSiloConfigurationValidator>("TheCodeKitchenOrleans");
+        .BindAndValidateConfiguration<OrleansSiloConfiguration, OrleansSiloConfigurationValidator>(
+            "TheCodeKitchenOrleans");
 
 var azureStorageConnectionString =
     builder.Configuration.GetConnectionString("AzureStorage") ??
@@ -24,11 +24,10 @@ var eventHubConnectionString =
     throw new InvalidOperationException("ConnectionStrings__EventHubNamespace is not configured.");
 
 var tableClient = new TableServiceClient(azureStorageConnectionString);
-var queueClient = new QueueServiceClient(azureStorageConnectionString);
 
 #if DEBUG
 // TODO: REMOVE, this is only for development purposes to ensure a clean state.
-foreach (var storage in TheCodeKitchenState.All) { tableClient.DeleteTable(storage); }
+// foreach (var storage in TheCodeKitchenState.All) { tableClient.DeleteTable(storage); }
 #endif
 
 builder.Services.AddSignalRManagementServices(builder.Configuration);
@@ -87,18 +86,6 @@ builder.UseOrleans(silo =>
                 })
             );
         });
-
-    /*
-    .AddAzureQueueStreams(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider,
-        options =>
-        {
-            options.Configure(azureQueueOptions =>
-            {
-                azureQueueOptions.QueueServiceClient = queueClient;
-                azureQueueOptions.QueueNames = TheCodeKitchenStreams.AzureStorageQueues;
-            });
-        });
-        */
 
     silo.UseDashboard();
 });

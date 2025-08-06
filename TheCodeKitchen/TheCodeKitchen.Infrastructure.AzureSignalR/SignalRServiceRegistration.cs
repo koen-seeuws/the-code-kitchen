@@ -6,11 +6,9 @@ namespace TheCodeKitchen.Infrastructure.AzureSignalR;
 
 public static class SignalRServiceRegistration
 {
-    public static IServiceCollection AddAzureSignalRServices(
-        this IServiceCollection services,
+    public static void AddAzureSignalRServices(this IServiceCollection services,
         IConfiguration configuration,
-        string azureSignalRSection = "AzureSignalR"
-    )
+        string azureSignalRSection = "AzureSignalR")
     {
         var azureSignalRConnectionString =
             configuration.GetConnectionString("AzureSignalR") ??
@@ -28,7 +26,5 @@ public static class SignalRServiceRegistration
                 options.ConnectionString = azureSignalRConnectionString;
                 options.ApplicationName = azureSignalRConfiguration.ApplicationName;
             });
-
-        return services;
     }
 }
