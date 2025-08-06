@@ -8,23 +8,23 @@ namespace TheCodeKitchen.Infrastructure.Security;
 
 public interface ISecurityTokenService
 {
-    public string GeneratePlayerToken(Guid gameId, Guid kitchenId, Guid cookId, string username);
+    public string GeneratePlayerToken(Guid gameId, Guid kitchenId, string username);
 }
 
 public class JwtTokenService(JwtSecurityOptions jwtSecurityOptions) : ISecurityTokenService
 {
     private readonly SymmetricSecurityKey _signingKey = new(Encoding.UTF8.GetBytes(jwtSecurityOptions.Secret));
 
-    public string GeneratePlayerToken(Guid gameId, Guid kitchenId, Guid cookId, string username)
+    public string GeneratePlayerToken(Guid gameId, Guid kitchenId, string username)
     {
         var signingCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {
             new Claim(TheCodeKitchenClaimTypes.GameId, gameId.ToString()),
-            new Claim(TheCodeKitchenClaimTypes.CookId, cookId.ToString()),
             new Claim(TheCodeKitchenClaimTypes.Username, username),
             new Claim(TheCodeKitchenClaimTypes.KitchenId, kitchenId.ToString()),
+            new Claim(ClaimTypes.NameIdentifier, username) //Used by SignalR
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor

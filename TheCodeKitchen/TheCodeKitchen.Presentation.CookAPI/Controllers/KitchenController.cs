@@ -42,7 +42,6 @@ public class KitchenController(
         var token = securityTokenService.GeneratePlayerToken(
             joinKitchenResult.Value.GameId,
             joinKitchenResult.Value.KitchenId,
-            joinKitchenResult.Value.CookId,
             joinKitchenResult.Value.Username
         );
 

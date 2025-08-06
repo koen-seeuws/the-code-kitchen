@@ -1,4 +1,3 @@
-using TheCodeKitchen.Application.Contracts.Constants;
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
 
 namespace TheCodeKitchen.Application.Business.Grains.CookGrain;
@@ -16,14 +15,9 @@ public sealed partial class CookGrain
         state.State.Messages.Add(message);
 
         await state.WriteStateAsync();
-
-        var messageStreamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
-        var messageStream = messageStreamProvider.GetStream<MessageReceivedEvent>(
-            nameof(MessageReceivedEvent),
-            $"{state.State.Kitchen}+{state.State.Username}"
-        );
+        
         var @event = new MessageReceivedEvent(number, request.From, request.To, request.Content, request.Timestamp);
-        await messageStream.OnNextAsync(@event);
+        await realTimeCookService.SendMessageReceivedEvent(@event);
 
         return TheCodeKitchenUnit.Value;
     }

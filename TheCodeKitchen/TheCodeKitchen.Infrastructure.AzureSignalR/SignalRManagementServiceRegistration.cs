@@ -1,0 +1,46 @@
+﻿using Microsoft.Azure.SignalR.Management;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
+using TheCodeKitchen.Infrastructure.AzureSignalR.Services;
+using TheCodeKitchen.Infrastructure.Extensions;
+
+namespace TheCodeKitchen.Infrastructure.AzureSignalR;
+
+public static class SignalRManagementServiceRegistration
+{
+    public static IServiceCollection AddSignalRManagementServices(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        string azureSignalRSection = "AzureSignalR"
+    )
+    {
+        var azureSignalRConnectionString =
+            configuration.GetConnectionString("AzureSignalR") ??
+            throw new InvalidOperationException("ConnectionStrings__AzureSignalR is not configured.");
+
+        var azureSignalRConfiguration = configuration.BindAndValidateConfiguration<
+            AzureSignalRConfiguration,
+            AzureSignalRConfigurationValidator
+        >(azureSignalRSection);
+
+        // Register ServiceManager as singleton
+        services.AddSingleton(_ =>
+        {
+            return new ServiceManagerBuilder()
+                .WithOptions(option =>
+                {
+                    option.ConnectionString = azureSignalRConnectionString;
+                    option.ApplicationName = azureSignalRConfiguration.ApplicationName;
+                })
+                .BuildServiceManager();
+        });
+
+        services.AddSingleton<HubContextProvider>();
+
+        services.AddSingleton<IRealTimeKitchenService, RealTimeKitchenService>();
+        services.AddSingleton<IRealTimeCookService, RealTimeCookService>();
+
+        return services;
+    }
+}

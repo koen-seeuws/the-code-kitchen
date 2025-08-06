@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Grains;
-using TheCodeKitchen.Application.Contracts.Requests.Game;
 using TheCodeKitchen.Application.Contracts.Requests.Pantry;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;

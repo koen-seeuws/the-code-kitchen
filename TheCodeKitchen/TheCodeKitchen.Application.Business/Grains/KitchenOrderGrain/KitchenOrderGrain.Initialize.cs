@@ -1,4 +1,3 @@
-using TheCodeKitchen.Application.Contracts.Constants;
 using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
 using TheCodeKitchen.Application.Contracts.Response.KitchenOrder;
 
@@ -10,23 +9,22 @@ public sealed partial class KitchenOrderGrain
     {
         var orderNumber = this.GetPrimaryKeyLong();
         var kitchen = Guid.Parse(this.GetPrimaryKeyString().Split('+')[1]);
-        
-        if(state.RecordExists)
-            return new AlreadyExistsError($"The order with number {orderNumber} has already been initialized in kitchen {kitchen}");
+
+        if (state.RecordExists)
+            return new AlreadyExistsError(
+                $"The order with number {orderNumber} has already been initialized in kitchen {kitchen}");
 
         var requestedFoods = mapper.Map<List<FoodRequest>>(request.RequestedFoods);
-            
+
         var kitchenOrder = new KitchenOrder(requestedFoods, orderNumber, request.Game, kitchen);
         state.State = kitchenOrder;
         await state.WriteStateAsync();
 
         await SubscribeToNextMomentEvent();
-        
-        var kitchenOrderStreamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
-        var kitchenOrderStream = kitchenOrderStreamProvider.GetStream<NewKitchenOrderEvent>(nameof(NewKitchenOrderEvent), $"{kitchen}");
+
         var @event = new NewKitchenOrderEvent(request.OrderNumber, request.RequestedFoods);
-        await kitchenOrderStream.OnNextAsync(@event);
-        
+        await realTimeKitchenService.SendNewKitchenOrderEvent(state.State.Kitchen, @event);
+
         return mapper.Map<CreateKitchenOrderResponse>(kitchenOrder);
     }
 }

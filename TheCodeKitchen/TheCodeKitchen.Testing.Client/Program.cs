@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.SignalR.Client;
 using TheCodeKitchen.Application.Contracts.Events;
 using TheCodeKitchen.Presentation.API.Cook.Models;
 
-const string apiUrl = "https://ca-tck-cook-api.proudbeach-fbb36fdd.westeurope.azurecontainerapps.io/";
-const string kitchenCode = "MJYJ";
-const string username = "Koen 5";
-const string password = "Test123!";
+const string apiUrl = "http://localhost:5169/";
+const string kitchenCode = "N6ET";
+const string username = "KOEN";
+const string password = "TEST";
 
 var apiClient = new HttpClient { BaseAddress = new Uri(apiUrl) };
 
@@ -22,19 +22,37 @@ ArgumentException.ThrowIfNullOrWhiteSpace(response.Token);
 apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", response.Token);
 
 //SignalR
-var connection = new HubConnectionBuilder()
+var kitchenConnection = new HubConnectionBuilder()
     .WithUrl($"{apiUrl}kitchenhub", options =>
     {
         options.AccessTokenProvider = () => Task.FromResult(response.Token)!;
     })
     .WithAutomaticReconnect()
     .Build();
+var cookConnection = new HubConnectionBuilder()
+    .WithUrl($"{apiUrl}cookhub", options =>
+    {
+        options.AccessTokenProvider = () => Task.FromResult(response.Token)!;
+    })
+    .WithAutomaticReconnect()
+    .Build();
 
-connection.On<NextMomentEvent>(nameof(NextMomentEvent), nextMomentEvent =>
+kitchenConnection.On<NewKitchenOrderEvent>(nameof(NewKitchenOrderEvent), kitchenOrderEvent =>
 {
-    Console.WriteLine($"Kitchen: {nextMomentEvent.GameId} - Moment: {nextMomentEvent.Moment}");
+    Console.WriteLine($"New Kitchen Order: {kitchenOrderEvent.Number} ");
 });
 
-await connection.StartAsync();
+cookConnection.On<TimerElapsedEvent>(nameof(TimerElapsedEvent), timerElapsedEvent =>
+{
+    Console.WriteLine($"Timer elapsed: {timerElapsedEvent.Number} - {timerElapsedEvent.Note}");
+});
+
+cookConnection.On<MessageReceivedEvent>(nameof(MessageReceivedEvent), messageReceivedEvent =>
+{
+    Console.WriteLine($"Message received: {messageReceivedEvent.Number} - {messageReceivedEvent.From} - {messageReceivedEvent.Content}");
+});
+
+await kitchenConnection.StartAsync();
+await cookConnection.StartAsync();
 
 Console.ReadLine();

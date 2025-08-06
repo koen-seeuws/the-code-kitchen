@@ -4,7 +4,6 @@ namespace TheCodeKitchen.Application.Contracts.Response.Kitchen;
 public record JoinKitchenResponse(
     Guid GameId,
     Guid KitchenId,
-    Guid CookId,
     string Username,
     string PasswordHash,
     bool isNewCook

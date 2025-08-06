@@ -9,11 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration, builder.Environment);
 builder.Services.AddPasswordHashingServices();
 builder.Services.AddJwtSecurityServices(builder.Configuration);
-builder.Services.AddSignalRServices(builder.Configuration, builder.Environment);
+builder.Services.AddAzureSignalRServices(builder.Configuration);
 
 // Presentation services
-builder.Services.AddSingleton(typeof(StreamSubscriber<,>));
-
 builder.Services.AddControllers();
 builder.Services.AddOpenApi(); // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddSwaggerGen();
