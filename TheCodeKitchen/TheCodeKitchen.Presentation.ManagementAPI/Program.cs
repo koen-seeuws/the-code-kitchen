@@ -6,7 +6,7 @@ using TheCodeKitchen.Presentation.ManagementAPI.Hubs;
 var builder = WebApplication.CreateBuilder(args);
 
 // Infrastructure services
-builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration, builder.Environment);
+builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);
 builder.Services.AddPasswordHashingServices();
 builder.Services.AddJwtSecurityServices(builder.Configuration);
 builder.Services.AddAzureSignalRServices(builder.Configuration);

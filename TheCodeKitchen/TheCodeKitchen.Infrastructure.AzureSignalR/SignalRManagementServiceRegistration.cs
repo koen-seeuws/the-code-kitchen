@@ -9,11 +9,9 @@ namespace TheCodeKitchen.Infrastructure.AzureSignalR;
 
 public static class SignalRManagementServiceRegistration
 {
-    public static IServiceCollection AddSignalRManagementServices(
-        this IServiceCollection services,
+    public static void AddSignalRManagementServices(this IServiceCollection services,
         IConfiguration configuration,
-        string azureSignalRSection = "AzureSignalR"
-    )
+        string azureSignalRSection = "AzureSignalR")
     {
         var azureSignalRConnectionString =
             configuration.GetConnectionString("AzureSignalR") ??
@@ -40,7 +38,5 @@ public static class SignalRManagementServiceRegistration
 
         services.AddSingleton<IRealTimeKitchenService, RealTimeKitchenService>();
         services.AddSingleton<IRealTimeCookService, RealTimeCookService>();
-
-        return services;
     }
 }

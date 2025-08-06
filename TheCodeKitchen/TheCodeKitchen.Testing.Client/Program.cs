@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.SignalR.Client;
 using TheCodeKitchen.Application.Contracts.Events;
 using TheCodeKitchen.Presentation.API.Cook.Models;
 
-const string apiUrl = "http://localhost:5169/";
-const string kitchenCode = "N6ET";
-const string username = "KOEN";
+const string apiUrl = "https://ca-tck-cook-api.proudbeach-fbb36fdd.westeurope.azurecontainerapps.io/";
+const string kitchenCode = "ZO7S";
+const string username = "KOEN9";
 const string password = "TEST";
 
 var apiClient = new HttpClient { BaseAddress = new Uri(apiUrl) };
@@ -22,13 +22,6 @@ ArgumentException.ThrowIfNullOrWhiteSpace(response.Token);
 apiClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", response.Token);
 
 //SignalR
-var kitchenConnection = new HubConnectionBuilder()
-    .WithUrl($"{apiUrl}kitchenhub", options =>
-    {
-        options.AccessTokenProvider = () => Task.FromResult(response.Token)!;
-    })
-    .WithAutomaticReconnect()
-    .Build();
 var cookConnection = new HubConnectionBuilder()
     .WithUrl($"{apiUrl}cookhub", options =>
     {
@@ -37,7 +30,7 @@ var cookConnection = new HubConnectionBuilder()
     .WithAutomaticReconnect()
     .Build();
 
-kitchenConnection.On<NewKitchenOrderEvent>(nameof(NewKitchenOrderEvent), kitchenOrderEvent =>
+cookConnection.On<NewKitchenOrderEvent>(nameof(NewKitchenOrderEvent), kitchenOrderEvent =>
 {
     Console.WriteLine($"New Kitchen Order: {kitchenOrderEvent.Number} ");
 });
@@ -52,7 +45,6 @@ cookConnection.On<MessageReceivedEvent>(nameof(MessageReceivedEvent), messageRec
     Console.WriteLine($"Message received: {messageReceivedEvent.Number} - {messageReceivedEvent.From} - {messageReceivedEvent.Content}");
 });
 
-await kitchenConnection.StartAsync();
 await cookConnection.StartAsync();
 
 Console.ReadLine();

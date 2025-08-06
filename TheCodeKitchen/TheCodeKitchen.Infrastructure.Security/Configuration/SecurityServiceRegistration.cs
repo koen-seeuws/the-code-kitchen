@@ -9,14 +9,13 @@ namespace TheCodeKitchen.Infrastructure.Security.Configuration;
 
 public static class SecurityServiceRegistration
 {
-    public static IServiceCollection AddPasswordHashingServices(this IServiceCollection services)
+    public static void AddPasswordHashingServices(this IServiceCollection services)
     {
         services.AddScoped<IPasswordHashingService, PasswordHashingService>();
-        return services;
     }
 
 
-    public static IServiceCollection AddJwtSecurityServices(this IServiceCollection services,
+    public static void AddJwtSecurityServices(this IServiceCollection services,
         IConfiguration configuration, string sectionKey = "JwtSecurity")
     {
         var jwtSecuritySecurityOptions =
@@ -46,7 +45,5 @@ public static class SecurityServiceRegistration
 
         services.AddSingleton(jwtSecuritySecurityOptions);
         services.AddScoped<ISecurityTokenService, JwtTokenService>();
-
-        return services;
     }
 }

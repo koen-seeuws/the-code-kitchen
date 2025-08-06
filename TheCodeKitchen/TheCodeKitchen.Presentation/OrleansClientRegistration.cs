@@ -1,5 +1,4 @@
 using Azure.Data.Tables;
-using Azure.Storage.Queues;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,8 +10,7 @@ namespace TheCodeKitchen.Presentation;
 
 public static class OrleansClientRegistration
 {
-    public static void AddTheCodeKitchenOrleansClient(this IServiceCollection services, IConfiguration configuration,
-        IHostEnvironment environment)
+    public static void AddTheCodeKitchenOrleansClient(this IServiceCollection services, IConfiguration configuration)
     {
         var clientConfiguration =
             configuration
@@ -28,7 +26,6 @@ public static class OrleansClientRegistration
             throw new InvalidOperationException("ConnectionStrings__EventHubNamespace is not configured.");
 
         var tableClient = new TableServiceClient(azureStorageConnectionString);
-        var queueClient = new QueueServiceClient(azureStorageConnectionString);
 
         services.AddOrleansClient(client =>
         {
@@ -61,18 +58,6 @@ public static class OrleansClientRegistration
                             });
                         });
                     });
-
-            /*
-            .AddAzureQueueStreams(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider,
-                options =>
-                {
-                    options.Configure(azureQueueOptions =>
-                    {
-                        azureQueueOptions.QueueServiceClient = queueClient;
-                        azureQueueOptions.QueueNames = TheCodeKitchenStreams.AzureStorageQueues;
-                    });
-                });
-                */
         });
     }
 }

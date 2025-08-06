@@ -7,7 +7,7 @@ using TheCodeKitchen.Presentation.API.Cook.Hubs;
 var builder = WebApplication.CreateBuilder(args);
 
 // Infrastructure services
-builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration, builder.Environment);
+builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);
 builder.Services.AddJwtSecurityServices(builder.Configuration);
 builder.Services.AddPasswordHashingServices();
 builder.Services.AddAzureSignalRServices(builder.Configuration);
@@ -48,8 +48,9 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.MapControllers();
-app.MapHub<KitchenHub>("/kitchenhub");
+
 app.MapHub<CookHub>("/cookhub");
+
 app.MapOpenApi();
 
 app.UseHttpsRedirection();
