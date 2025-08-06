@@ -9,7 +9,7 @@ public record FoodDto(
     ICollection<RecipeStepDto> Steps,
     Guid Game,
     Guid Kitchen,
-    Guid? Cook,
+    string? Cook,
     string? CurrentEquipmentType,
     int? CurrentEquipmentNumber,
     long? OrderNumber
