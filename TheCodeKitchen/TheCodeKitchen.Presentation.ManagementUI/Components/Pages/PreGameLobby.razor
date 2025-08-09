@@ -1,5 +1,4 @@
 @page "/games/{gameId:guid}/pre-game-lobby"
-@using TheCodeKitchen.Presentation.ManagementUI.Models.TableRecordModels
 
 <PageTitle>Pre-game Lobby</PageTitle>
 
@@ -24,7 +23,6 @@ else
     }
 
     <MudTable Items="@KitchenRecords"
-              Context="KitchenContext"
               Hover="true"
               Breakpoint="Breakpoint.Sm"
               Loading="@(KitchenRecords == null)"
@@ -37,44 +35,23 @@ else
             <MudTh>Name</MudTh>
             <MudTh>Code</MudTh>
             <MudTh>Rating</MudTh>
+            <MudTh>Cooks</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Name">@KitchenContext.Name</MudTd>
-            <MudTd DataLabel="Code">@KitchenContext.Code</MudTd>
-            <MudTd DataLabel="Rating">@KitchenContext.Rating</MudTd>
-        </RowTemplate>
-        <ChildRowContent>
-            @{
-                List<CookTableRecordModel>? cookRecords = null;
-                CookRecordsPerKitchen?.TryGetValue(KitchenContext.Id, out cookRecords);
-                <MudTr>
-                    <td colspan=3>
-                        <MudCard Elevation="0">
-                            <MudCardHeader>
-                                <CardHeaderContent>
-                                    <MudText Typo="Typo.body1">Cooks in <strong>@KitchenContext.Name</strong></MudText>
-                                </CardHeaderContent>
-                            </MudCardHeader>
-                            <MudCardContent Class="pa-0">
-                                <MudTable Items="@cookRecords" 
-                                          Context="CookContext" 
-                                          Hover="true"
-                                          Breakpoint="Breakpoint.Sm"
-                                          Loading="@(cookRecords == null)"
-                                          LoadingProgressColor="Color.Primary">
-                                    <HeaderContent>
-                                        <MudTh>Username</MudTh>
-                                    </HeaderContent>
-                                    <RowTemplate>
-                                        <MudTd DataLabel="Username">@CookContext.Username</MudTd>
-                                    </RowTemplate>
-                                </MudTable>
-                            </MudCardContent>
-                        </MudCard>
-                    </td>
-                </MudTr>
+            <MudTd DataLabel="Name">@context.Name</MudTd>
+            <MudTd DataLabel="Code">@context.Code</MudTd>
+            <MudTd DataLabel="Rating">@context.Rating</MudTd>
+            @if (CookRecordsPerKitchen != null)
+            {
+                <MudTd DataLabel="Cooks">
+                    @string.Join(", ", CookRecordsPerKitchen[context.Id].Select(c => c.Username))
+                </MudTd>
             }
-        </ChildRowContent>
+            else
+            {
+                <MudTd DataLabel="Cooks"/>
+            }
+        </RowTemplate>
     </MudTable>
 
     if (GetGameResponse.Started == null)
