@@ -1,4 +1,5 @@
 using TheCodeKitchen.Application.Contracts.Constants;
+using TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 

@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.SignalR;
-using TheCodeKitchen.Application.Contracts.Events;
+using TheCodeKitchen.Application.Contracts.Events.Cook;
 using TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
 using TheCodeKitchen.Infrastructure.AzureSignalR.Constants;
 
@@ -9,13 +9,13 @@ public class RealTimeCookService(HubContextProvider hubContextProvider) : IRealT
 { 
     public async Task SendMessageReceivedEvent(MessageReceivedEvent @event)
     {
-        var cookHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.CookHub);
+        var cookHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.KitchenOrderHub);
         await cookHubContext.Clients.User(@event.To).SendAsync(nameof(MessageReceivedEvent), @event);
     }
 
     public async Task SendTimerElapsedEvent(string username, TimerElapsedEvent @event)
     {
-        var cookHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.CookHub);
+        var cookHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.KitchenOrderHub);
         await cookHubContext.Clients.User(username).SendAsync(nameof(TimerElapsedEvent), @event);
     }
 }

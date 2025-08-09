@@ -1,7 +1,6 @@
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Infrastructure.Security.Configuration;
 using TheCodeKitchen.Presentation;
-using TheCodeKitchen.Presentation.ManagementAPI.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +19,7 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 app.MapControllers();
-app.MapHub<GameManagementHub>("/gamemanagementhub");
+
 app.MapOpenApi();
 
 app.UseHttpsRedirection();

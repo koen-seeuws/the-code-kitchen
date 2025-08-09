@@ -1,4 +1,5 @@
 using TheCodeKitchen.Application.Contracts.Constants;
+using TheCodeKitchen.Application.Contracts.Events.Game;
 
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 

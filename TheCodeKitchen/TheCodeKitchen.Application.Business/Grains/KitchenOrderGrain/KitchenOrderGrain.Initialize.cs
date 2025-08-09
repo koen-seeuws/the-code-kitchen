@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
 using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
 using TheCodeKitchen.Application.Contracts.Response.KitchenOrder;
 
@@ -23,7 +24,7 @@ public sealed partial class KitchenOrderGrain
         await SubscribeToNextMomentEvent();
 
         var @event = new NewKitchenOrderEvent(request.OrderNumber, request.RequestedFoods);
-        await realTimeKitchenService.SendNewKitchenOrderEvent(state.State.Kitchen, @event);
+        await realTimeKitchenOrderService.SendNewKitchenOrderEvent(state.State.Kitchen, @event);
 
         return mapper.Map<CreateKitchenOrderResponse>(kitchenOrder);
     }

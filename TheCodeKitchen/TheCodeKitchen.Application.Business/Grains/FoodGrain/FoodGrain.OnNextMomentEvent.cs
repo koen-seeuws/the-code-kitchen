@@ -1,3 +1,5 @@
+using TheCodeKitchen.Application.Contracts.Events.Game;
+
 namespace TheCodeKitchen.Application.Business.Grains.FoodGrain;
 
 public sealed partial class FoodGrain

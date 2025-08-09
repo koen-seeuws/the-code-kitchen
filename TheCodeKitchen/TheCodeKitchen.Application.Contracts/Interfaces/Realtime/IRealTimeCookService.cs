@@ -1,4 +1,4 @@
-using TheCodeKitchen.Application.Contracts.Events;
+using TheCodeKitchen.Application.Contracts.Events.Cook;
 
 namespace TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
 

@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Contracts.Events.Kitchen;
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 using TheCodeKitchen.Application.Contracts.Response.Kitchen;
@@ -42,13 +43,14 @@ public sealed partial class KitchenGrain
         
         if (!createCookResult.Succeeded)
             return createCookResult.Error;
-
-        var createdCook = createCookResult.Value;
+        
+        var @event = new CookJoinedEvent(createCookResult.Value.Username);
+        await realTimeKitchenService.SendCookJoinedEvent(state.State.Id, @event);
         
         return new JoinKitchenResponse(
             state.State.Game,
             state.State.Id,
-            createdCook.Username,
+            createCookResult.Value.Username,
             request.PasswordHash,
             true
         );

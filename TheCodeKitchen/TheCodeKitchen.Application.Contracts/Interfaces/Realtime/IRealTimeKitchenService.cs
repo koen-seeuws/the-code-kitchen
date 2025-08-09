@@ -1,8 +1,9 @@
-using TheCodeKitchen.Application.Contracts.Events;
+using TheCodeKitchen.Application.Contracts.Events.Kitchen;
 
 namespace TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
 
 public interface IRealTimeKitchenService
 {
-    Task SendNewKitchenOrderEvent(Guid kitchenId, NewKitchenOrderEvent @event);
+    Task SendCookJoinedEvent(Guid kitchenId, CookJoinedEvent @event);
+    Task SendMessageDeliveredEvent(Guid kitchenId, MessageDeliveredEvent @event);
 }

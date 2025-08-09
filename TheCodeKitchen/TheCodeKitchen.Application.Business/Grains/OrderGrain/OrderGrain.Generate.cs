@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Constants;
+using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Models;
 
 namespace TheCodeKitchen.Application.Business.Grains.OrderGrain;

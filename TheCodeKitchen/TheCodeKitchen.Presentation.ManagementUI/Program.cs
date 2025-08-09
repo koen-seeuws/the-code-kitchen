@@ -2,6 +2,7 @@ using MudBlazor.Services;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Presentation;
 using TheCodeKitchen.Presentation.ManagementUI.Components;
+using TheCodeKitchen.Presentation.ManagementUI.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,11 +29,15 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
 app.UseAntiforgery();
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.MapHub<GameManagementHub>("/GameManagementHub");
+app.MapHub<GameHub>("/GameHub");
+app.MapHub<KitchenHub>("/KitchenHub");
+app.MapHub<KitchenOrderHub>("/KitchenOrderHub");
 
 app.Run();

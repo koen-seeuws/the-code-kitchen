@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Contracts.Events.Kitchen;
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 
@@ -30,6 +31,9 @@ public sealed partial class KitchenGrain
             });
 
         await Task.WhenAll(tasks);
+        
+        var @event = new MessageDeliveredEvent(request.From, request.To, request.Content, timestamp);
+        await realTimeKitchenService.SendMessageDeliveredEvent(state.State.Id, @event);
 
         return TheCodeKitchenUnit.Value;
     }

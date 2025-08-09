@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.SignalR;
 
-namespace TheCodeKitchen.Presentation.ManagementAPI.Hubs;
+namespace TheCodeKitchen.Presentation.ManagementUI.Hubs;
 
 public class GameManagementHub : Hub
 {

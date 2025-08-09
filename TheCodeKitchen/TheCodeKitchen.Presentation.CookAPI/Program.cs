@@ -49,7 +49,7 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.MapControllers();
 
-app.MapHub<CookHub>("/cookhub");
+app.MapHub<CookHub>("/CookHub");
 
 app.MapOpenApi();
 

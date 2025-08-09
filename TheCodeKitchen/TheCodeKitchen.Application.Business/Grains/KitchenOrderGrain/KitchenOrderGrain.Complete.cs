@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
@@ -39,6 +40,9 @@ public sealed partial class KitchenOrderGrain
 
         // Update kitchen rating
         await UpdateKitchenRating();
+        
+        var @event = new KitchenOrderCompletedEvent(state.State.Number);
+        await realTimeKitchenOrderService.SendKitchenOrderCompletedEvent(@state.State.Kitchen, @event);
 
         DeactivateOnIdle();
 

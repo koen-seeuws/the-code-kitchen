@@ -1,4 +1,5 @@
 using TheCodeKitchen.Application.Contracts.Constants;
+using TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
 
 namespace TheCodeKitchen.Application.Business.Grains.GameManagementGrain;
 
@@ -9,5 +10,6 @@ public class GameManagementState
 
 public sealed partial class GameManagementGrain(
     [PersistentState(TheCodeKitchenState.GameManagement, TheCodeKitchenState.GameManagement)]
-    IPersistentState<GameManagementState> state
+    IPersistentState<GameManagementState> state,
+    IRealTimeGameManagementService realTimeGameManagementService
 ) : Grain, IGameManagementGrain;

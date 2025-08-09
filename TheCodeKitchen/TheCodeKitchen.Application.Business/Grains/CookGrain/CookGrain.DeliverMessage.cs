@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Contracts.Events.Cook;
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
 
 namespace TheCodeKitchen.Application.Business.Grains.CookGrain;

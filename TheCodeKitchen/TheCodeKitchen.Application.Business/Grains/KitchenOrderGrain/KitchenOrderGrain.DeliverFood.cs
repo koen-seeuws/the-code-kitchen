@@ -1,4 +1,5 @@
 using TheCodeKitchen.Application.Business.Extensions;
+using TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
 using TheCodeKitchen.Application.Contracts.Requests.Food;
 using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
 
@@ -84,6 +85,9 @@ public sealed partial class KitchenOrderGrain
         
         // Update kitchen rating
         await UpdateKitchenRating();
+        
+        var @event = new KitchenOrderFoodDeliveredEvent(state.State.Number, food.Name, qualityRating);
+        await realTimeKitchenOrderService.SendKitchenOrderFoodDeliveredEvent(state.State.Kitchen, @event);
 
         return TheCodeKitchenUnit.Value;
     }

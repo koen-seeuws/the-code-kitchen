@@ -1,4 +1,5 @@
 using TheCodeKitchen.Application.Contracts.Constants;
+using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
@@ -14,5 +15,5 @@ public sealed partial class KitchenOrderGrain(
     [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
     IPersistentState<KitchenOrderGrainStreamSubscriptionHandles> streamHandles,
     IMapper mapper,
-    IRealTimeKitchenService realTimeKitchenService
+    IRealTimeKitchenOrderService realTimeKitchenOrderService
 ) : Grain, IKitchenOrderGrain;

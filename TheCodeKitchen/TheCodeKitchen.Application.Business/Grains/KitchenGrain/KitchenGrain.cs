@@ -1,6 +1,9 @@
 using Microsoft.Extensions.Logging;
 using Orleans.Placement;
 using TheCodeKitchen.Application.Contracts.Constants;
+using TheCodeKitchen.Application.Contracts.Events.Game;
+using TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
+using TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
@@ -18,5 +21,6 @@ public sealed partial class KitchenGrain(
     [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
     IPersistentState<KitchenGrainStreamSubscriptionHandles> streamHandles,
     IMapper mapper,
+    IRealTimeKitchenService realTimeKitchenService,
     ILogger<KitchenGrain> logger
 ) : Grain, IKitchenGrain;

@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 using TheCodeKitchen.Application.Contracts.Response.Kitchen;
 
@@ -18,6 +19,15 @@ public sealed partial class GameGrain
         await state.WriteStateAsync();
         var kitchenGrain = GrainFactory.GetGrain<IKitchenGrain>(id);
         var result = await kitchenGrain.Initialize(request, state.State.Kitchens.Count);
-        return result;
+
+        if (!result.Succeeded)
+            return result.Error;
+
+        var kitchen = result.Value;
+        
+        var @event = new KitchenCreatedEvent(kitchen.Id, kitchen.Name, kitchen.Code, kitchen.Rating);
+        await realTimeGameService.SendKitchenCreatedEvent(state.State.Id, @event);
+        
+        return result.Value;
     }
 }

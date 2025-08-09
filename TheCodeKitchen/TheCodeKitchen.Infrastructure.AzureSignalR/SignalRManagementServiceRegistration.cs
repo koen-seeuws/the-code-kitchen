@@ -34,9 +34,14 @@ public static class SignalRManagementServiceRegistration
                 .BuildServiceManager();
         });
 
+        // Register HubContextProvider as singleton
         services.AddSingleton<HubContextProvider>();
 
+        // Register Realtime services
+        services.AddSingleton<IRealTimeGameManagementService, RealTimeGameManagementService>();
+        services.AddSingleton<IRealTimeGameService, RealTimeGameService>();
         services.AddSingleton<IRealTimeKitchenService, RealTimeKitchenService>();
+        services.AddSingleton<IRealTimeKitchenOrderService, RealTimeKitchenOrderService>();
         services.AddSingleton<IRealTimeCookService, RealTimeCookService>();
     }
 }

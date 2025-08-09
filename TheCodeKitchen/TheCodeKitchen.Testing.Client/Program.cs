@@ -1,7 +1,8 @@
 ﻿using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.SignalR.Client;
-using TheCodeKitchen.Application.Contracts.Events;
+using TheCodeKitchen.Application.Contracts.Events.Cook;
+using TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
 using TheCodeKitchen.Presentation.API.Cook.Models;
 
 const string apiUrl = "https://ca-tck-cook-api.proudbeach-fbb36fdd.westeurope.azurecontainerapps.io/";
