@@ -26,9 +26,8 @@ public partial class PreGameLobby(
     private GetGameResponse? GetGameResponse { get; set; }
     private ICollection<KitchenTableRecordModel>? KitchenRecords { get; set; }
     private IDictionary<Guid, List<CookTableRecordModel>>? CookRecordsPerKitchen { get; set; }
-
     private string? ErrorMessage { get; set; }
-
+    public bool Busy { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -170,12 +169,13 @@ public partial class PreGameLobby(
 
         if (dialogResult is { Canceled: false, Data: CreateKitchenResponse createKitchenResponse })
         {
-            await LoadKitchens();
+            snackbar.Add($"Successfully created kitchen {createKitchenResponse.Game}", Severity.Success);
         }
     }
 
     private async Task StartGame()
     {
+        Busy = true;
         try
         {
             var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
@@ -193,6 +193,10 @@ public partial class PreGameLobby(
         catch
         {
             snackbar.Add("An error occurred while starting the game.", Severity.Error);
+        }
+        finally
+        {
+            Busy = false;
         }
     }
 

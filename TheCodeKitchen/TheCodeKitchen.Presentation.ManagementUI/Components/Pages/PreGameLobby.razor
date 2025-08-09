@@ -56,7 +56,7 @@ else
 
     if (GetGameResponse.Started == null)
     {
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@StartGame" Class="mb-3">
+        <MudButton OnClick="@StartGame" Disabled="Busy" Variant="Variant.Filled" Color="Color.Primary"  Class="mb-3">
             <MudIcon Icon="@Icons.Material.Filled.PlayArrow"/>
             Start Game
         </MudButton>
