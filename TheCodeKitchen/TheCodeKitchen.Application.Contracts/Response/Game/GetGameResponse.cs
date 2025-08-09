@@ -5,6 +5,7 @@ public record GetGameResponse(
     Guid Id,
     string Name,
     double SpeedModifier,
+    double Temperature,
     DateTimeOffset? Started,
     bool Paused
 );

@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.Game;
+using TheCodeKitchen.Presentation.ManagementUI.Models;
+using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 
@@ -41,11 +43,4 @@ public partial class CreateGameDialog(ISnackbar snackbar, IClusterClient cluster
     }
 
     private void Cancel() => MudDialog.Cancel();
-}
-
-public class CreateGameFormModel
-{
-    public string Name { get; set; } = string.Empty;
-    public double SpeedModifier { get; set; } = 1.0;
-    public double Temperature { get; set; } = 30.0;
 }

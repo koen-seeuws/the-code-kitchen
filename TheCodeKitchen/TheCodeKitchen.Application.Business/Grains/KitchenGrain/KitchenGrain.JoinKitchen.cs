@@ -44,8 +44,8 @@ public sealed partial class KitchenGrain
         if (!createCookResult.Succeeded)
             return createCookResult.Error;
         
-        var @event = new CookJoinedEvent(createCookResult.Value.Username);
-        await realTimeKitchenService.SendCookJoinedEvent(state.State.Id, @event);
+        var @event = new CookJoinedEvent(createCookResult.Value.Username, state.State.Id);
+        await realTimeGameService.SendCookJoinedEvent(state.State.Game, @event);
         
         return new JoinKitchenResponse(
             state.State.Game,

@@ -1,4 +1,5 @@
 @page "/games/{gameId:guid}/pre-game-lobby"
+@using TheCodeKitchen.Presentation.ManagementUI.Models.TableRecordModels
 
 <PageTitle>Pre-game Lobby</PageTitle>
 
@@ -22,10 +23,11 @@ else
         </MudButton>
     }
 
-    <MudTable Items="@GetKitchenResponses"
+    <MudTable Items="@KitchenRecords"
+              Context="KitchenContext"
               Hover="true"
               Breakpoint="Breakpoint.Sm"
-              Loading="@(GetKitchenResponses == null)"
+              Loading="@(KitchenRecords == null)"
               LoadingProgressColor="Color.Primary"
               Class="mb-3">
         <NoRecordsContent>
@@ -37,10 +39,42 @@ else
             <MudTh>Rating</MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Code">@context.Code</MudTd>
-            <MudTd DataLabel="Rating">@context.Rating</MudTd>
+            <MudTd DataLabel="Name">@KitchenContext.Name</MudTd>
+            <MudTd DataLabel="Code">@KitchenContext.Code</MudTd>
+            <MudTd DataLabel="Rating">@KitchenContext.Rating</MudTd>
         </RowTemplate>
+        <ChildRowContent>
+            @{
+                List<CookTableRecordModel>? cookRecords = null;
+                CookRecordsPerKitchen?.TryGetValue(KitchenContext.Id, out cookRecords);
+                <MudTr>
+                    <td colspan=3>
+                        <MudCard Elevation="0">
+                            <MudCardHeader>
+                                <CardHeaderContent>
+                                    <MudText Typo="Typo.body1">Cooks in <strong>@KitchenContext.Name</strong></MudText>
+                                </CardHeaderContent>
+                            </MudCardHeader>
+                            <MudCardContent Class="pa-0">
+                                <MudTable Items="@cookRecords" 
+                                          Context="CookContext" 
+                                          Hover="true"
+                                          Breakpoint="Breakpoint.Sm"
+                                          Loading="@(cookRecords == null)"
+                                          LoadingProgressColor="Color.Primary">
+                                    <HeaderContent>
+                                        <MudTh>Username</MudTh>
+                                    </HeaderContent>
+                                    <RowTemplate>
+                                        <MudTd DataLabel="Username">@CookContext.Username</MudTd>
+                                    </RowTemplate>
+                                </MudTable>
+                            </MudCardContent>
+                        </MudCard>
+                    </td>
+                </MudTr>
+            }
+        </ChildRowContent>
     </MudTable>
 
     if (GetGameResponse.Started == null)
@@ -52,7 +86,10 @@ else
     }
     else
     {
-        <MudAlert Severity="Severity.Info">The game has already started, go <MudLink Href="@($"/games/{GameId}")" Color="Color.Info">here</MudLink>!</MudAlert>
+        <MudAlert Severity="Severity.Info">The game has already started, go
+            <MudLink Href="@($"/games/{GameId}")" Color="Color.Info">here</MudLink>
+            !
+        </MudAlert>
     }
 }
     

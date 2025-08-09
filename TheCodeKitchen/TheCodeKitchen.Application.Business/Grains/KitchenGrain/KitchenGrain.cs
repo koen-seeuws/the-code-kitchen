@@ -22,5 +22,6 @@ public sealed partial class KitchenGrain(
     IPersistentState<KitchenGrainStreamSubscriptionHandles> streamHandles,
     IMapper mapper,
     IRealTimeKitchenService realTimeKitchenService,
+    IRealTimeGameService realTimeGameService,
     ILogger<KitchenGrain> logger
 ) : Grain, IKitchenGrain;

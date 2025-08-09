@@ -3,8 +3,11 @@ using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Presentation;
 using TheCodeKitchen.Presentation.ManagementUI.Components;
 using TheCodeKitchen.Presentation.ManagementUI.Hubs;
+using TheCodeKitchen.Presentation.ManagementUI.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAutoMapper(typeof(GameMapping));
 
 // Infrastructure services
 builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);

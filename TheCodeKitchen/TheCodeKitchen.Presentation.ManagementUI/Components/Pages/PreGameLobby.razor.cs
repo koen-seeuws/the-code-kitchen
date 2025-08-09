@@ -1,9 +1,16 @@
+using System.Collections.Concurrent;
+using AutoMapper;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
+using TheCodeKitchen.Application.Contracts.Events.Game;
+using TheCodeKitchen.Application.Contracts.Events.Kitchen;
 using TheCodeKitchen.Application.Contracts.Grains;
+using TheCodeKitchen.Application.Contracts.Requests.Cook;
 using TheCodeKitchen.Application.Contracts.Response.Game;
 using TheCodeKitchen.Application.Contracts.Response.Kitchen;
 using TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
+using TheCodeKitchen.Presentation.ManagementUI.Models.TableRecordModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Pages;
 
@@ -11,13 +18,16 @@ public partial class PreGameLobby(
     NavigationManager navigationManager,
     IDialogService dialogService,
     ISnackbar snackbar,
-    IClusterClient clusterClient
-) : ComponentBase
+    IClusterClient clusterClient,
+    IMapper mapper
+) : ComponentBase, IAsyncDisposable
 {
     [Parameter] public Guid GameId { get; set; }
-
+    private HubConnection? _gameHubConnection;
+    private IDictionary<Guid, HubConnection>? _kitchenHubConnectionsById;
     private GetGameResponse? GetGameResponse { get; set; }
-    private ICollection<GetKitchenResponse>? GetKitchenResponses { get; set; }
+    private ICollection<KitchenTableRecordModel>? KitchenRecords { get; set; }
+    private IDictionary<Guid, List<CookTableRecordModel>>? CookRecordsPerKitchen { get; set; }
 
     private string? ErrorMessage { get; set; }
 
@@ -26,6 +36,8 @@ public partial class PreGameLobby(
     {
         await LoadGame();
         await LoadKitchens();
+        await LoadCooks();
+        await ListenToGameEvents();
         await base.OnInitializedAsync();
     }
 
@@ -51,11 +63,11 @@ public partial class PreGameLobby(
     {
         try
         {
-            GetKitchenResponses = null;
+            KitchenRecords = null;
             var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
             var getKitchensResult = await gameGrain.GetKitchens();
             if (getKitchensResult.Succeeded)
-                GetKitchenResponses = getKitchensResult.Value.ToList();
+                KitchenRecords = mapper.Map<List<KitchenTableRecordModel>>(getKitchensResult.Value);
             else
                 ErrorMessage = getKitchensResult.Error.Message;
         }
@@ -64,6 +76,88 @@ public partial class PreGameLobby(
             ErrorMessage = "An error occurred while retrieving the kitchens.";
         }
     }
+
+    private async Task LoadCooks()
+    {
+        try
+        {
+            CookRecordsPerKitchen = null;
+
+            if (KitchenRecords is null)
+            {
+                throw new NullReferenceException();
+            }
+
+            var getCookRequest = new GetCookRequest(null);
+
+            var cooksPerKitchen = new Dictionary<Guid, List<CookTableRecordModel>>();
+
+            foreach (var kitchen in KitchenRecords)
+            {
+                var kitchenGrain = clusterClient.GetGrain<IKitchenGrain>(kitchen.Id);
+                var getCooksResult = await kitchenGrain.GetCooks(getCookRequest);
+                if (getCooksResult.Succeeded)
+                {
+                    var cookRecords = mapper.Map<List<CookTableRecordModel>>(getCooksResult.Value);
+                    cooksPerKitchen[kitchen.Id] = cookRecords;
+                }
+                else
+                {
+                    ErrorMessage = getCooksResult.Error.Message;
+                    break;
+                }
+            }
+
+            CookRecordsPerKitchen = cooksPerKitchen;
+        }
+        catch
+        {
+            ErrorMessage = "An error occurred while retrieving the cooks.";
+        }
+    }
+
+
+    private async Task ListenToGameEvents()
+    {
+        if (_gameHubConnection is not null)
+            await _gameHubConnection.DisposeAsync();
+
+        _gameHubConnection = new HubConnectionBuilder()
+            .WithUrl(navigationManager.ToAbsoluteUri($"/GameHub?gameId={GameId}"))
+            .Build();
+
+        _gameHubConnection.On(nameof(KitchenCreatedEvent), async (KitchenCreatedEvent @event) =>
+        {
+            var kitchenRecord = mapper.Map<KitchenTableRecordModel>(@event);
+            KitchenRecords?.Add(kitchenRecord);
+            await InvokeAsync(StateHasChanged);
+        });
+        
+        _gameHubConnection.On(nameof(CookJoinedEvent), async (CookJoinedEvent @event) =>
+        {
+            if (CookRecordsPerKitchen is null) return;
+
+            if (!CookRecordsPerKitchen.TryGetValue(@event.Kitchen, out var cookRecords))
+            {
+                cookRecords = new List<CookTableRecordModel>();
+                CookRecordsPerKitchen[@event.Kitchen] = cookRecords;
+            }
+            
+            var cookRecord = mapper.Map<CookTableRecordModel>(@event);
+            cookRecords.Add(cookRecord);
+            await InvokeAsync(StateHasChanged);
+        });
+
+        try
+        {
+            await _gameHubConnection.StartAsync();
+        }
+        catch
+        {
+            snackbar.Add("Failed to start listening to new kitchen events", Severity.Error);
+        }
+    }
+    
 
     private async Task CreateKitchen()
     {
@@ -99,5 +193,10 @@ public partial class PreGameLobby(
         {
             snackbar.Add("An error occurred while starting the game.", Severity.Error);
         }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_gameHubConnection != null) await _gameHubConnection.DisposeAsync();
     }
 }

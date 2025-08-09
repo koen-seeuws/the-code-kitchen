@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.Pantry;
+using TheCodeKitchen.Presentation.ManagementUI.Models;
+using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 
@@ -41,9 +43,4 @@ public partial class CreateIngredientDialog(ISnackbar snackbar, IClusterClient c
     }
 
     private void Cancel() => MudDialog.Cancel();
-}
-
-public class CreateIngredientFormModel
-{
-    public string Name { get; set; } = string.Empty;
 }

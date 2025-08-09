@@ -1,7 +1,6 @@
-namespace TheCodeKitchen.Application.Contracts.Events.GameManagement;
+namespace TheCodeKitchen.Presentation.ManagementUI.Models.TableRecordModels;
 
-[GenerateSerializer]
-public record GameCreatedEvent(
+public record GameTableRecordModel(
     Guid Id,
     string Name,
     double SpeedModifier,

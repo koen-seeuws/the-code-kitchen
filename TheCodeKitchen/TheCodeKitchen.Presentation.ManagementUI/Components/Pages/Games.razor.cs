@@ -1,36 +1,43 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
+using TheCodeKitchen.Application.Contracts.Events.GameManagement;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Response.Game;
 using TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
+using TheCodeKitchen.Presentation.ManagementUI.Models.TableRecordModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Pages;
 
 public partial class Games(
     NavigationManager navigationManager,
     IDialogService dialogService,
-    IClusterClient clusterClient
-) : ComponentBase
+    ISnackbar snackbar,
+    IClusterClient clusterClient,
+    IMapper mapper
+) : ComponentBase, IAsyncDisposable
 {
-    private ICollection<GetGameResponse>? GetGameResponses { get; set; }
+    private HubConnection? _gameManagementHubConnection;
+    private ICollection<GameTableRecordModel>? GameRecords { get; set; }
     private string? ErrorMessage { get; set; }
-
 
     protected override async Task OnInitializedAsync()
     {
         await LoadGames();
+        await ListenToGameCreatedEvents();
         await base.OnInitializedAsync();
     }
-    
+
     private async Task LoadGames()
     {
         try
         {
-            GetGameResponses = null;
+            GameRecords = null;
             var gameManagementGrain = clusterClient.GetGrain<IGameManagementGrain>(Guid.Empty);
             var result = await gameManagementGrain.GetGames();
             if (result.Succeeded)
-                GetGameResponses = result.Value.ToList();
+                GameRecords = mapper.Map<List<GameTableRecordModel>>(result.Value);
             else
                 ErrorMessage = result.Error.Message;
         }
@@ -40,10 +47,36 @@ public partial class Games(
         }
     }
 
+    private async Task ListenToGameCreatedEvents()
+    {
+        if (_gameManagementHubConnection is not null)
+            await _gameManagementHubConnection.DisposeAsync();
+
+        _gameManagementHubConnection = new HubConnectionBuilder()
+            .WithUrl(navigationManager.ToAbsoluteUri("/GameManagementHub"))
+            .Build();
+
+        _gameManagementHubConnection.On(nameof(GameCreatedEvent), async (GameCreatedEvent @event) =>
+        {
+            var gameRecord = mapper.Map<GameTableRecordModel>(@event);
+            GameRecords?.Add(gameRecord);
+            await InvokeAsync(StateHasChanged);
+        });
+
+        try
+        {
+            await _gameManagementHubConnection.StartAsync();
+        }
+        catch
+        {
+            snackbar.Add("Failed to start listening to new game events", Severity.Error);
+        }
+    }
+
     private void NavigateToGame(Guid gameId, bool started)
     {
         var link = $"/games/{gameId}";
-        if(!started)
+        if (!started)
             link += "/pre-game-lobby";
         navigationManager.NavigateTo(link);
     }
@@ -55,5 +88,10 @@ public partial class Games(
 
         if (dialogResult is { Canceled: false, Data: CreateGameResponse createGameResponse })
             NavigateToGame(createGameResponse.Id, false);
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_gameManagementHubConnection != null) await _gameManagementHubConnection.DisposeAsync();
     }
 }

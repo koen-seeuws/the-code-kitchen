@@ -9,6 +9,8 @@
 
 
     <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="14.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.8" />
         <PackageReference Include="MudBlazor" Version="8.*"/>
     </ItemGroup>
 

@@ -1,6 +1,7 @@
 ﻿@page "/"
 @page "/games"
 @using TheCodeKitchen.Application.Contracts.Response.Game
+@using TheCodeKitchen.Presentation.ManagementUI.Models.TableRecordModels
 
 <PageTitle>Games</PageTitle>
 
@@ -16,12 +17,12 @@
 }
 else
 {
-    <MudTable Items="@GetGameResponses"
+    <MudTable Items="@GameRecords"
               Hover="true"
               Breakpoint="Breakpoint.Sm"
-              Loading="@(GetGameResponses == null)"
+              Loading="@(GameRecords == null)"
               LoadingProgressColor="Color.Primary"
-              OnRowClick="@((TableRowClickEventArgs<GetGameResponse> e) => NavigateToGame(e.Item!.Id, e.Item.Started != null))">
+              OnRowClick="@((TableRowClickEventArgs<GameTableRecordModel> e) => NavigateToGame(e.Item!.Id, e.Item.Started != null))">
         <NoRecordsContent>
             No games found.
         </NoRecordsContent>

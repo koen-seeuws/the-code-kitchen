@@ -5,6 +5,7 @@ using TheCodeKitchen.Application.Contracts.Models;
 using TheCodeKitchen.Application.Contracts.Requests.CookBook;
 using TheCodeKitchen.Application.Contracts.Response.CookBook;
 using TheCodeKitchen.Application.Contracts.Response.Pantry;
+using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 
@@ -147,23 +148,4 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
     }
 
     private void Cancel() => MudDialog.Cancel();
-}
-
-public class CreateRecipeFormModel
-{
-    public string Name { get; set; } = string.Empty;
-    public ICollection<StepFormModel> Steps { get; set; } = new List<StepFormModel>();
-    public ICollection<IngredientFormModel> Ingredients { get; set; } = new List<IngredientFormModel>();
-}
-
-public class IngredientFormModel
-{
-    public string Name { get; set; } = string.Empty;
-    public ICollection<StepFormModel> Steps { get; set; } = new List<StepFormModel>();
-}
-
-public class StepFormModel
-{
-    public string EquipmentType { get; set; } = string.Empty;
-    public TimeSpan? Time { get; set; } = TimeSpan.Zero;
 }

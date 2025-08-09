@@ -19,7 +19,7 @@ public sealed partial class GameManagementGrain
 
         var game = result.Value;
         
-        var @event = new GameCreatedEvent(game.Id, game.Name, game.SpeedModifier, game.Temperature);
+        var @event = new GameCreatedEvent(game.Id, game.Name, game.SpeedModifier, game.Temperature,null, true);
         await realTimeGameManagementService.SendGameCreatedEvent(@event);
         
         return result;
