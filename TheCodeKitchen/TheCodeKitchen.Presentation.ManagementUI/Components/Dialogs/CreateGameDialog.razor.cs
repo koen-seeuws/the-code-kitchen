@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.Game;
-using TheCodeKitchen.Presentation.ManagementUI.Models;
 using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;

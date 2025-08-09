@@ -17,18 +17,18 @@ public class RealTimeKitchenOrderService(HubContextProvider hubContextProvider) 
         var kitchenHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.KitchenOrderHub); // UI
         await kitchenHubContext.Clients.Group(kitchenGroup).SendAsync(nameof(NewKitchenOrderEvent), @event);
     }
+    
+    public async Task SendKitchenOrderFoodDeliveredEvent(Guid kitchenId, KitchenOrderFoodDeliveredEvent @event)
+    {
+        var kitchenHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.KitchenOrderHub);
+        var kitchenGroup = GroupConstants.GetKitchenGroup(kitchenId);
+        await kitchenHubContext.Clients.Group(kitchenGroup).SendAsync(nameof(KitchenOrderFoodDeliveredEvent), @event);
+    }
 
     public async Task SendKitchenOrderCompletedEvent(Guid kitchenId, KitchenOrderCompletedEvent @event)
     {
         var kitchenHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.KitchenOrderHub);
         var kitchenGroup = GroupConstants.GetKitchenGroup(kitchenId);
         await kitchenHubContext.Clients.Group(kitchenGroup).SendAsync(nameof(KitchenOrderCompletedEvent), @event);
-    }
-
-    public async Task SendKitchenOrderFoodDeliveredEvent(Guid kitchenId, KitchenOrderFoodDeliveredEvent @event)
-    {
-        var kitchenHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.KitchenOrderHub);
-        var kitchenGroup = GroupConstants.GetKitchenGroup(kitchenId);
-        await kitchenHubContext.Clients.Group(kitchenGroup).SendAsync(nameof(KitchenOrderFoodDeliveredEvent), @event);
     }
 }

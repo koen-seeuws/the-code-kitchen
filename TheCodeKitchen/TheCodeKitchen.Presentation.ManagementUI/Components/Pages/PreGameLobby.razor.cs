@@ -1,4 +1,3 @@
-using System.Collections.Concurrent;
 using AutoMapper;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -24,7 +23,6 @@ public partial class PreGameLobby(
 {
     [Parameter] public Guid GameId { get; set; }
     private HubConnection? _gameHubConnection;
-    private IDictionary<Guid, HubConnection>? _kitchenHubConnectionsById;
     private GetGameResponse? GetGameResponse { get; set; }
     private ICollection<KitchenTableRecordModel>? KitchenRecords { get; set; }
     private IDictionary<Guid, List<CookTableRecordModel>>? CookRecordsPerKitchen { get; set; }
@@ -119,6 +117,9 @@ public partial class PreGameLobby(
 
     private async Task ListenToGameEvents()
     {
+        if(GetGameResponse?.Started != null)
+            return;
+        
         if (_gameHubConnection is not null)
             await _gameHubConnection.DisposeAsync();
 

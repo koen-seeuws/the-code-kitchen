@@ -4,5 +4,6 @@ namespace TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
 
 public interface IRealTimeKitchenService
 {
+    Task SendKitchenRatingUpdatedEvent(Guid kitchenId, KitchenRatingUpdatedEvent @event);
     Task SendMessageDeliveredEvent(Guid kitchenId, MessageDeliveredEvent @event);
 }

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
+using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Response.Game;
 using TheCodeKitchen.Application.Contracts.Response.Kitchen;
@@ -11,21 +13,23 @@ public partial class Game(
     IDialogService dialogService,
     ISnackbar snackbar,
     IClusterClient clusterClient
-) : ComponentBase
+) : ComponentBase, IAsyncDisposable
 {
     [Parameter] public Guid GameId { get; set; }
-
+    private HubConnection? _gameHubConnection;
     private GetGameResponse? GetGameResponse { get; set; }
+    private string? GameErrorMessage { get; set; }
     private ICollection<GetKitchenResponse>? GetKitchenResponses { get; set; }
+    private string? KitchenErrorMessage { get; set; }
     private bool? Paused { get; set; }
     public bool Advancing { get; set; }
-    private string? ErrorMessage { get; set; }
 
 
     protected override async Task OnInitializedAsync()
     {
         await LoadGame();
         await LoadKitchens();
+        await ListenToGameEvents();
         await base.OnInitializedAsync();
     }
 
@@ -42,11 +46,11 @@ public partial class Game(
                 Paused = getGameResult.Value.Paused;
             }
             else
-                ErrorMessage = getGameResult.Error.Message;
+                GameErrorMessage = getGameResult.Error.Message;
         }
         catch
         {
-            ErrorMessage = "An error occurred while retrieving the game.";
+            GameErrorMessage = "An error occurred while retrieving the game.";
         }
     }
 
@@ -60,11 +64,37 @@ public partial class Game(
             if (getKitchensResult.Succeeded)
                 GetKitchenResponses = getKitchensResult.Value.ToList();
             else
-                ErrorMessage = getKitchensResult.Error.Message;
+                KitchenErrorMessage = getKitchensResult.Error.Message;
         }
         catch
         {
-            ErrorMessage = "An error occurred while retrieving the kitchens.";
+            KitchenErrorMessage = "An error occurred while retrieving the kitchens.";
+        }
+    }
+
+    private async Task ListenToGameEvents()
+    {
+        if (_gameHubConnection is not null)
+            await _gameHubConnection.DisposeAsync();
+
+        _gameHubConnection = new HubConnectionBuilder()
+            .WithUrl(navigationManager.ToAbsoluteUri($"/GameHub?gameId={GameId}"))
+            .Build();
+
+        _gameHubConnection.On(nameof(GamePausedOrResumedEvent),
+            async (GamePausedOrResumedEvent @event) =>
+            {
+                Paused = @event.Paused;
+                await InvokeAsync(StateHasChanged);
+            });
+
+        try
+        {
+            await _gameHubConnection.StartAsync();
+        }
+        catch
+        {
+            snackbar.Add("Failed to start listening to game events", Severity.Error);
         }
     }
 
@@ -112,5 +142,10 @@ public partial class Game(
         {
             Advancing = false;
         }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_gameHubConnection != null) await _gameHubConnection.DisposeAsync();
     }
 }

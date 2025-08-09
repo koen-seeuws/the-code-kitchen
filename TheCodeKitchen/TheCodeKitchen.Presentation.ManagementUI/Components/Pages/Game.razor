@@ -2,9 +2,9 @@
 
 <PageTitle>Game</PageTitle>
 
-@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+@if (!string.IsNullOrWhiteSpace(GameErrorMessage))
 {
-    <MudAlert Severity="Severity.Error">@ErrorMessage</MudAlert>
+    <MudAlert Severity="Severity.Error">@GameErrorMessage</MudAlert>
 }
 else if (GetGameResponse == null)
 {
@@ -40,9 +40,27 @@ else
                OnClick="@NextMoment"
                Disabled="@(Paused == false || GetGameResponse.Started == null || Advancing)"
                Class="mb-3">
-            <MudIcon Icon="@Icons.Material.Filled.NextPlan"/>
-            Advance
+        <MudIcon Icon="@Icons.Material.Filled.NextPlan"/>
+        Advance
     </MudButton>
 
-    <div>TODO</div>
+    if (!string.IsNullOrWhiteSpace(KitchenErrorMessage))
+    {
+        <MudAlert Severity="Severity.Error">@KitchenErrorMessage</MudAlert>
+    }
+    else if (GetKitchenResponses == null)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+    }
+    else
+    {
+        <MudGrid Spacing="1">
+            @foreach (var kitchen in GetKitchenResponses)
+            {
+                <MudItem xs="12" md="6" xl="4">
+                    <GameKitchen Kitchen="@kitchen"/>
+                </MudItem>
+            }
+        </MudGrid>
+    }
 }

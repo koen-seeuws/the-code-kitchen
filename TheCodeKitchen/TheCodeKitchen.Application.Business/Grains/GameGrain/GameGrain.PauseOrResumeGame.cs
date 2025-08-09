@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Response.Game;
 
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
@@ -13,7 +14,12 @@ public sealed partial class GameGrain
 
         if (!result.Succeeded)
             return result.Error;
+        
+        var paused = _nextMomentTimer is null;
+        
+        var @event = new GamePausedOrResumedEvent(paused);
+        await realTimeGameService.SendGamePausedOrResumedEvent(state.State.Id, @event);
 
-        return new PauseOrResumeGameResponse(_nextMomentTimer is null);
+        return new PauseOrResumeGameResponse(paused);
     }
 }

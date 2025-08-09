@@ -7,4 +7,5 @@ public interface IRealTimeGameService
 {
     Task SendKitchenCreatedEvent(Guid gameId, KitchenCreatedEvent @event);
     Task SendCookJoinedEvent(Guid gameId, CookJoinedEvent @event);
+    Task SendGamePausedOrResumedEvent(Guid gameId, GamePausedOrResumedEvent @event);
 }
