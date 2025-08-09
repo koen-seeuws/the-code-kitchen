@@ -22,7 +22,7 @@ public partial class Game(
     private ICollection<GetKitchenResponse>? GetKitchenResponses { get; set; }
     private string? KitchenErrorMessage { get; set; }
     private bool? Paused { get; set; }
-    public bool Advancing { get; set; }
+    public bool Busy { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -100,6 +100,7 @@ public partial class Game(
 
     private async Task PauseOrUnpauseGame()
     {
+        Busy = true;
         try
         {
             var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
@@ -119,13 +120,17 @@ public partial class Game(
         {
             snackbar.Add("An error occurred while trying to pause or unpause the game.", Severity.Error);
         }
+        finally
+        {
+            Busy = false;
+        }
     }
 
     private async Task NextMoment()
     {
         try
         {
-            Advancing = true;
+            Busy = true;
             var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
             var nextMomentResult = await gameGrain.NextMoment();
 
@@ -140,7 +145,7 @@ public partial class Game(
         }
         finally
         {
-            Advancing = false;
+            Busy = false;
         }
     }
 

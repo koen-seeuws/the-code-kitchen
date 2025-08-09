@@ -9,12 +9,10 @@ namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 public partial class CreateKitchenDialog(ISnackbar snackbar, IClusterClient clusterClient) : ComponentBase
 {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
-    
     [Parameter] public Guid GameId { get; set; }
-
     private MudForm Form { get; set; } = new();
-    
     private CreateKitchenFormModel Model { get; set; } = new();
+    private bool Creating { get; set; }
 
     private async Task Submit()
     {
@@ -22,6 +20,7 @@ public partial class CreateKitchenDialog(ISnackbar snackbar, IClusterClient clus
         if (!Form.IsValid)
             return;
         
+        Creating = true;
         try
         {
             var request = new CreateKitchenRequest(Model.Name, GameId);
@@ -40,6 +39,10 @@ public partial class CreateKitchenDialog(ISnackbar snackbar, IClusterClient clus
         catch
         {
             snackbar.Add("An error occured while trying to create a kitchen.", Severity.Error);
+        }
+        finally
+        {
+            Creating = false;
         }
     }
 

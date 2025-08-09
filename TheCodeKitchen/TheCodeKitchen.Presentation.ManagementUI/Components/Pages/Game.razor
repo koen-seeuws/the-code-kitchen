@@ -19,10 +19,10 @@ else
         <MudAlert Severity="Severity.Info">The game has not yet started.</MudAlert>
     }
 
-    <MudButton Variant="Variant.Filled"
+    <MudButton OnClick="@PauseOrUnpauseGame"
+               Variant="Variant.Filled"
                Color="Color.Primary"
-               OnClick="@PauseOrUnpauseGame"
-               Disabled="@(Paused == null || GetGameResponse.Started == null)"
+               Disabled="@(Paused == null || GetGameResponse.Started == null || Busy)"
                Class="mb-3">
         @if (Paused == true)
         {
@@ -35,10 +35,10 @@ else
             <span>Pause</span>
         }
     </MudButton>
-    <MudButton Variant="Variant.Filled"
+    <MudButton OnClick="@NextMoment"
+               Variant="Variant.Filled"
                Color="Color.Primary"
-               OnClick="@NextMoment"
-               Disabled="@(Paused == false || GetGameResponse.Started == null || Advancing)"
+               Disabled="@(Paused == false || GetGameResponse.Started == null || Busy)"
                Class="mb-3">
         <MudIcon Icon="@Icons.Material.Filled.NextPlan"/>
         Advance

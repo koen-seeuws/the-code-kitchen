@@ -9,10 +9,9 @@ namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 public partial class CreateIngredientDialog(ISnackbar snackbar, IClusterClient clusterClient) : ComponentBase
 {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
-
     private MudForm Form { get; set; } = new();
-    
     private CreateIngredientFormModel Model { get; set; } = new();
+    private bool Creating { get; set; }
 
     private async Task Submit()
     {
@@ -20,6 +19,7 @@ public partial class CreateIngredientDialog(ISnackbar snackbar, IClusterClient c
         if (!Form.IsValid)
             return;
         
+        Creating = true;
         try
         {
             var request = new CreateIngredientRequest(Model.Name);
@@ -38,6 +38,10 @@ public partial class CreateIngredientDialog(ISnackbar snackbar, IClusterClient c
         catch
         {
             snackbar.Add("An error occured while trying to create an ingredient.", Severity.Error);
+        }
+        finally
+        {
+            Creating = false;
         }
     }
 

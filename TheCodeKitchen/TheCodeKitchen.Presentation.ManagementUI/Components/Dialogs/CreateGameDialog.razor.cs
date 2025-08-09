@@ -9,10 +9,9 @@ namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 public partial class CreateGameDialog(ISnackbar snackbar, IClusterClient clusterClient) : ComponentBase
 {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
-
     private MudForm Form { get; set; } = new();
-    
     private CreateGameFormModel Model { get; set; } = new();
+    private bool Creating { get; set; }
 
     private async Task Submit()
     {
@@ -20,6 +19,7 @@ public partial class CreateGameDialog(ISnackbar snackbar, IClusterClient cluster
         if (!Form.IsValid)
             return;
 
+        Creating = true;
         try
         {
             var request = new CreateGameRequest(Model.Name, Model.SpeedModifier, Model.Temperature);
@@ -38,6 +38,10 @@ public partial class CreateGameDialog(ISnackbar snackbar, IClusterClient cluster
         catch
         {
             snackbar.Add("An error occured while trying to create a game.", Severity.Error);
+        }
+        finally
+        {
+            Creating = false;
         }
     }
 

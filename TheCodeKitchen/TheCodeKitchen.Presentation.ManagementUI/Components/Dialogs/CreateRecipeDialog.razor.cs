@@ -12,18 +12,13 @@ namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clusterClient) : ComponentBase
 {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
-
     [Parameter] public ICollection<GetIngredientResponse>? Ingredients { get; set; }
-
     [Parameter] public ICollection<GetRecipeResponse>? Recipes { get; set; }
-
     private string? ErrorMessage { get; set; }
-
     private ICollection<string> AllIngredients { get; set; } = new List<string>();
-
     private MudForm Form { get; set; } = new();
-
     private CreateRecipeFormModel Model { get; set; } = new();
+    private bool Creating { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -112,6 +107,7 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
         if (!Form.IsValid)
             return;
 
+        Creating = true;
         try
         {
             var steps = Model.Steps
@@ -144,6 +140,10 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
         catch
         {
             snackbar.Add("An error occured while trying to create a recipe.", Severity.Error);
+        }
+        finally
+        {
+            Creating = false;
         }
     }
 
