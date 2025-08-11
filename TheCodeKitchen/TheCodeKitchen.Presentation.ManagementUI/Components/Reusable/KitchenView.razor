@@ -5,7 +5,7 @@
     <MudText Typo="Typo.body1" Class="mb-3">Code: @Kitchen.Code</MudText>
 }
 
-<MudText Typo="Typo.body1" Class="mb-3">Rating: @Kitchen.Rating.ToString("F2")</MudText>
+<MudText Typo="Typo.body1" Class="mb-3">Rating: @((Kitchen.Rating * 100).ToString("F2"))%</MudText>
 
 <MudText Typo="Typo.h5" Class="mb-3">Messages</MudText>
 
@@ -16,6 +16,10 @@
 else if (_kitchenHubConnection is null)
 {
     <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+}
+else if (Messages.Count == 0)
+{
+    <MudAlert Severity="@Severity.Info">No messages, you guys should communicate a little more!</MudAlert>
 }
 else
 {

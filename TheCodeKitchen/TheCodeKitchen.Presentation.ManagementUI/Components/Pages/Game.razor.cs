@@ -5,7 +5,6 @@ using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Response.Game;
-using TheCodeKitchen.Application.Contracts.Response.Kitchen;
 using TheCodeKitchen.Presentation.ManagementUI.Models.ViewModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Pages;

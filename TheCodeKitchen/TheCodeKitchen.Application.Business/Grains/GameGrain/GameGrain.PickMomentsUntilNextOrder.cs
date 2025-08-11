@@ -2,7 +2,7 @@ namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public sealed partial class GameGrain
 {
-    private int? _momentsUntilNewOrder = null;
+    private int? _momentsUntilNewOrder;
     
     private Task PickMomentsUntilNextOrder()
     {

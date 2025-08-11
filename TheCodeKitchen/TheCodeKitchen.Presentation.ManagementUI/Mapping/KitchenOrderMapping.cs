@@ -1,6 +1,5 @@
 using AutoMapper;
 using TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
-using TheCodeKitchen.Application.Contracts.Models.KitchenOrder;
 using TheCodeKitchen.Application.Contracts.Response.Order;
 using TheCodeKitchen.Presentation.ManagementUI.Models.ViewModels;
 

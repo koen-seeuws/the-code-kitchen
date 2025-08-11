@@ -27,7 +27,7 @@ var tableClient = new TableServiceClient(azureStorageConnectionString);
 
 #if DEBUG
 // TODO: REMOVE, this is only for development purposes to ensure a clean state.
-foreach (var storage in TheCodeKitchenState.All) { tableClient.DeleteTable(storage); }
+//foreach (var storage in TheCodeKitchenState.All) { tableClient.DeleteTable(storage); }
 #endif
 
 builder.Services.AddSignalRManagementServices(builder.Configuration);

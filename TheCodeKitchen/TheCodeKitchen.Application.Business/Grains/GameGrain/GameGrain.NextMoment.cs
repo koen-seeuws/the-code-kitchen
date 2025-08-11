@@ -27,7 +27,7 @@ public sealed partial class GameGrain
         if (_momentsUntilNewOrder is null)
             await PickMomentsUntilNextOrder();
         
-        if (--_momentsUntilNewOrder <= 0)
+        if (--_momentsUntilNewOrder <= 0 || state.State.OrderNumbers.Count <= 0)
         {
             await GenerateOrder();
         }
