@@ -13,9 +13,9 @@
 {
     <MudAlert Severity="Severity.Error">@ErrorMessage</MudAlert>
 }
-else if (GetRecipeResponses == null)
+else if (GetRecipeResponses is null)
 {
-    <MudProgressCircular Indeterminate="@(true)"/>
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
 }
 else
 {

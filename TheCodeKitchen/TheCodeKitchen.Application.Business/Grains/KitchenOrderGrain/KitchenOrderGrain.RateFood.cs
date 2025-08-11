@@ -11,7 +11,7 @@ public sealed partial class KitchenOrderGrain
     {
         var recipe = recipes.FirstOrDefault(r => r.Name.Equals(food, StringComparison.OrdinalIgnoreCase));
 
-        if (recipe == null)
+        if (recipe is null)
             return 0.0; // If someone tries to rate a food that isn't a recipe, rate 0
 
         var recipeRating = RateSteps(executedSteps, recipe.Steps);

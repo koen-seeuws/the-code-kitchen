@@ -13,7 +13,7 @@ public sealed partial class FoodGrain
             return new AlreadyDeliveredError(
                 $"This food is already delivered to order {state.State.OrderNumber.Value}");
         
-        if (!string.IsNullOrWhiteSpace(state.State.CurrentEquipmentType) || state.State.CurrentEquipmentNumber != null)
+        if (!string.IsNullOrWhiteSpace(state.State.CurrentEquipmentType) || state.State.CurrentEquipmentNumber is not null)
             return new AlreadyBeingHeldError(
                 $"This food is already being held in equipment {state.State.CurrentEquipmentType} || {state.State.CurrentEquipmentNumber}");
         

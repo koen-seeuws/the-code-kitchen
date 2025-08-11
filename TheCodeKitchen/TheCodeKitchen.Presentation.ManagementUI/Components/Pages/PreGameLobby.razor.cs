@@ -116,7 +116,7 @@ public partial class PreGameLobby(
 
     private async Task ListenToGameEvents()
     {
-        if(GetGameResponse?.Started != null)
+        if(GetGameResponse?.Started is not null)
             return;
         
         if (_gameHubConnection is not null)
@@ -202,6 +202,6 @@ public partial class PreGameLobby(
 
     public async ValueTask DisposeAsync()
     {
-        if (_gameHubConnection != null) await _gameHubConnection.DisposeAsync();
+        if (_gameHubConnection is not null) await _gameHubConnection.DisposeAsync();
     }
 }

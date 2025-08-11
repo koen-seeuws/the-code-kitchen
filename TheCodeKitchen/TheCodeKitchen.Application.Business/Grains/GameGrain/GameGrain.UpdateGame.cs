@@ -9,7 +9,7 @@ public sealed partial class GameGrain
         if (!state.RecordExists)
             return new NotFoundError($"The game with id {this.GetPrimaryKey()} has not been initialized");
 
-        var running = _nextMomentTimer != null;
+        var running = _nextMomentTimer is not null;
 
         if (running)
             await PauseOrUnpauseGame();

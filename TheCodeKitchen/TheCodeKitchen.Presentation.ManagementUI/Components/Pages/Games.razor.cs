@@ -92,6 +92,6 @@ public partial class Games(
 
     public async ValueTask DisposeAsync()
     {
-        if (_gameManagementHubConnection != null) await _gameManagementHubConnection.DisposeAsync();
+        if (_gameManagementHubConnection is not null) await _gameManagementHubConnection.DisposeAsync();
     }
 }

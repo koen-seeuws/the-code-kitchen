@@ -1,0 +1,93 @@
+<MudText Typo="Typo.h4" Class="mb-3">@Kitchen.Name</MudText>
+
+@if (string.IsNullOrWhiteSpace(Kitchen.Code))
+{
+    <MudText Typo="Typo.body1" Class="mb-3">Code: @Kitchen.Code</MudText>
+}
+
+<MudText Typo="Typo.body1" Class="mb-3">Rating: @Kitchen.Rating.ToString("F2")</MudText>
+
+<MudText Typo="Typo.h5" Class="mb-3">Messages</MudText>
+
+@if (!string.IsNullOrWhiteSpace(KitchenConnectionErrorMessage))
+{
+    <MudAlert Severity="@Severity.Error">@KitchenConnectionErrorMessage</MudAlert>
+}
+else if (_kitchenHubConnection is null)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+}
+else
+{
+    foreach (var message in Messages)
+    {
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">@message.From to @(message.To ?? "everyone")</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <MudText Typo="Typo.body1">@message.Content</MudText>
+            </MudCardContent>
+        </MudCard>
+    }
+}
+
+<MudText Typo="Typo.h5" Class="mb-3">Orders</MudText>
+
+@if (!string.IsNullOrWhiteSpace(KitchenOrdersErrorMessage))
+{
+    <MudAlert Severity="Severity.Error">@KitchenOrdersErrorMessage</MudAlert>
+}
+else if (KitchenOrders is null)
+{
+    <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
+}
+else if (KitchenOrders.Count == 0)
+{
+    <MudAlert Severity="Severity.Info">No orders yet</MudAlert>
+}
+else
+{
+    foreach (var kitchenOrder in KitchenOrders)
+    {
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Typo="Typo.h6">@kitchenOrder.Number</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>
+                <div class="d-flex flex-grow-1 gap-1">
+                    <div>
+                        <MudText Typo="Typo.subtitle1">Requested</MudText>
+                        <ul>
+                            @foreach (var requestedFood in kitchenOrder.RequestedFoods)
+                            {
+                                <li>
+                                    <MudText Typo="Typo.body1">@requestedFood</MudText>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    <MudDivider Vertical="true" FlexItem="true" />
+                    <div>
+                        <MudText Typo="Typo.subtitle1">Delivered</MudText>
+                        <ul>
+                            @foreach (var deliveredFood in kitchenOrder.DeliveredFoods)
+                            {
+                                <li>
+                                    <MudText Typo="Typo.body1">@deliveredFood</MudText>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                    
+                </div>
+            </MudCardContent>
+        </MudCard>
+    }
+}
+
+

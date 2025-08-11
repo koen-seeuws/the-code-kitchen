@@ -5,15 +5,15 @@ namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
 public sealed partial class KitchenGrain
 {
-    public async Task<Result<IEnumerable<GetSimpleOrderResponse>>> GetOpenOrders()
+    public async Task<Result<IEnumerable<GetOpenOrderResponse>>> GetOpenOrders()
     {
         if (!state.RecordExists)
             return new NotFoundError($"The kitchen with id {this.GetPrimaryKey()} does not exist");
 
         var tasks = state.State.OpenOrders.Select(async number =>
         {
-            var orderGrain = GrainFactory.GetGrain<IOrderGrain>(number, state.State.Game.ToString());
-            var result = await orderGrain.GetOrder();
+            var kitchenOrderGrain = GrainFactory.GetGrain<IKitchenOrderGrain>(number, state.State.Id.ToString());
+            var result = await kitchenOrderGrain.GetKitchenOrder();
             return result;
         });
 
@@ -27,9 +27,14 @@ public sealed partial class KitchenGrain
             .Select(o =>
             {
                 var requestedFoods = o.RequestedFoods
-                    .Select(f => f.RequestedFood)
+                    .Select(f => f.Food)
                     .ToList();
-                return new GetSimpleOrderResponse(o.Number, requestedFoods);
+                
+                var deliveredFoods = o.DeliveredFoods
+                    .Select(f => f.Food)
+                    .ToList();
+                
+                return new GetOpenOrderResponse(o.Number, requestedFoods, deliveredFoods);
             })
             .ToList();
 

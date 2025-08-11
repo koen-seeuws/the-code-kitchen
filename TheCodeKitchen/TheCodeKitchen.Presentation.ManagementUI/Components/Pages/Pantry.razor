@@ -18,7 +18,7 @@ else
     <MudTable Items="@GetIngredientResponses"
               Hover="true"
               Breakpoint="Breakpoint.Sm"
-              Loading="@(GetIngredientResponses == null)"
+              Loading="@(GetIngredientResponses is null)"
               LoadingProgressColor="Color.Primary">
         <NoRecordsContent>
             No ingredients found.

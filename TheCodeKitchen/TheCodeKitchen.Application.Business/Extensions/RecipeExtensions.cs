@@ -25,7 +25,7 @@ public static class RecipeExtensions
                 var timeToPrepareIngredient = i.Steps.Sum(s => s.Time);
                 var ingredientRecipe = allRecipes
                     .FirstOrDefault(r => r.Name.Equals(i.Name, StringComparison.InvariantCultureIgnoreCase));
-                if (ingredientRecipe != null)
+                if (ingredientRecipe is not null)
                     timeToPrepareIngredient += ingredientRecipe.GetMinimumPreparationTime(allRecipes);
                 return timeToPrepareIngredient;
             })

@@ -22,7 +22,7 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
 
     protected override async Task OnInitializedAsync()
     {
-        if (Recipes == null)
+        if (Recipes is null)
         {
             try
             {
@@ -40,7 +40,7 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
             }
         }
 
-        if (Ingredients == null)
+        if (Ingredients is null)
         {
             try
             {
@@ -58,7 +58,7 @@ public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clust
             }
         }
 
-        if (Recipes != null && Ingredients != null)
+        if (Recipes is not null && Ingredients is not null)
         {
             var recipeNames = Recipes.Select(r => r.Name).ToList();
             var ingredientNames = Ingredients.Select(i => i.Name).ToList();

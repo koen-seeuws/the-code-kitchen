@@ -9,7 +9,7 @@ public sealed partial class KitchenOrderGrain
     {
         ICollection<double> ratings =
         [
-            state.State.FoodRequestRatings
+            state.State.RequestedFoods
                 .Select(r => r.Rating)
                 .DefaultIfEmpty(1.0)
                 .Average(),

@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.SignalR.Client;
 using MudBlazor;
@@ -5,6 +6,7 @@ using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Response.Game;
 using TheCodeKitchen.Application.Contracts.Response.Kitchen;
+using TheCodeKitchen.Presentation.ManagementUI.Models.ViewModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Pages;
 
@@ -12,14 +14,15 @@ public partial class Game(
     NavigationManager navigationManager,
     IDialogService dialogService,
     ISnackbar snackbar,
-    IClusterClient clusterClient
+    IClusterClient clusterClient,
+    IMapper mapper
 ) : ComponentBase, IAsyncDisposable
 {
     [Parameter] public Guid GameId { get; set; }
     private HubConnection? _gameHubConnection;
     private GetGameResponse? GetGameResponse { get; set; }
     private string? GameErrorMessage { get; set; }
-    private ICollection<GetKitchenResponse>? GetKitchenResponses { get; set; }
+    private ICollection<KitchenViewModel>? Kitchens { get; set; }
     private string? KitchenErrorMessage { get; set; }
     private bool? Paused { get; set; }
     public bool Busy { get; set; }
@@ -58,11 +61,11 @@ public partial class Game(
     {
         try
         {
-            GetKitchenResponses = null;
+            Kitchens = null;
             var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
             var getKitchensResult = await gameGrain.GetKitchens();
             if (getKitchensResult.Succeeded)
-                GetKitchenResponses = getKitchensResult.Value.ToList();
+                Kitchens = mapper.Map<List<KitchenViewModel>>(getKitchensResult.Value);
             else
                 KitchenErrorMessage = getKitchensResult.Error.Message;
         }
@@ -151,6 +154,6 @@ public partial class Game(
 
     public async ValueTask DisposeAsync()
     {
-        if (_gameHubConnection != null) await _gameHubConnection.DisposeAsync();
+        if (_gameHubConnection is not null) await _gameHubConnection.DisposeAsync();
     }
 }

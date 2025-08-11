@@ -14,7 +14,7 @@ public sealed partial class KitchenOrderGrain
         var time = state.State.Time += TheCodeKitchenMomentDuration.Value;
 
         // Rating down order when it takes too long
-        var nonDeliveredRequestedFoodRatings = state.State.FoodRequestRatings
+        var nonDeliveredRequestedFoodRatings = state.State.RequestedFoods
             .Where(fr => !fr.Delivered)
             .ToList();
 

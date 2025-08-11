@@ -15,7 +15,7 @@ public sealed partial class KitchenOrderGrain
             return new AlreadyExistsError(
                 $"The order with number {orderNumber} has already been initialized in kitchen {kitchen}");
 
-        var requestedFoods = mapper.Map<List<FoodRequest>>(request.RequestedFoods);
+        var requestedFoods = mapper.Map<List<OrderFoodRequest>>(request.RequestedFoods);
 
         var kitchenOrder = new KitchenOrder(requestedFoods, orderNumber, request.Game, kitchen);
         state.State = kitchenOrder;
@@ -23,8 +23,9 @@ public sealed partial class KitchenOrderGrain
 
         await SubscribeToNextMomentEvent();
 
-        var @event = new NewKitchenOrderEvent(request.OrderNumber, request.RequestedFoods);
-        await realTimeKitchenOrderService.SendNewKitchenOrderEvent(state.State.Kitchen, @event);
+        var requestedFoodNames = request.RequestedFoods.Select(f => f.Food).ToList();
+        var @event = new KitchenOrderCreatedEvent(request.OrderNumber, requestedFoodNames);
+        await realTimeKitchenOrderService.SendKitchenOrderCreatedEvent(state.State.Kitchen, @event);
 
         return mapper.Map<CreateKitchenOrderResponse>(kitchenOrder);
     }

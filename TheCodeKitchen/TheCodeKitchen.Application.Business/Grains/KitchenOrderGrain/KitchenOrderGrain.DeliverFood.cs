@@ -47,20 +47,20 @@ public sealed partial class KitchenOrderGrain
 
         var qualityRating = RateFood(food.Name, food.Steps, food.Ingredients, recipes);
 
-        var foodDelivery = new FoodDelivery(food.Id, food.Name, qualityRating);
+        var foodDelivery = new KitchenOrderFoodDelivery(food.Id, food.Name, qualityRating);
         state.State.DeliveredFoods.Add(foodDelivery);
 
         // Making sure the customer is no longer waiting for its food (wont be picked up anymore OnNextMoment)
-        var foodRequestRating = state.State.FoodRequestRatings
+        var foodRequestRating = state.State.RequestedFoods
             .Where(d => !d.Delivered)
-            .FirstOrDefault(d => d.RequestedFood.Equals(food.Name, StringComparison.OrdinalIgnoreCase));
+            .FirstOrDefault(d => d.Food.Equals(food.Name, StringComparison.OrdinalIgnoreCase));
 
-        if (foodRequestRating != null)
+        if (foodRequestRating is not null)
             foodRequestRating.Delivered = true;
 
         // Rating order completeness
-        var requestedFoods = state.State.FoodRequestRatings
-            .Select(d => d.RequestedFood)
+        var requestedFoods = state.State.RequestedFoods
+            .Select(d => d.Food)
             .ToList();
 
         var deliveredFoods = state.State.DeliveredFoods

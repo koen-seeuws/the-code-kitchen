@@ -34,7 +34,7 @@ public sealed partial class OrderGrain
             .Select(r =>
             {
                 var timeToPrepare = r.GetMinimumPreparationTime(recipes);
-                return new FoodRequest(r.Name, timeToPrepare);
+                return new OrderFoodRequest(r.Name, timeToPrepare);
             })
             .ToList();
         

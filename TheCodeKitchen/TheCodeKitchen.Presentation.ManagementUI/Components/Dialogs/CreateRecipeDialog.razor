@@ -9,7 +9,7 @@
         {
             <MudAlert Severity="Severity.Error">@ErrorMessage</MudAlert>
         }
-        else if (Ingredients == null || Recipes == null)
+        else if (Ingredients is null || Recipes is null)
         {
             <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
         }

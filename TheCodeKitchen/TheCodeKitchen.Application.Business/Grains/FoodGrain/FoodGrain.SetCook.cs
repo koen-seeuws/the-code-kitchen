@@ -13,7 +13,7 @@ public sealed partial class FoodGrain
             return new AlreadyDeliveredError(
                 $"This food is already delivered to order {state.State.OrderNumber.Value}");
 
-        if (state.State.Cook != null && !state.State.Cook.Equals(request.Cook, StringComparison.OrdinalIgnoreCase))
+        if (state.State.Cook is not null && !state.State.Cook.Equals(request.Cook, StringComparison.OrdinalIgnoreCase))
             return new AlreadyBeingHeldError(
                 "This food is already being held by another cook");
 

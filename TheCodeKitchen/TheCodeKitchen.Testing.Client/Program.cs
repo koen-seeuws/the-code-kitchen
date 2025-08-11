@@ -31,7 +31,7 @@ var cookConnection = new HubConnectionBuilder()
     .WithAutomaticReconnect()
     .Build();
 
-cookConnection.On<NewKitchenOrderEvent>(nameof(NewKitchenOrderEvent), kitchenOrderEvent =>
+cookConnection.On<KitchenOrderCreatedEvent>(nameof(KitchenOrderCreatedEvent), kitchenOrderEvent =>
 {
     Console.WriteLine($"New Kitchen Order: {kitchenOrderEvent.Number} ");
 });

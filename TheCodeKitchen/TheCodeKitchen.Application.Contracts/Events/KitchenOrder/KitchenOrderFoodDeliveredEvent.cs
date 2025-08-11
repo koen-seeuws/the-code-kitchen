@@ -1,4 +1,4 @@
 namespace TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
 
 [GenerateSerializer]
-public record KitchenOrderFoodDeliveredEvent(long Number, string FoodName, double Rating);
+public record KitchenOrderFoodDeliveredEvent(long Number, string Food, double Rating);

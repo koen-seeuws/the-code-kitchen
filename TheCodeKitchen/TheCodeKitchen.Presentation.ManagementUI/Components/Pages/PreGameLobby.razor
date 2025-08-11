@@ -6,7 +6,7 @@
 {
     <MudAlert Severity="Severity.Error">@ErrorMessage</MudAlert>
 }
-else if (GetGameResponse == null)
+else if (GetGameResponse is null)
 {
     <MudProgressCircular Color="Color.Primary" Indeterminate="true"/>
 }
@@ -14,7 +14,7 @@ else
 {
     <MudText Typo="Typo.h3" Class="mb-3">@GetGameResponse.Name</MudText>
 
-    if (GetGameResponse.Started == null)
+    if (GetGameResponse.Started is null)
     {
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@CreateKitchen" Class="mb-3">
             <MudIcon Icon="@Icons.Material.Filled.Add"/>
@@ -25,7 +25,7 @@ else
     <MudTable Items="@KitchenRecords"
               Hover="true"
               Breakpoint="Breakpoint.Sm"
-              Loading="@(KitchenRecords == null)"
+              Loading="@(KitchenRecords is null)"
               LoadingProgressColor="Color.Primary"
               Class="mb-3">
         <NoRecordsContent>
@@ -41,7 +41,7 @@ else
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Code">@context.Code</MudTd>
             <MudTd DataLabel="Rating">@context.Rating</MudTd>
-            @if (CookRecordsPerKitchen != null)
+            @if (CookRecordsPerKitchen is not null)
             {
                 <MudTd DataLabel="Cooks">
                     @string.Join(", ", CookRecordsPerKitchen[context.Id].Select(c => c.Username))
@@ -54,7 +54,7 @@ else
         </RowTemplate>
     </MudTable>
 
-    if (GetGameResponse.Started == null)
+    if (GetGameResponse.Started is null)
     {
         <MudButton OnClick="@StartGame" Disabled="Busy" Variant="Variant.Filled" Color="Color.Primary"  Class="mb-3">
             <MudIcon Icon="@Icons.Material.Filled.PlayArrow"/>
