@@ -1,5 +1,5 @@
 @page "/games/{gameId:guid}"
-@using TheCodeKitchen.Presentation.ManagementUI.Components.Reusable
+@using TheCodeKitchen.Presentation.ManagementUI.Components.Shared
 
 <PageTitle>Game</PageTitle>
 
@@ -44,6 +44,14 @@ else
         <MudIcon Icon="@Icons.Material.Filled.NextPlan"/>
         Advance
     </MudButton>
+    <MudButton OnClick="@GenerateOrder"
+               Variant="Variant.Filled"
+               Color="Color.Primary"
+               Disabled="@(GetGameResponse.Started is null || Busy)"
+               Class="mb-3">
+        <MudIcon Icon="@Icons.Material.Filled.Checklist"/>
+        Generate Order
+    </MudButton>
 
     if (!string.IsNullOrWhiteSpace(KitchenErrorMessage))
     {
@@ -56,11 +64,21 @@ else
     else
     {
         <MudGrid Spacing="1">
-            @foreach (var kitchen in Kitchens)
-            {
-                <MudItem xs="12" md="6" xl="4">
-                    <KitchenView Kitchen="@kitchen"/>
-                </MudItem>
+            @{
+                var md = 0;
+                if (Kitchens.Count >= 2)
+                    md = 6;
+                
+                var xl = 0;
+                if (Kitchens.Count >= 3)
+                    xl = 4;
+                
+                foreach (var kitchen in Kitchens)
+                {
+                    <MudItem xs="12" md="@md" xl="@xl">
+                        <KitchenComponent Kitchen="@kitchen"/>
+                    </MudItem>
+                }
             }
         </MudGrid>
     }

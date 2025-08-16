@@ -54,44 +54,22 @@ else if (KitchenOrders.Count == 0)
 }
 else
 {
-    foreach (var kitchenOrder in KitchenOrders)
-    {
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
-                    <MudText Typo="Typo.h6">@kitchenOrder.Number</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <div class="d-flex flex-grow-1 gap-1">
-                    <div>
-                        <MudText Typo="Typo.subtitle1">Requested</MudText>
-                        <ul>
-                            @foreach (var requestedFood in kitchenOrder.RequestedFoods)
-                            {
-                                <li>
-                                    <MudText Typo="Typo.body1">@requestedFood</MudText>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                    <MudDivider Vertical="true" FlexItem="true" />
-                    <div>
-                        <MudText Typo="Typo.subtitle1">Delivered</MudText>
-                        <ul>
-                            @foreach (var deliveredFood in kitchenOrder.DeliveredFoods)
-                            {
-                                <li>
-                                    <MudText Typo="Typo.body1">@deliveredFood</MudText>
-                                </li>
-                            }
-                        </ul>
-                    </div>
-                    
-                </div>
-            </MudCardContent>
-        </MudCard>
-    }
+    <MudGrid Justify="Justify.Center" Spacing="3">
+        @{
+            var md = 0;
+            if (KitchenOrders.Count >= 2)
+                md = 6;
+
+            var xl = 0;
+            if (KitchenOrders.Count >= 3)
+                xl = 4;
+
+            foreach (var kitchenOrder in KitchenOrders)
+            {
+                <MudItem xs="12" md="@md" xl="@xl">
+                    <KitchenOrderComponent KitchenOrder="@kitchenOrder"/>
+                </MudItem>
+            }
+        }
+    </MudGrid>
 }
-
-

@@ -7,9 +7,9 @@ using TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Presentation.ManagementUI.Models.ViewModels;
 
-namespace TheCodeKitchen.Presentation.ManagementUI.Components.Reusable;
+namespace TheCodeKitchen.Presentation.ManagementUI.Components.Shared;
 
-public partial class KitchenView(
+public partial class KitchenComponent(
     NavigationManager navigationManager,
     ISnackbar snackbar,
     IClusterClient clusterClient,

@@ -64,7 +64,9 @@ public partial class PreGameLobby(
             var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
             var getKitchensResult = await gameGrain.GetKitchens();
             if (getKitchensResult.Succeeded)
+            {
                 KitchenRecords = mapper.Map<List<KitchenTableRecordModel>>(getKitchensResult.Value);
+            }
             else
                 ErrorMessage = getKitchensResult.Error.Message;
         }
@@ -116,9 +118,9 @@ public partial class PreGameLobby(
 
     private async Task ListenToGameEvents()
     {
-        if(GetGameResponse?.Started is not null)
+        if (GetGameResponse?.Started is not null)
             return;
-        
+
         if (_gameHubConnection is not null)
             await _gameHubConnection.DisposeAsync();
 
@@ -130,9 +132,11 @@ public partial class PreGameLobby(
         {
             var kitchenRecord = mapper.Map<KitchenTableRecordModel>(@event);
             KitchenRecords?.Add(kitchenRecord);
+            if (CookRecordsPerKitchen is not null)
+                CookRecordsPerKitchen[kitchenRecord.Id] = new List<CookTableRecordModel>();
             await InvokeAsync(StateHasChanged);
         });
-        
+
         _gameHubConnection.On(nameof(CookJoinedEvent), async (CookJoinedEvent @event) =>
         {
             if (CookRecordsPerKitchen is null) return;
@@ -142,7 +146,7 @@ public partial class PreGameLobby(
                 cookRecords = new List<CookTableRecordModel>();
                 CookRecordsPerKitchen[@event.Kitchen] = cookRecords;
             }
-            
+
             var cookRecord = mapper.Map<CookTableRecordModel>(@event);
             cookRecords.Add(cookRecord);
             await InvokeAsync(StateHasChanged);
@@ -157,7 +161,7 @@ public partial class PreGameLobby(
             snackbar.Add("Failed to start listening to new kitchen events", Severity.Error);
         }
     }
-    
+
 
     private async Task CreateKitchen()
     {

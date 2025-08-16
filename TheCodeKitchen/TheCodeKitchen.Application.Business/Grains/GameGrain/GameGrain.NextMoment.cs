@@ -25,11 +25,14 @@ public sealed partial class GameGrain
 
         // Order generation
         if (_momentsUntilNewOrder is null)
+        {
             await PickMomentsUntilNextOrder();
-        
+        }
+
         if (--_momentsUntilNewOrder <= 0 || state.State.OrderNumbers.Count <= 0)
         {
             await GenerateOrder();
+            await PickMomentsUntilNextOrder();
         }
 
         // Keep grain active while game is playing

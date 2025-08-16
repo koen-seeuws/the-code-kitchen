@@ -150,6 +150,29 @@ public partial class Game(
             Busy = false;
         }
     }
+    
+    private async Task GenerateOrder()
+    {
+        try
+        {
+            Busy = true;
+            var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
+            var generateOrderResult = await gameGrain.GenerateOrder();
+
+            if (!generateOrderResult.Succeeded)
+            {
+                snackbar.Add(generateOrderResult.Error.Message, Severity.Error);
+            }
+        }
+        catch
+        {
+            snackbar.Add("An error occurred while trying to generate an order.", Severity.Error);
+        }
+        finally
+        {
+            Busy = false;
+        }
+    }
 
     public async ValueTask DisposeAsync()
     {

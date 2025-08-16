@@ -2,7 +2,7 @@ namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public sealed partial class GameGrain
 {
-    private async Task<Result<TheCodeKitchenUnit>> GenerateOrder()
+    public async Task<Result<TheCodeKitchenUnit>> GenerateOrder()
     {
         var orderNumber = state.State.OrderNumbers.DefaultIfEmpty(0).Max() + 1;
 
@@ -16,8 +16,6 @@ public sealed partial class GameGrain
 
         state.State.OrderNumbers.Add(orderNumber);
         await state.WriteStateAsync();
-        
-        await PickMomentsUntilNextOrder();
 
         return TheCodeKitchenUnit.Value;
     }
