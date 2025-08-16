@@ -102,7 +102,7 @@ public partial class KitchenComponent(
             .WithUrl(navigationManager.ToAbsoluteUri($"/KitchenOrderHub?kitchenId={Kitchen.Id}"))
             .Build();
 
-        _kitchenOrderHubConnection.On(nameof(NewKitchenOrderEvent), async (NewKitchenOrderEvent @event) =>
+        _kitchenOrderHubConnection.On(nameof(KitchenOrderCreatedEvent), async (KitchenOrderCreatedEvent @event) =>
         {
             var kitchenOrderViewModel = mapper.Map<KitchenOrderViewModel>(@event);
             KitchenOrders = KitchenOrders?

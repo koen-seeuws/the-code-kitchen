@@ -11,7 +11,7 @@
 
 @if (!string.IsNullOrWhiteSpace(KitchenConnectionErrorMessage))
 {
-    <MudAlert Severity="@Severity.Error">@KitchenConnectionErrorMessage</MudAlert>
+    <MudAlert Severity="Severity.Error">@KitchenConnectionErrorMessage</MudAlert>
 }
 else if (_kitchenHubConnection is null)
 {
@@ -19,7 +19,7 @@ else if (_kitchenHubConnection is null)
 }
 else if (Messages.Count == 0)
 {
-    <MudAlert Severity="@Severity.Info">No messages, you guys should communicate a little more!</MudAlert>
+    <MudAlert Severity="Severity.Info">No messages, you guys should communicate a little more!</MudAlert>
 }
 else
 {
