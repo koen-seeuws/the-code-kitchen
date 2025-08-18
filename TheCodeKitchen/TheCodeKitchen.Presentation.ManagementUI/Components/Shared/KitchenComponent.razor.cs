@@ -25,7 +25,7 @@ public partial class KitchenComponent(
 
     private ICollection<MessageViewModel> Messages { get; set; } = new List<MessageViewModel>();
     private string? KitchenConnectionErrorMessage { get; set; }
-    
+
     private ICollection<KitchenOrderViewModel>? KitchenOrders { get; set; }
     private string? KitchenOrdersErrorMessage { get; set; }
 
@@ -53,7 +53,7 @@ public partial class KitchenComponent(
             KitchenOrdersErrorMessage = "An error occurred while retrieving the kitchen's orders.";
         }
     }
-    
+
     private async Task ListenToKitchenEvents()
     {
         if (_kitchenHubConnection is not null)
@@ -61,11 +61,11 @@ public partial class KitchenComponent(
             await _kitchenHubConnection.DisposeAsync();
             _kitchenHubConnection = null;
         }
-        
+
         _kitchenHubConnection = new HubConnectionBuilder()
             .WithUrl(navigationManager.ToAbsoluteUri($"/KitchenHub?kitchenId={Kitchen.Id}"))
             .Build();
-        
+
         _kitchenHubConnection.On(nameof(KitchenRatingUpdatedEvent), async (KitchenRatingUpdatedEvent @event) =>
         {
             Kitchen.Rating = @event.Rating;
@@ -99,7 +99,7 @@ public partial class KitchenComponent(
             await _kitchenOrderHubConnection.DisposeAsync();
             _kitchenOrderHubConnection = null;
         }
-        
+
         _kitchenOrderHubConnection = new HubConnectionBuilder()
             .WithUrl(navigationManager.ToAbsoluteUri($"/KitchenOrderHub?kitchenId={Kitchen.Id}"))
             .Build();
@@ -130,7 +130,7 @@ public partial class KitchenComponent(
         _kitchenOrderHubConnection.On(nameof(KitchenOrderCompletedEvent), async (KitchenOrderCompletedEvent @event) =>
         {
             var kitchenOrder = KitchenOrders?.FirstOrDefault(o => o.Number == @event.Number);
-            if (kitchenOrder is not null) 
+            if (kitchenOrder is not null)
                 KitchenOrders?.Remove(kitchenOrder);
             await InvokeAsync(StateHasChanged);
         });
