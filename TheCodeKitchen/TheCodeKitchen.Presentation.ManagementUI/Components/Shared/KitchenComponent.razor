@@ -23,19 +23,18 @@ else if (Messages.Count == 0)
 }
 else
 {
-    foreach (var message in Messages)
-    {
-        <MudCard>
-            <MudCardHeader>
-                <CardHeaderContent>
+    <div class="d-flex flex-column gap-3 mb-3" style="max-height: 75vh; overflow-y: auto;">
+        @foreach (var message in Messages)
+        {
+            <MudCard>
+                <MudCardContent>
                     <MudText Typo="Typo.h6">@message.From to @(message.To ?? "everyone")</MudText>
-                </CardHeaderContent>
-            </MudCardHeader>
-            <MudCardContent>
-                <MudText Typo="Typo.body1">@message.Content</MudText>
-            </MudCardContent>
-        </MudCard>
-    }
+                    <MudText Typo="Typo.caption">@clientTimeService.GetLocalDateTime(message.Timestamp)</MudText>
+                    <MudText Typo="Typo.body1">@message.Content</MudText>
+                </MudCardContent>
+            </MudCard>
+        }
+    </div>
 }
 
 <MudText Typo="Typo.h5" Class="mb-3">Orders</MudText>
@@ -54,22 +53,24 @@ else if (KitchenOrders.Count == 0)
 }
 else
 {
-    <MudGrid Justify="Justify.Center" Spacing="3">
-        @{
-            var md = 0;
-            if (KitchenOrders.Count >= 2)
-                md = 6;
+    <div style="max-height: 75vh; overflow-y: auto;">
+        <MudGrid Justify="Justify.Center" Spacing="3">
+            @{
+                var md = 0;
+                if (KitchenOrders.Count >= 2)
+                    md = 6;
 
-            var xl = 0;
-            if (KitchenOrders.Count >= 3)
-                xl = 4;
+                var xl = 0;
+                if (KitchenOrders.Count >= 3)
+                    xl = 4;
 
-            foreach (var kitchenOrder in KitchenOrders)
-            {
-                <MudItem xs="12" md="@md" xl="@xl">
-                    <KitchenOrderComponent KitchenOrder="@kitchenOrder"/>
-                </MudItem>
+                foreach (var kitchenOrder in KitchenOrders)
+                {
+                    <MudItem xs="12" md="@md" xl="@xl">
+                        <KitchenOrderComponent KitchenOrder="@kitchenOrder"/>
+                    </MudItem>
+                }
             }
-        }
-    </MudGrid>
+        </MudGrid>
+    </div>
 }

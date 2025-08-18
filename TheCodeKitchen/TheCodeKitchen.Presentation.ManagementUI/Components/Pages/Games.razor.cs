@@ -7,6 +7,7 @@ using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Response.Game;
 using TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 using TheCodeKitchen.Presentation.ManagementUI.Models.TableRecordModels;
+using TheCodeKitchen.Presentation.ManagementUI.Services;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Pages;
 
@@ -15,7 +16,8 @@ public partial class Games(
     IDialogService dialogService,
     ISnackbar snackbar,
     IClusterClient clusterClient,
-    IMapper mapper
+    IMapper mapper,
+    ClientTimeService clientTimeService
 ) : ComponentBase, IAsyncDisposable
 {
     private HubConnection? _gameManagementHubConnection;

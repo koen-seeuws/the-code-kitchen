@@ -33,7 +33,7 @@ else
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Name">@context.Name</MudTd>
-            <MudTd DataLabel="Started">@context.Started</MudTd>
+            <MudTd DataLabel="Started">@clientTimeService.GetLocalDateTime(context.Started)</MudTd>
             <MudTd DataLabel="Paused">@context.Paused</MudTd>
             <MudTd DataLabel="Speed modifier">@context.SpeedModifier</MudTd>
         </RowTemplate>

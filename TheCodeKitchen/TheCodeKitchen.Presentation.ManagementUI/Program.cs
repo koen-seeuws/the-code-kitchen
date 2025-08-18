@@ -4,6 +4,7 @@ using TheCodeKitchen.Presentation;
 using TheCodeKitchen.Presentation.ManagementUI.Components;
 using TheCodeKitchen.Presentation.ManagementUI.Hubs;
 using TheCodeKitchen.Presentation.ManagementUI.Mapping;
+using TheCodeKitchen.Presentation.ManagementUI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.Services.AddAzureSignalRServices(builder.Configuration);
 
 // Presentation services
 builder.Services.AddMudServices();
+builder.Services.AddScoped<ClientTimeService>();
 
 builder.Services
     .AddRazorComponents()

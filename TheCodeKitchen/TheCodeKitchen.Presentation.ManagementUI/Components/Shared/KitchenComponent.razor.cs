@@ -6,6 +6,7 @@ using TheCodeKitchen.Application.Contracts.Events.Kitchen;
 using TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Presentation.ManagementUI.Models.ViewModels;
+using TheCodeKitchen.Presentation.ManagementUI.Services;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Shared;
 
@@ -13,7 +14,8 @@ public partial class KitchenComponent(
     NavigationManager navigationManager,
     ISnackbar snackbar,
     IClusterClient clusterClient,
-    IMapper mapper
+    IMapper mapper,
+    ClientTimeService clientTimeService
 ) : ComponentBase, IAsyncDisposable
 {
     [Parameter] public KitchenViewModel Kitchen { get; set; } = null!;
@@ -75,7 +77,7 @@ public partial class KitchenComponent(
             var messageViewModel = mapper.Map<MessageViewModel>(@event);
             Messages = Messages
                 .Append(messageViewModel)
-                .OrderBy(m => m.Timetamp)
+                .OrderBy(m => m.Timestamp)
                 .ToList();
             await InvokeAsync(StateHasChanged);
         });
