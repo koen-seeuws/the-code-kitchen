@@ -17,6 +17,7 @@ builder.Services.AddAzureSignalRServices(builder.Configuration);
 // Presentation services
 builder.Services.AddMudServices();
 builder.Services.AddScoped<ClientTimeService>();
+builder.Services.AddScoped<ScrollService>();
 
 builder.Services
     .AddRazorComponents()

@@ -15,7 +15,8 @@ public partial class KitchenComponent(
     ISnackbar snackbar,
     IClusterClient clusterClient,
     IMapper mapper,
-    ClientTimeService clientTimeService
+    ClientTimeService clientTimeService,
+    ScrollService scrollService
 ) : ComponentBase, IAsyncDisposable
 {
     [Parameter] public KitchenViewModel Kitchen { get; set; } = null!;
@@ -79,7 +80,11 @@ public partial class KitchenComponent(
                 .Append(messageViewModel)
                 .OrderBy(m => m.Timestamp)
                 .ToList();
-            await InvokeAsync(StateHasChanged);
+            await InvokeAsync(async () =>
+            {
+                StateHasChanged();
+                await scrollService.ScrollToBottomIfPreviouslyNearBottom($"kitchen-{Kitchen.Id}-messages");
+            });
         });
 
         try
@@ -111,22 +116,24 @@ public partial class KitchenComponent(
                 .Append(kitchenOrderViewModel)
                 .OrderBy(o => o.Number)
                 .ToList();
+            
             await InvokeAsync(StateHasChanged);
         });
-        
+
         _kitchenOrderHubConnection.On(nameof(KitchenOrderFoodDeliveredEvent), async (KitchenOrderFoodDeliveredEvent @event) =>
-        {
-            var kitchenOrder = KitchenOrders?.FirstOrDefault(o => o.Number == @event.Number);
-            if (kitchenOrder is not null)
             {
-                kitchenOrder.DeliveredFoods = kitchenOrder.DeliveredFoods
-                    .Append(@event.Food)
-                    .Order()
-                    .ToList();
-            }
-            await InvokeAsync(StateHasChanged);
-        });
-        
+                var kitchenOrder = KitchenOrders?.FirstOrDefault(o => o.Number == @event.Number);
+                if (kitchenOrder is not null)
+                {
+                    kitchenOrder.DeliveredFoods = kitchenOrder.DeliveredFoods
+                        .Append(@event.Food)
+                        .Order()
+                        .ToList();
+                }
+
+                await InvokeAsync(StateHasChanged);
+            });
+
         _kitchenOrderHubConnection.On(nameof(KitchenOrderCompletedEvent), async (KitchenOrderCompletedEvent @event) =>
         {
             var kitchenOrder = KitchenOrders?.FirstOrDefault(o => o.Number == @event.Number);
