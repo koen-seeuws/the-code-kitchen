@@ -24,15 +24,17 @@ public sealed partial class GameGrain
         await stream.OnNextAsync(nextMomentEvent);
 
         // Order generation
-        if (_momentsUntilNewOrder is null)
+        if (_timeUntilNewOrder is null)
         {
-            await PickMomentsUntilNextOrder();
+            await PickRandomTimeUntilNextOrder();
         }
 
-        if (--_momentsUntilNewOrder <= 0 || state.State.OrderNumbers.Count <= 0)
+        if (_timeUntilNewOrder >= TimeSpan.Zero)
+            _timeUntilNewOrder = _timeUntilNewOrder - TheCodeKitchenMomentDuration.Value;
+
+        if (_timeUntilNewOrder <= TimeSpan.Zero)
         {
             await GenerateOrder();
-            await PickMomentsUntilNextOrder();
         }
 
         // Keep grain active while game is playing

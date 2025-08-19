@@ -1,3 +1,5 @@
+using TheCodeKitchen.Application.Contracts.Requests.Order;
+
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public sealed partial class GameGrain
@@ -8,14 +10,18 @@ public sealed partial class GameGrain
 
         var game = state.State.Id;
         var orderGrain = GrainFactory.GetGrain<IOrderGrain>(orderNumber, game.ToString());
-        
-        var generateOrderResult = await orderGrain.Generate();
+
+        var generateOrderRequest =
+            new GenerateOrderRequest(state.State.MinimumItemsPerOrder, state.State.MaximumItemsPerOrder);
+        var generateOrderResult = await orderGrain.GenerateOrder(generateOrderRequest);
 
         if (!generateOrderResult.Succeeded)
             return generateOrderResult.Error;
 
         state.State.OrderNumbers.Add(orderNumber);
         await state.WriteStateAsync();
+
+        _timeUntilNewOrder = generateOrderResult.Value.MinimumTimeToPrepare / state.State.OrderSpeedModifier;
 
         return TheCodeKitchenUnit.Value;
     }

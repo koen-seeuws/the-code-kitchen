@@ -3,12 +3,14 @@ using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Constants;
 using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Models;
+using TheCodeKitchen.Application.Contracts.Requests.Order;
+using TheCodeKitchen.Application.Contracts.Response.Order;
 
 namespace TheCodeKitchen.Application.Business.Grains.OrderGrain;
 
 public sealed partial class OrderGrain
 {
-    public async Task<Result<TheCodeKitchenUnit>> Generate()
+    public async Task<Result<GenerateOrderResponse>> GenerateOrder(GenerateOrderRequest request)
     {
         var orderNumber = this.GetPrimaryKeyLong();
         var game = Guid.Parse(this.GetPrimaryKeyString().Split('+')[1]);
@@ -28,7 +30,7 @@ public sealed partial class OrderGrain
         if (recipes.Length == 0)
             return new EmptyError("There are no recipes available to generate an order");
 
-        var amountOfDishes = Random.Shared.Next(1, TheCodeKitchenMaxItemsPerOrder.Value + 1);
+        var amountOfDishes = Random.Shared.Next(request.MinimumItemsPerOrder, request.MaximumItemsPerOrder);
         var foodRequests = Random.Shared
             .GetItems(recipes, amountOfDishes)
             .Select(r =>
@@ -37,6 +39,11 @@ public sealed partial class OrderGrain
                 return new OrderFoodRequest(r.Name, timeToPrepare);
             })
             .ToList();
+        
+        var minimumPreparationTime = foodRequests
+            .Select(f => f.MinimumTimeToPrepareFood)
+            .DefaultIfEmpty(TimeSpan.Zero)
+            .Max();
         
         var order = new Order(orderNumber, game, foodRequests);
         state.State = order;
@@ -49,6 +56,6 @@ public sealed partial class OrderGrain
         var stream = streamProvider.GetStream<NewOrderEvent>(nameof(NewOrderEvent), state.State.Game);
         await stream.OnNextAsync(newOrderEvent);
 
-        return TheCodeKitchenUnit.Value;
+        return new GenerateOrderResponse(minimumPreparationTime);
     }
 }

@@ -22,7 +22,14 @@ public partial class CreateGameDialog(ISnackbar snackbar, IClusterClient cluster
         Creating = true;
         try
         {
-            var request = new CreateGameRequest(Model.Name, Model.SpeedModifier, Model.Temperature);
+            var request = new CreateGameRequest(
+                Model.Name,
+                Model.SpeedModifier,
+                Model.MinimumItemsPerOrder,
+                Model.MaximumItemsPerOrder,
+                Model.OrderSpeedModifier,
+                Model.Temperature
+            );
             var gameManagementGrain = clusterClient.GetGrain<IGameManagementGrain>(Guid.Empty);
             var createGameResult = await gameManagementGrain.CreateGame(request);
 
@@ -31,7 +38,6 @@ public partial class CreateGameDialog(ISnackbar snackbar, IClusterClient cluster
                 snackbar.Add("Successfully created game.", Severity.Success);
                 MudDialog.Close(DialogResult.Ok(createGameResult.Value));
             }
-                
             else
                 snackbar.Add(createGameResult.Error.Message, Severity.Error);
         }

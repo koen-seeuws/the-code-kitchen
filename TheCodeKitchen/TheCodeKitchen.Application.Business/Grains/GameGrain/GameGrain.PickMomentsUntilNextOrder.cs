@@ -1,12 +1,15 @@
+using TheCodeKitchen.Application.Contracts.Constants;
+
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public sealed partial class GameGrain
 {
-    private int? _momentsUntilNewOrder;
+    private TimeSpan? _timeUntilNewOrder;
     
-    private Task PickMomentsUntilNextOrder()
+    private Task PickRandomTimeUntilNextOrder()
     {
-        _momentsUntilNewOrder = Random.Shared.Next(30, 31);
+        var multiplier = Random.Shared.Next(1, 15);
+        _timeUntilNewOrder = multiplier * TheCodeKitchenMomentDuration.Value;
         return Task.CompletedTask;
     }
 }
