@@ -12,11 +12,11 @@ public static class TheCodeKitchenEquipmentTypeConstants
         EquipmentType.CuttingBoard,
         EquipmentType.Fridge,
         EquipmentType.Freezer,
-        EquipmentType.Stove,
         EquipmentType.Fryer,
         EquipmentType.HotPlate,
         EquipmentType.Mixer,
-        EquipmentType.Oven
+        EquipmentType.Oven,
+        EquipmentType.Stove,
     };
     
     public static readonly string[] Steppable = new[]
@@ -26,9 +26,9 @@ public static class TheCodeKitchenEquipmentTypeConstants
         EquipmentType.CuttingBoard,
         EquipmentType.Fridge,
         EquipmentType.Freezer,
-        EquipmentType.Stove,
         EquipmentType.Fryer,
         EquipmentType.Mixer,
-        EquipmentType.Oven
+        EquipmentType.Oven,
+        EquipmentType.Stove
     };
 }
