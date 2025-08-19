@@ -75,10 +75,14 @@
                                 <MudSelectItem Value="@ingredient">@ingredient</MudSelectItem>
                             }
                         </MudSelect>
-                        <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                       Color="Color.Primary"
-                                       Variant="Variant.Filled"
-                                       OnClick="@(() => RemoveIngredient(recipeIngredient))"/>
+                        @if (Model.Ingredients.Count > 2)
+                        {
+                            <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                           Color="Color.Primary"
+                                           Variant="Variant.Filled"
+                                           OnClick="@(() => RemoveIngredient(recipeIngredient))"/>
+                        }
+
                     </div>
                     <MudDivider Class="mb-3"/>
                     @if (Ingredients.Select(i => i.Name).Contains(recipeIngredient.Name, StringComparer.Ordinal))
@@ -111,6 +115,7 @@
                             </div>
                             <MudDivider Class="mb-3"/>
                         }
+
                         <MudButton Color="Color.Primary"
                                    Variant="Variant.Filled"
                                    OnClick="@(() => AddStep(recipeIngredient.Steps))"
