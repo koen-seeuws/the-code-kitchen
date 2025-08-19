@@ -47,7 +47,7 @@ public sealed partial class EquipmentGrain
 
         if (state.State.Time.HasValue)
         {
-            var isSteppable = TheCodeKitchenEquipmentTypeConstants.Stepable
+            var isSteppable = TheCodeKitchenEquipmentTypeConstants.Steppable
                 .Any(et => et.Equals(state.State.EquipmentType, StringComparison.OrdinalIgnoreCase)
                 );
 

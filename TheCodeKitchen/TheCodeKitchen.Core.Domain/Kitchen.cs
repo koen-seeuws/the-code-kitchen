@@ -13,11 +13,16 @@ public class Kitchen(Guid id, string name, string code, Guid game)
     public IDictionary<string, int> Equipment { get; set; } = new Dictionary<string, int>
     {
         { EquipmentType.Bbq, 6 },
+        { EquipmentType.Blender, 4 },
         { EquipmentType.Counter, 30 },
         { EquipmentType.CuttingBoard, 6 },
-        { EquipmentType.Furnace, 6 },
+        { EquipmentType.Freezer, 12 },
+        { EquipmentType.Fridge, 15 },
+        { EquipmentType.Fryer, 4 },
         { EquipmentType.HotPlate, 10 },
-        { EquipmentType.Mixer, 4 }
+        { EquipmentType.Mixer, 4 },
+        { EquipmentType.Oven, 4 },
+        { EquipmentType.Stove, 6 },
     };
 
     public ICollection<long> OpenOrders { get; set; } = new List<long>();

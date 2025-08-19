@@ -5,20 +5,30 @@ namespace TheCodeKitchen.Application.Contracts.Constants;
 public static class TheCodeKitchenEquipmentTypeConstants
 {
     public static readonly string[] All = new[]
-    {
+    {        
+        EquipmentType.Bbq,
+        EquipmentType.Blender,
         EquipmentType.Counter,
         EquipmentType.CuttingBoard,
+        EquipmentType.Fridge,
+        EquipmentType.Freezer,
+        EquipmentType.Stove,
+        EquipmentType.Fryer,
+        EquipmentType.HotPlate,
         EquipmentType.Mixer,
-        EquipmentType.Furnace,
-        EquipmentType.Bbq,
-        EquipmentType.HotPlate
+        EquipmentType.Oven
     };
     
-    public static readonly string[] Stepable = new[]
-    {
+    public static readonly string[] Steppable = new[]
+    {       
+        EquipmentType.Bbq,
+        EquipmentType.Blender,
         EquipmentType.CuttingBoard,
+        EquipmentType.Fridge,
+        EquipmentType.Freezer,
+        EquipmentType.Stove,
+        EquipmentType.Fryer,
         EquipmentType.Mixer,
-        EquipmentType.Furnace,
-        EquipmentType.Bbq
+        EquipmentType.Oven
     };
 }
