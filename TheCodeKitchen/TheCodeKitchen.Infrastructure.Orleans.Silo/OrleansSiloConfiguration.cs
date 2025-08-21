@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace TheCodeKitchen.Infrastructure.OrleansSilo;
+namespace TheCodeKitchen.Infrastructure.Orleans.Silo;
 
 public class OrleansSiloConfiguration
 {

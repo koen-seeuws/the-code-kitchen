@@ -4,7 +4,7 @@ using TheCodeKitchen.Application.Business;
 using TheCodeKitchen.Application.Contracts.Constants;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Infrastructure.Extensions;
-using TheCodeKitchen.Infrastructure.OrleansSilo;
+using TheCodeKitchen.Infrastructure.Orleans.Silo;
 
 var builder = Host.CreateApplicationBuilder(args);
 

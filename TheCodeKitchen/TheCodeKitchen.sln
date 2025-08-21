@@ -28,7 +28,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCodeKitchen.Infrastructu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCodeKitchen.Infrastructure.Security", "TheCodeKitchen.Infrastructure.Security\TheCodeKitchen.Infrastructure.Security.csproj", "{E88EEB82-04CB-43F1-9C79-93FC5C22A73B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCodeKitchen.Infrastructure.OrleansSilo", "TheCodeKitchen.Infrastructure.OrleansSilo\TheCodeKitchen.Infrastructure.OrleansSilo.csproj", "{235713D3-BD52-412C-9545-782840148FB0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheCodeKitchen.Infrastructure.Orleans.Silo", "TheCodeKitchen.Infrastructure.Orleans.Silo\TheCodeKitchen.Infrastructure.Orleans.Silo.csproj", "{235713D3-BD52-412C-9545-782840148FB0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5. Testing", "5. Testing", "{46331BFC-8511-475E-BD10-F9112A19AE44}"
 EndProject
