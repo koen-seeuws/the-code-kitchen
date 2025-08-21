@@ -1,11 +1,8 @@
 ﻿using TheCodeKitchen.CookTemplate.Client;
 
 const string apiUrl = "https://ca-tck-cook-api.proudbeach-fbb36fdd.westeurope.azurecontainerapps.io/";
-const string kitchenCode = "ZO7S";
-const string username = "KOEN9";
-const string password = "TEST";
 
-var cook = new Cook(username, password, kitchenCode, apiUrl);
+var cook = new Cook(apiUrl);
 
 var cancellationTokenSource = new CancellationTokenSource();
 

@@ -19,7 +19,7 @@ public class PantryController(IClusterClient clusterClient) : ControllerBase
         return this.MatchActionResult(result);
     }
     
-    [HttpGet("{ingredient}/[action]")]
+    [HttpPost("{ingredient}/[action]")]
     public async Task<IActionResult> TakeFood([FromRoute] string ingredient)
     {
         var kitchen = HttpContext.User.GetKitchenId();

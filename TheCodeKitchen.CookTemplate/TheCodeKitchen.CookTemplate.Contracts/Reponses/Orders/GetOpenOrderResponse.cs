@@ -1,4 +1,3 @@
-namespace TheCodeKitchen.Application.Contracts.Response.Order;
+namespace TheCodeKitchen.CookTemplate.Contracts.Reponses.Orders;
 
-[GenerateSerializer]
 public record GetOpenOrderResponse(long Number, ICollection<string> RequestedFoods, ICollection<string> DeliveredFoods);

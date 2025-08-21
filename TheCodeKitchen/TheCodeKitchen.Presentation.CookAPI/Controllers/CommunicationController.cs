@@ -14,7 +14,7 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 public class CommunicationController(IClusterClient clusterClient) : ControllerBase
 {
     [HttpPost("[action]")]
-    public async Task<IActionResult> Speak(SendMessageRequest request)
+    public async Task<IActionResult> SendMessage(SendMessageRequest request)
     {
         var kitchen = HttpContext.User.GetKitchenId();
         var cook = HttpContext.User.GetUsername();
@@ -25,7 +25,7 @@ public class CommunicationController(IClusterClient clusterClient) : ControllerB
     }
 
     [HttpGet("[action]")]
-    public async Task<IActionResult> Remember()
+    public async Task<IActionResult> ReadMessages()
     {
         var kitchen = HttpContext.User.GetKitchenId();
         var cook = HttpContext.User.GetUsername();

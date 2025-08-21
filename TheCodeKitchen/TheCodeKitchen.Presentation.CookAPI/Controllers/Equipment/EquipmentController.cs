@@ -24,7 +24,7 @@ public abstract class EquipmentController(IClusterClient clusterClient, string e
         return this.MatchActionResult(result);
     }
     
-    [HttpGet("{number:int}/[action]")]
+    [HttpPost("{number:int}/[action]")]
     public async Task<IActionResult> TakeFood(int number)
     {
         var kitchen = HttpContext.User.GetKitchenId();
