@@ -6,24 +6,25 @@ var cook = new Cook(apiUrl);
 
 var cancellationTokenSource = new CancellationTokenSource();
 
-Console.CancelKeyPress += (sender, e) =>
+Console.CancelKeyPress += (_, e) =>
 {
     e.Cancel = true; // prevent immediate termination
     cancellationTokenSource.Cancel();
-    Console.WriteLine("Stopping cook...");
+    Console.WriteLine("\nStopping cooking...");
 };
 
 try
 {
+    Console.WriteLine("Starting cooking...");
     await cook.StartCooking(cancellationTokenSource.Token); // async connect
-    Console.WriteLine("Cooking started. Press Ctrl+C to stop.");
+    Console.WriteLine("\nStarted cooking. Press Ctrl+C to stop.");
 
     // Keep the app alive until Ctrl+C
     await Task.Delay(-1, cancellationTokenSource.Token);
 }
 catch (TaskCanceledException)
 {
-    Console.WriteLine("Cooking stopped.");
+    Console.WriteLine("\nStopped cooking.");
 }
 catch (Exception ex)
 {

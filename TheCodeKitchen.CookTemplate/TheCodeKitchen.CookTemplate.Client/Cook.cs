@@ -7,7 +7,7 @@ namespace TheCodeKitchen.CookTemplate.Client;
 
 public class Cook(string baseUrl)
 {
-    private const string KitchenCode = "XXXX"; //TODO: Replace with your kitchen code
+    private const string KitchenCode = "6SYE"; //TODO: Replace with your kitchen code
     private const string Username = "YYYY"; //TODO: Replace with your username
     private const string Password = "ZZZZ"; //TODO: Replace with your password
 
