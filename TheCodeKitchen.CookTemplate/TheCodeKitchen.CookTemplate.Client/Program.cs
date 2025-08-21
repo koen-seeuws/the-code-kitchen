@@ -2,13 +2,13 @@
 
 const string apiUrl = "https://ca-tck-cook-api.proudbeach-fbb36fdd.westeurope.azurecontainerapps.io/";
 
-var cook = new Cook(apiUrl);
+var cook = new Cook(apiUrl);// <- Implement your code in the Cook class
 
 var cancellationTokenSource = new CancellationTokenSource();
 
 Console.CancelKeyPress += (_, e) =>
 {
-    e.Cancel = true; // prevent immediate termination
+    e.Cancel = true; // Prevent immediate termination
     cancellationTokenSource.Cancel();
     Console.WriteLine("\nStopping cooking...");
 };
@@ -16,11 +16,9 @@ Console.CancelKeyPress += (_, e) =>
 try
 {
     Console.WriteLine("Starting cooking...");
-    await cook.StartCooking(cancellationTokenSource.Token); // async connect
+    await cook.StartCooking(cancellationTokenSource.Token);
     Console.WriteLine("\nStarted cooking. Press Ctrl+C to stop.");
-
-    // Keep the app alive until Ctrl+C
-    await Task.Delay(-1, cancellationTokenSource.Token);
+    await Task.Delay(-1, cancellationTokenSource.Token); // Keep the app alive until Ctrl+C
 }
 catch (TaskCanceledException)
 {
