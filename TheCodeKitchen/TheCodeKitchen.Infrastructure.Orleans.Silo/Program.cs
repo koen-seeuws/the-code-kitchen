@@ -39,16 +39,16 @@ builder.UseOrleans(silo =>
         options.ClusterId = siloConfiguration.ClusterId;
         options.ServiceId = siloConfiguration.ServiceId;
     });
-    
-    silo.ConfigureEndpoints(11111, 30000);
+
+    if (builder.Environment.IsDevelopment())
+        silo.ConfigureEndpoints(11111, 30000);
 
     silo.UseAzureStorageClustering(options =>
     {
         options.TableServiceClient = tableClient;
         options.TableName = "TheCodeKitchenClustering";
     });
-
-
+    
     foreach (var storage in TheCodeKitchenState.All)
     {
         silo.AddAzureTableGrainStorage(storage, options =>
