@@ -1,7 +1,7 @@
 using Microsoft.OpenApi.Models;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
+using TheCodeKitchen.Infrastructure.Orleans.Client;
 using TheCodeKitchen.Infrastructure.Security.Configuration;
-using TheCodeKitchen.Presentation;
 using TheCodeKitchen.Presentation.API.Cook.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);

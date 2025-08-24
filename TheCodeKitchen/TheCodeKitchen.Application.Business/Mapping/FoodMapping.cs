@@ -1,4 +1,5 @@
-using TheCodeKitchen.Application.Contracts.Models;
+using TheCodeKitchen.Application.Contracts.Models.Food;
+using TheCodeKitchen.Application.Contracts.Models.Order;
 using TheCodeKitchen.Application.Contracts.Response.Food;
 
 namespace TheCodeKitchen.Application.Business.Mapping;

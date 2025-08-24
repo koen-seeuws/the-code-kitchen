@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Grains;
-using TheCodeKitchen.Application.Contracts.Models;
+using TheCodeKitchen.Application.Contracts.Models.Recipe;
 using TheCodeKitchen.Application.Contracts.Requests.CookBook;
 using TheCodeKitchen.Application.Contracts.Response.CookBook;
 using TheCodeKitchen.Application.Contracts.Response.Pantry;

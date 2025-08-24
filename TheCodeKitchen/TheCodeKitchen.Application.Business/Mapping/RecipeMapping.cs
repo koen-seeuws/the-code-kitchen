@@ -1,4 +1,4 @@
-using TheCodeKitchen.Application.Contracts.Models;
+using TheCodeKitchen.Application.Contracts.Models.Recipe;
 using TheCodeKitchen.Application.Contracts.Response.CookBook;
 
 namespace TheCodeKitchen.Application.Business.Mapping;

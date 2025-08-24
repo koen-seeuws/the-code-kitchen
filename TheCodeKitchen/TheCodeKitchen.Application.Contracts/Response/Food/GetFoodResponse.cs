@@ -1,4 +1,5 @@
-using TheCodeKitchen.Application.Contracts.Models;
+using TheCodeKitchen.Application.Contracts.Models.Food;
+using TheCodeKitchen.Application.Contracts.Models.Recipe;
 
 namespace TheCodeKitchen.Application.Contracts.Response.Food;
 

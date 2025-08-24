@@ -2,6 +2,7 @@ using TheCodeKitchen.Application.Business.Helpers;
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 using TheCodeKitchen.Application.Contracts.Response.Kitchen;
+using TheCodeKitchen.Core.Enums;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
@@ -23,9 +24,25 @@ public sealed partial class KitchenGrain
 
         if (!codeResult.Succeeded)
             return codeResult.Error;
+        
+        // Equipment 
+        var equipments = new Dictionary<string, int>
+        {
+            { EquipmentType.Bbq, 6 },
+            { EquipmentType.Blender, 4 },
+            { EquipmentType.Counter, 30 },
+            { EquipmentType.CuttingBoard, 6 },
+            { EquipmentType.Freezer, 12 },
+            { EquipmentType.Fridge, 15 },
+            { EquipmentType.Fryer, 4 },
+            { EquipmentType.HotPlate, 10 },
+            { EquipmentType.Mixer, 4 },
+            { EquipmentType.Oven, 4 },
+            { EquipmentType.Stove, 6 },
+        };
 
         // State
-        var kitchen = new Kitchen(id, name, codeResult.Value, request.GameId);
+        var kitchen = new Kitchen(id, name, codeResult.Value, request.GameId, equipments);
         state.State = kitchen;
         await state.WriteStateAsync();
 

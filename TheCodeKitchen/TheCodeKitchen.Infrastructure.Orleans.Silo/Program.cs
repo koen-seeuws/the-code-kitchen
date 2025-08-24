@@ -1,10 +1,10 @@
 using Azure.Data.Tables;
 using Orleans.Configuration;
 using TheCodeKitchen.Application.Business;
-using TheCodeKitchen.Application.Contracts.Constants;
+using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Infrastructure.Extensions;
-using TheCodeKitchen.Infrastructure.Orleans.Silo;
+using TheCodeKitchen.Infrastructure.Orleans;
 
 var builder = Host.CreateApplicationBuilder(args);
 
@@ -12,7 +12,7 @@ builder.Services.AddApplicationServices();
 
 var siloConfiguration =
     builder.Configuration
-        .BindAndValidateConfiguration<OrleansSiloConfiguration, OrleansSiloConfigurationValidator>(
+        .BindAndValidateConfiguration<OrleansConfiguration, OrleansConfigurationValidator>(
             "TheCodeKitchenOrleans");
 
 var azureStorageConnectionString =

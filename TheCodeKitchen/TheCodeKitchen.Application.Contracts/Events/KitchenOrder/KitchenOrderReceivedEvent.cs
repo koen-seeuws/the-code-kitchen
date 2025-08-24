@@ -1,4 +1,4 @@
-using TheCodeKitchen.Application.Contracts.Models;
+using TheCodeKitchen.Application.Contracts.Models.Order;
 
 namespace TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
 

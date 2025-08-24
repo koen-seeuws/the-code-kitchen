@@ -1,4 +1,4 @@
-namespace TheCodeKitchen.Application.Contracts.Constants;
+namespace TheCodeKitchen.Application.Constants;
 
 public static class TheCodeKitchenState
 {

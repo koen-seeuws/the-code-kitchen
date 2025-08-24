@@ -1,6 +1,6 @@
 using MudBlazor.Services;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
-using TheCodeKitchen.Presentation;
+using TheCodeKitchen.Infrastructure.Orleans.Client;
 using TheCodeKitchen.Presentation.ManagementUI.Components;
 using TheCodeKitchen.Presentation.ManagementUI.Hubs;
 using TheCodeKitchen.Presentation.ManagementUI.Mapping;

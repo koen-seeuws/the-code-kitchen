@@ -10,8 +10,9 @@
       <PackageReference Include="AutoMapper" Version="14.0.0" />
       <PackageReference Include="FluentValidation" Version="11.11.0" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
-      <PackageReference Include="Microsoft.Orleans.Persistence.Memory" Version="9.2.1" />
       <PackageReference Include="Microsoft.Orleans.Reminders" Version="9.2.1" />
+      <PackageReference Include="Microsoft.Orleans.Sdk" Version="9.2.1" />
+      <PackageReference Include="Microsoft.Orleans.Streaming" Version="9.2.1" />
     </ItemGroup>
 
     <ItemGroup>
@@ -19,7 +20,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Common\" />
       <Folder Include="Validators\" />
     </ItemGroup>
 

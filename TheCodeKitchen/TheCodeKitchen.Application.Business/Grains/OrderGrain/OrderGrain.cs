@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using TheCodeKitchen.Application.Contracts.Constants;
+using TheCodeKitchen.Application.Constants;
 
 namespace TheCodeKitchen.Application.Business.Grains.OrderGrain;
 

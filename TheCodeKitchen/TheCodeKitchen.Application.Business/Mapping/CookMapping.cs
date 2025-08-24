@@ -1,4 +1,5 @@
 using TheCodeKitchen.Application.Contracts.Response.Cook;
+using Timer = TheCodeKitchen.Core.Domain.Timer;
 
 namespace TheCodeKitchen.Application.Business.Mapping;
 
@@ -9,6 +10,6 @@ public class CookMapping : Profile
         CreateMap<Cook, CreateCookResponse>();
         CreateMap<Cook, GetCookResponse>();
         CreateMap<Message, ReadMessageResponse>();
-        CreateMap<Core.Domain.Timer, GetTimerResponse>();
+        CreateMap<Timer, GetTimerResponse>();
     }
 }

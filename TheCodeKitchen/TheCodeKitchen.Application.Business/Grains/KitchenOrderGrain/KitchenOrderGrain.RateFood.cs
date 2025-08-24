@@ -1,5 +1,6 @@
-using TheCodeKitchen.Application.Contracts.Constants;
-using TheCodeKitchen.Application.Contracts.Models;
+using TheCodeKitchen.Application.Constants;
+using TheCodeKitchen.Application.Contracts.Models.Food;
+using TheCodeKitchen.Application.Contracts.Models.Recipe;
 using TheCodeKitchen.Application.Contracts.Response.CookBook;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;

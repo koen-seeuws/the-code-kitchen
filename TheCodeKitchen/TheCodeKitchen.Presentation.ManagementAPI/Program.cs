@@ -1,6 +1,6 @@
 using TheCodeKitchen.Infrastructure.AzureSignalR;
+using TheCodeKitchen.Infrastructure.Orleans.Client;
 using TheCodeKitchen.Infrastructure.Security.Configuration;
-using TheCodeKitchen.Presentation;
 
 var builder = WebApplication.CreateBuilder(args);
 

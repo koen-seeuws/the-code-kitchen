@@ -7,14 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Orleans.Clustering.AzureStorage" Version="9.2.1" />
       <PackageReference Include="Microsoft.Orleans.Core.Abstractions" Version="9.2.1" />
-      <PackageReference Include="Microsoft.Orleans.Streaming.AzureStorage" Version="9.2.1" />
-      <PackageReference Include="Microsoft.Orleans.Streaming.EventHubs" Version="9.2.1" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\TheCodeKitchen.Application.Constants\TheCodeKitchen.Application.Constants.csproj" />
       <ProjectReference Include="..\TheCodeKitchen.Core.Domain\TheCodeKitchen.Core.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Constants\" />
     </ItemGroup>
 
 </Project>

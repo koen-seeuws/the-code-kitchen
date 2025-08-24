@@ -3,19 +3,19 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Orleans.Configuration;
-using TheCodeKitchen.Application.Contracts.Constants;
+using Orleans.Hosting;
+using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Infrastructure.Extensions;
 
-namespace TheCodeKitchen.Presentation;
+namespace TheCodeKitchen.Infrastructure.Orleans.Client;
 
 public static class OrleansClientRegistration
 {
     public static void AddTheCodeKitchenOrleansClient(this IServiceCollection services, IConfiguration configuration)
     {
         var clientConfiguration =
-            configuration
-                .BindAndValidateConfiguration<OrleansClientConfiguration, OrleansClientConfigurationValidator>(
-                    "TheCodeKitchenOrleans");
+            configuration.BindAndValidateConfiguration<OrleansConfiguration, OrleansConfigurationValidator>(
+                "TheCodeKitchenOrleans");
 
         var azureStorageConnectionString =
             configuration.GetConnectionString("AzureStorage") ??

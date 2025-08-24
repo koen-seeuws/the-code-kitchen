@@ -8,11 +8,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.3.0" />
-    <PackageReference Include="Microsoft.Orleans.Client" Version="9.2.1" />
-    <PackageReference Include="Microsoft.Orleans.Streaming.AzureStorage" Version="9.2.1" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TheCodeKitchen.Application.Contracts\TheCodeKitchen.Application.Contracts.csproj" />
+    <ProjectReference Include="..\TheCodeKitchen.Infrastructure.Orleans.Client\TheCodeKitchen.Infrastructure.Orleans.Client.csproj" />
     <ProjectReference Include="..\TheCodeKitchen.Infrastructure\TheCodeKitchen.Infrastructure.csproj" />
   </ItemGroup>
 

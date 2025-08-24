@@ -1,6 +1,6 @@
-namespace TheCodeKitchen.Presentation.ManagementUI.Services;
-
 using Microsoft.JSInterop;
+
+namespace TheCodeKitchen.Presentation.ManagementUI.Services;
 
 public class ClientTimeService(IJSRuntime js)
 {

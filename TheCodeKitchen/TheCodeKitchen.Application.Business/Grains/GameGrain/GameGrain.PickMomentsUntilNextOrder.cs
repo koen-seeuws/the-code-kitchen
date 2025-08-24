@@ -1,4 +1,4 @@
-using TheCodeKitchen.Application.Contracts.Constants;
+using TheCodeKitchen.Application.Constants;
 
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 

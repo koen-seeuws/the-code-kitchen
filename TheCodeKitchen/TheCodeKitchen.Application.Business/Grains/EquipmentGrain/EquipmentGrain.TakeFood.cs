@@ -1,4 +1,4 @@
-using TheCodeKitchen.Application.Contracts.Constants;
+using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
 using TheCodeKitchen.Application.Contracts.Requests.Food;

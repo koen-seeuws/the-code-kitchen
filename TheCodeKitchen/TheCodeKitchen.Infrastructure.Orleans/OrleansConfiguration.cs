@@ -1,17 +1,17 @@
 using FluentValidation;
 
-namespace TheCodeKitchen.Infrastructure.Orleans.Silo;
+namespace TheCodeKitchen.Infrastructure.Orleans;
 
-public class OrleansSiloConfiguration
+public class OrleansConfiguration
 {
     public string? ClusterId { get; set; }
     public string? ServiceId { get; set; }
     public StreamingEventHubConfiguration? Streaming { get; set; }
 }
 
-public class OrleansSiloConfigurationValidator : AbstractValidator<OrleansSiloConfiguration>
+public class OrleansConfigurationValidator : AbstractValidator<OrleansConfiguration>
 {
-    public OrleansSiloConfigurationValidator()
+    public OrleansConfigurationValidator()
     {
         RuleFor(x => x.ClusterId).NotEmpty();
         RuleFor(x => x.ServiceId).NotEmpty();

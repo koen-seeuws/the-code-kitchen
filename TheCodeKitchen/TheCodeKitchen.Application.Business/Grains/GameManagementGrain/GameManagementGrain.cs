@@ -1,4 +1,4 @@
-using TheCodeKitchen.Application.Contracts.Constants;
+using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
 
 namespace TheCodeKitchen.Application.Business.Grains.GameManagementGrain;
