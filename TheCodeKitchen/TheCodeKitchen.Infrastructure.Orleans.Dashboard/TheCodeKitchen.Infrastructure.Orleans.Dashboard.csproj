@@ -15,14 +15,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\TheCodeKitchen.Application.Constants\TheCodeKitchen.Application.Constants.csproj" />
       <ProjectReference Include="..\TheCodeKitchen.Application.Contracts\TheCodeKitchen.Application.Contracts.csproj" />
       <ProjectReference Include="..\TheCodeKitchen.Infrastructure.Orleans\TheCodeKitchen.Infrastructure.Orleans.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 </Project>

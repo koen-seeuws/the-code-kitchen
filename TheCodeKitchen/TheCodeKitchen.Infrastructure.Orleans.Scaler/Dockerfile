@@ -8,6 +8,10 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["TheCodeKitchen.Infrastructure.Orleans.Scaler/TheCodeKitchen.Infrastructure.Orleans.Scaler.csproj", "TheCodeKitchen.Infrastructure.Orleans.Scaler/"]
+COPY ["TheCodeKitchen.Infrastructure.Orleans/TheCodeKitchen.Infrastructure.Orleans.csproj", "TheCodeKitchen.Infrastructure.Orleans/"]
+COPY ["TheCodeKitchen.Infrastructure/TheCodeKitchen.Infrastructure.csproj", "TheCodeKitchen.Infrastructure/"]
+COPY ["TheCodeKitchen.Application.Constants/TheCodeKitchen.Application.Constants.csproj", "TheCodeKitchen.Application.Constants/"]
+COPY ["TheCodeKitchen.Infrastructure.Orleans.Client/TheCodeKitchen.Infrastructure.Orleans.Client.csproj", "TheCodeKitchen.Infrastructure.Orleans.Client/"]
 RUN dotnet restore "TheCodeKitchen.Infrastructure.Orleans.Scaler/TheCodeKitchen.Infrastructure.Orleans.Scaler.csproj"
 COPY . .
 WORKDIR "/src/TheCodeKitchen.Infrastructure.Orleans.Scaler"
