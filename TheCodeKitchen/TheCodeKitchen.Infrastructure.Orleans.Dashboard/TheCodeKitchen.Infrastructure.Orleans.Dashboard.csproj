@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-TheCodeKitchen.Infrastructure.Orleans.Dashboard-fb473edb-92f5-419c-8d46-2119fe4aaa4e</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.2"/>
+        <PackageReference Include="Microsoft.Orleans.Server" Version="9.2.1" />
+        <PackageReference Include="OrleansDashboard" Version="8.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\TheCodeKitchen.Application.Constants\TheCodeKitchen.Application.Constants.csproj" />
+      <ProjectReference Include="..\TheCodeKitchen.Application.Contracts\TheCodeKitchen.Application.Contracts.csproj" />
+      <ProjectReference Include="..\TheCodeKitchen.Infrastructure.Orleans\TheCodeKitchen.Infrastructure.Orleans.csproj" />
+    </ItemGroup>
+</Project>

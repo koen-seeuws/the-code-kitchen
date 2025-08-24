@@ -20,14 +20,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+      <ProjectReference Include="..\TheCodeKitchen.Infrastructure.Orleans.Client\TheCodeKitchen.Infrastructure.Orleans.Client.csproj" />
+      <ProjectReference Include="..\TheCodeKitchen.Infrastructure.Orleans\TheCodeKitchen.Infrastructure.Orleans.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TheCodeKitchen.Infrastructure.Orleans.Client\TheCodeKitchen.Infrastructure.Orleans.Client.csproj" />
-      <ProjectReference Include="..\TheCodeKitchen.Infrastructure.Orleans\TheCodeKitchen.Infrastructure.Orleans.csproj" />
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>
