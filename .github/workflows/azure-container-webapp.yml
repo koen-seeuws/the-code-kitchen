@@ -26,11 +26,40 @@ jobs:
         run: |
           docker build -t crthecodekitchen.azurecr.io/ca-tck-orleans-silo:latest \
                        -t crthecodekitchen.azurecr.io/ca-tck-orleans-silo:$IMAGE_TAG \
-                       -f TheCodeKitchen/TheCodeKitchen.Infrastructure.OrleansSilo/Dockerfile TheCodeKitchen/
+                       -f TheCodeKitchen/TheCodeKitchen.Infrastructure.Orleans.Silo/Dockerfile TheCodeKitchen/
 
       - name: Push Orleans Silo Docker Image to ACR
         run: |
           docker push crthecodekitchen.azurecr.io/ca-tck-orleans-silo --all-tags
+
+  build-orleans-scaler:
+    name: Build Orleans Scaler
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+    
+      - name: Azure Login
+        uses: Azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Azure CLI - Login to ACR
+        run: |
+          az acr login --name crthecodekitchen
+    
+      - name: Build Orleans Scaler Docker image
+        env:
+          IMAGE_TAG: ${{ github.run_number }}
+        run: |
+          docker build -t crthecodekitchen.azurecr.io/ca-tck-orleans-scaler:latest \
+                       -t crthecodekitchen.azurecr.io/ca-tck-orleans-scaler:$IMAGE_TAG \
+                       -f TheCodeKitchen/TheCodeKitchen.Infrastructure.Orleans.Scaler/Dockerfile TheCodeKitchen/
+
+      - name: Push Orleans Scaler Docker Image to ACR
+        run: |
+          docker push crthecodekitchen.azurecr.io/ca-tck-orleans-scaler --all-tags
+
 
   build-cook-api:
     name: Build Cook API
@@ -132,6 +161,25 @@ jobs:
           imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-orleans-silo:${{ github.run_number }}
           registryUrl: crthecodekitchen.azurecr.io
           containerAppName: ca-tck-orleans-silo
+          resourceGroup: rg-the-code-kitchen
+          containerAppEnvironment: cae-the-code-kitchen
+
+  deploy-orleans-scaler:
+    name: Deploy Orleans Scaler
+    needs: [build-orleans-scaler, deploy-orleans-silo]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Azure Login
+        uses: Azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+            
+      - name: Deploy Orleans Scaler to Azure Container Apps
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          imageToDeploy: crthecodekitchen.azurecr.io/ca-tck-orleans-scaler:${{ github.run_number }}
+          registryUrl: crthecodekitchen.azurecr.io
+          containerAppName: ca-tck-orleans-scaler
           resourceGroup: rg-the-code-kitchen
           containerAppEnvironment: cae-the-code-kitchen
 
