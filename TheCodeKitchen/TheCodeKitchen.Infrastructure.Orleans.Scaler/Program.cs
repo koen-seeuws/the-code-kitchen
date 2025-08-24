@@ -1,6 +1,7 @@
 
 
 using TheCodeKitchen.Infrastructure.Orleans.Scaler.Services;
+using TheCodeKitchen.Infrastructure.Orleans.Scaler.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 

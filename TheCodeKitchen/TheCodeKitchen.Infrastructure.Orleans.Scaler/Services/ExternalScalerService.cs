@@ -3,6 +3,7 @@ using FluentValidation;
 using Grpc.Core;
 using TheCodeKitchen.Infrastructure.Orleans.Scaler.Constants;
 using TheCodeKitchen.Infrastructure.Orleans.Scaler.Extensions;
+using TheCodeKitchen.Infrastructure.Orleans.Scaler.Validation;
 
 namespace TheCodeKitchen.Infrastructure.Orleans.Scaler.Services;
 

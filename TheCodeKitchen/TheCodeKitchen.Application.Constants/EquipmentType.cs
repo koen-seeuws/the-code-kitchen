@@ -1,4 +1,4 @@
-namespace TheCodeKitchen.Core.Enums;
+namespace TheCodeKitchen.Application.Constants;
 
 public static class EquipmentType
 {

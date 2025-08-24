@@ -13,6 +13,18 @@ public static class ScaledObjectRefExtensions
             return maxGrainCountPerSilo;
         }
 
-        return 1000; // Default value if not specified
+        throw new InvalidOperationException($"ScaledObjectRef is missing required metadata key {Constants.OrleansScalerConstants.MaxGrainCountPerSiloMetadataKey}");
+    }
+    
+    public static string GetSiloNameFilter(this ScaledObjectRef scaledObjectRef)
+    {
+        if (scaledObjectRef.ScalerMetadata != null &&
+            scaledObjectRef.ScalerMetadata.TryGetValue(Constants.OrleansScalerConstants.SiloNameFilterMetadataKey, out var siloNameFilter) &&
+            !string.IsNullOrWhiteSpace(siloNameFilter))
+        {
+            return siloNameFilter;
+        }
+
+        throw new InvalidOperationException($"ScaledObjectRef is missing required metadata key {Constants.OrleansScalerConstants.SiloNameFilterMetadataKey}");
     }
 }
