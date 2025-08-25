@@ -3,4 +3,4 @@ using TheCodeKitchen.Application.Contracts.Models.Order;
 namespace TheCodeKitchen.Application.Contracts.Events.Game;
 
 [GenerateSerializer]
-public record NewOrderEvent(long Number, ICollection<FoodRequestDto> RequestedFoods);
+public record OrderGeneratedEvent(long Number, ICollection<FoodRequestDto> RequestedFoods);

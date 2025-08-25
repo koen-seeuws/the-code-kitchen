@@ -50,11 +50,11 @@ public sealed partial class OrderGrain
         await state.WriteStateAsync();
 
         var foodRequestDtos = mapper.Map<List<FoodRequestDto>>(foodRequests);
-        var newOrderEvent = new NewOrderEvent(orderNumber, foodRequestDtos);
+        var orderGeneratedEvent = new OrderGeneratedEvent(orderNumber, foodRequestDtos);
         
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
-        var stream = streamProvider.GetStream<NewOrderEvent>(nameof(NewOrderEvent), state.State.Game);
-        await stream.OnNextAsync(newOrderEvent);
+        var stream = streamProvider.GetStream<OrderGeneratedEvent>(nameof(OrderGeneratedEvent), state.State.Game);
+        await stream.OnNextAsync(orderGeneratedEvent);
 
         return new GenerateOrderResponse(minimumPreparationTime);
     }

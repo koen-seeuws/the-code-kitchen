@@ -6,7 +6,7 @@ public sealed partial class KitchenGrain
     {
         streamHandles.State ??= new KitchenGrainStreamSubscriptionHandles();
         await SubscribeToNextMomentEvent();
-        await SubscribeToNewOrderEvent();
+        await SubscribeToOrderGeneratedEvent();
         await SubscribeToKitchenOrderRatingUpdatedEvent();
         await base.OnActivateAsync(cancellationToken);
     }

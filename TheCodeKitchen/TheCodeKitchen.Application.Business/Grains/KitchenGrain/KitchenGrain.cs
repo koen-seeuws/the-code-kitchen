@@ -10,7 +10,7 @@ namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 public class KitchenGrainStreamSubscriptionHandles
 {
     public StreamSubscriptionHandle<NextMomentEvent>? NextMomentStreamSubscriptionHandle { get; set; } = null;
-    public StreamSubscriptionHandle<NewOrderEvent>? NewOrderStreamSubscriptionHandle { get; set; }
+    public StreamSubscriptionHandle<OrderGeneratedEvent>? NewOrderStreamSubscriptionHandle { get; set; }
     public StreamSubscriptionHandle<KitchenOrderRatingUpdatedEvent>? KitchenOrderRatingUpdatedStreamSubscriptionHandle { get; set; }
 }
 
