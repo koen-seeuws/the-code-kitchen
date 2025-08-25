@@ -3,46 +3,40 @@
         <MudText Typo="Typo.h4">Create Game</MudText>
     </TitleContent>
     <DialogContent>
-        <MudForm Model="@Model" @ref="Form">
+        <MudForm Model="@Model" Validation="@validator.ValidateValue" @ref="Form">
             <MudTextField Label="Name"
                           @bind-Value="Model.Name"
                           For="@(() => Model.Name)"
-                          Required
                           Variant="Variant.Outlined"
                           Class="mb-1"/>
             <MudTextField Label="Speed Modifier"
                           InputType="InputType.Number"
                           @bind-Value="Model.SpeedModifier"
                           For="@(() => Model.SpeedModifier)"
-                          Required
                           Variant="Variant.Outlined"
                           Class="mb-1"/>
             <MudTextField Label="Minimum Items Per Order"
                           InputType="InputType.Number"
                           @bind-Value="Model.MinimumItemsPerOrder"
                           For="@(() => Model.MinimumItemsPerOrder)"
-                          Required
                           Variant="Variant.Outlined"
                           Class="mb-1"/>
             <MudTextField Label="Maximum Items Per Order"
                           InputType="InputType.Number"
                           @bind-Value="Model.MaximumItemsPerOrder"
                           For="@(() => Model.MaximumItemsPerOrder)"
-                          Required
                           Variant="Variant.Outlined"
                           Class="mb-1"/>
             <MudTextField Label="Order Speed Modifier"
                           InputType="InputType.Number"
                           @bind-Value="Model.OrderSpeedModifier"
                           For="@(() => Model.OrderSpeedModifier)"
-                          Required
                           Variant="Variant.Outlined"
                           Class="mb-1"/>
             <MudTextField Label="Temperature"
                           InputType="InputType.Number"
                           @bind-Value="Model.Temperature"
                           For="@(() => Model.Temperature)"
-                          Required
                           Variant="Variant.Outlined"
                           Class="mb-1"/>
         </MudForm>

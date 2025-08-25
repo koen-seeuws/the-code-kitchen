@@ -3,10 +3,15 @@ using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.Pantry;
 using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
+using TheCodeKitchen.Presentation.ManagementUI.Validation;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 
-public partial class CreateIngredientDialog(ISnackbar snackbar, IClusterClient clusterClient) : ComponentBase
+public partial class CreateIngredientDialog(
+    ISnackbar snackbar,
+    IClusterClient clusterClient,
+    CreateIngredientFormModelValidator validator
+) : ComponentBase
 {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
     private MudForm Form { get; set; } = new();
@@ -18,7 +23,7 @@ public partial class CreateIngredientDialog(ISnackbar snackbar, IClusterClient c
         await Form.Validate();
         if (!Form.IsValid)
             return;
-        
+
         Creating = true;
         try
         {
@@ -31,7 +36,7 @@ public partial class CreateIngredientDialog(ISnackbar snackbar, IClusterClient c
                 snackbar.Add("Successfully created ingredient.", Severity.Success);
                 MudDialog.Close(DialogResult.Ok(createIngredientResult.Value));
             }
-                
+
             else
                 snackbar.Add(createIngredientResult.Error.Message, Severity.Error);
         }

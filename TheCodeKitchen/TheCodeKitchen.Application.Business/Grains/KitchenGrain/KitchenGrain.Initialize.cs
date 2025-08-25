@@ -1,4 +1,3 @@
-using TheCodeKitchen.Application.Business.Helpers;
 using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
@@ -52,7 +51,7 @@ public sealed partial class KitchenGrain
         {
             for (var number = 0; number < equipment.Value; number++)
             {
-                var equipmentGrainIdExtension = EquipmentGrainIdHelper.CreateId(equipment.Key, number);
+                var equipmentGrainIdExtension = EquipmentGrainId.Create(equipment.Key, number);
                 var equipmentGrain = GrainFactory.GetGrain<IEquipmentGrain>(id, equipmentGrainIdExtension);
 
                 var createEquipmentRequest = new CreateEquipmentRequest(request.GameId,id, number);

@@ -1,18 +1,24 @@
 using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.Game;
+using TheCodeKitchen.Application.Validation;
+using TheCodeKitchen.Application.Validation.Game;
 
 namespace TheCodeKitchen.Presentation.ManagementAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class GameController(IClusterClient client) : ControllerBase
+public class GameController(
+    IClusterClient client,
+    CreateGameValidator createGameValidator
+    ) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateGameRequest createGameRequest)
+    public async Task<IActionResult> Create([FromBody] CreateGameRequest request)
     {
+        if (!createGameValidator.ValidateAndError(request, out var error)) return this.MatchActionResult(error);
         var gameManagementGrain = client.GetGrain<IGameManagementGrain>(Guid.Empty);
-        var result = await gameManagementGrain.CreateGame(createGameRequest);
+        var result = await gameManagementGrain.CreateGame(request);
         return this.MatchActionResult(result);
     }
 

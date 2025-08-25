@@ -3,10 +3,15 @@ using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.Game;
 using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
+using TheCodeKitchen.Presentation.ManagementUI.Validation;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 
-public partial class CreateGameDialog(ISnackbar snackbar, IClusterClient clusterClient) : ComponentBase
+public partial class CreateGameDialog(
+    ISnackbar snackbar,
+    IClusterClient clusterClient,
+    CreateGameFormModelValidator validator
+) : ComponentBase
 {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
     private MudForm Form { get; set; } = new();

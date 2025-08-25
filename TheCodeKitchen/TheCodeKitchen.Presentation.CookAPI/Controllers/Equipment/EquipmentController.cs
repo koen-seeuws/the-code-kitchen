@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TheCodeKitchen.Application.Business.Helpers;
+using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
 using TheCodeKitchen.Infrastructure.Security.Extensions;
@@ -17,7 +17,7 @@ public abstract class EquipmentController(IClusterClient clusterClient, string e
     {
         var kitchen = HttpContext.User.GetKitchenId();
         var cook = HttpContext.User.GetUsername();
-        var equipmentGrainIdExtension = EquipmentGrainIdHelper.CreateId(equipmentType, number);
+        var equipmentGrainIdExtension = EquipmentGrainId.Create(equipmentType, number);
         var grain = clusterClient.GetGrain<IEquipmentGrain>(kitchen, equipmentGrainIdExtension);
         var addFoodRequest = new AddFoodRequest(cook);
         var result = await grain.AddFood(addFoodRequest);
@@ -29,7 +29,7 @@ public abstract class EquipmentController(IClusterClient clusterClient, string e
     {
         var kitchen = HttpContext.User.GetKitchenId();
         var cook = HttpContext.User.GetUsername();
-        var equipmentGrainIdExtension = EquipmentGrainIdHelper.CreateId(equipmentType, number);
+        var equipmentGrainIdExtension = EquipmentGrainId.Create(equipmentType, number);
         var grain = clusterClient.GetGrain<IEquipmentGrain>(kitchen, equipmentGrainIdExtension);
         var takeFoodRequest =  new TakeFoodFromEquipmentRequest(cook);
         var result = await grain.TakeFood(takeFoodRequest);

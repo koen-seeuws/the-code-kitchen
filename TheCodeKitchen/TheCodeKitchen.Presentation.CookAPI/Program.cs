@@ -1,10 +1,14 @@
+using FluentValidation;
 using Microsoft.OpenApi.Models;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Infrastructure.Orleans.Client;
 using TheCodeKitchen.Infrastructure.Security.Configuration;
 using TheCodeKitchen.Presentation.API.Cook.Hubs;
+using TheCodeKitchen.Presentation.API.Cook.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddValidatorsFromAssembly(typeof(AuthenticationRequestValidator).Assembly);
 
 // Infrastructure services
 builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);

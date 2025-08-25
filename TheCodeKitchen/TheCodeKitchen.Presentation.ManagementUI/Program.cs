@@ -1,3 +1,4 @@
+using FluentValidation;
 using MudBlazor.Services;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Infrastructure.Orleans.Client;
@@ -5,10 +6,12 @@ using TheCodeKitchen.Presentation.ManagementUI.Components;
 using TheCodeKitchen.Presentation.ManagementUI.Hubs;
 using TheCodeKitchen.Presentation.ManagementUI.Mapping;
 using TheCodeKitchen.Presentation.ManagementUI.Services;
+using TheCodeKitchen.Presentation.ManagementUI.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAutoMapper(typeof(GameMapping));
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(CreateRecipeFormModelValidator));
 
 // Infrastructure services
 builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);

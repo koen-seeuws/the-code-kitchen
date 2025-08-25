@@ -16,6 +16,7 @@
 
 
     <ItemGroup>
+      <ProjectReference Include="..\TheCodeKitchen.Application.Validation\TheCodeKitchen.Application.Validation.csproj" />
       <ProjectReference Include="..\TheCodeKitchen.Infrastructure.AzureSignalR\TheCodeKitchen.Infrastructure.AzureSignalR.csproj" />
       <ProjectReference Include="..\TheCodeKitchen.Presentation\TheCodeKitchen.Presentation.csproj" />
     </ItemGroup>

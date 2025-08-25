@@ -2,8 +2,10 @@ using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Contracts.Errors;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
+using TheCodeKitchen.Application.Validation;
 using TheCodeKitchen.Infrastructure.Security;
 using TheCodeKitchen.Presentation.API.Cook.Models;
+using TheCodeKitchen.Presentation.API.Cook.Validators;
 
 namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 
@@ -12,12 +14,16 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 public class KitchenController(
     IClusterClient client,
     IPasswordHashingService passwordHashingService,
-    ISecurityTokenService securityTokenService
+    ISecurityTokenService securityTokenService,
+    AuthenticationRequestValidator authenticationRequestValidator
 ) : ControllerBase
 {
     [HttpPost("{code}/[action]")]
     public async Task<IActionResult> Join([FromRoute] string code, [FromBody] AuthenticationRequest request)
     {
+        if (!authenticationRequestValidator.ValidateAndError(request, out var error))
+            return this.MatchActionResult(error!);
+
         var kitchenCodeIndexGrain = client.GetGrain<IKitchenManagementGrain>(Guid.Empty);
 
         var passwordHash = passwordHashingService.HashPassword(request.Password);

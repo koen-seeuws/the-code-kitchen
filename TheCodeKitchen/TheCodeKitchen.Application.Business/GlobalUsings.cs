@@ -3,7 +3,6 @@ global using TheCodeKitchen.Core.Domain;
 
 // Application
 global using AutoMapper;
-global using FluentValidation;
 global using TheCodeKitchen.Application.Contracts.Errors;
 global using TheCodeKitchen.Application.Contracts.Events;
 global using TheCodeKitchen.Application.Contracts.Grains;

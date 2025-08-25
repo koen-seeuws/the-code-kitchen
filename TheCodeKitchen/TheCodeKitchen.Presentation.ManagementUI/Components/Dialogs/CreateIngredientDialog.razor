@@ -3,7 +3,7 @@
         <MudText Typo="Typo.h4">Create Ingredient</MudText>
     </TitleContent>
     <DialogContent>
-        <MudForm Model="@Model" @ref="Form">
+        <MudForm Model="@Model" Validation="@validator.ValidateValue" @ref="Form">
             <MudTextField Label="Name"
                           @bind-Value="Model.Name"
                           For="@(() => Model.Name)"

@@ -1,6 +1,7 @@
+using FluentValidation;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 
-namespace TheCodeKitchen.Application.Business.Validators;
+namespace TheCodeKitchen.Application.Validation.Cook;
 
 public class SendMessageValidator : AbstractValidator<SendMessageRequest>
 {

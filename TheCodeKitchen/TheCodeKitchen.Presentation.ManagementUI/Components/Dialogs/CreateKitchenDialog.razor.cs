@@ -3,10 +3,15 @@ using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
+using TheCodeKitchen.Presentation.ManagementUI.Validation;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 
-public partial class CreateKitchenDialog(ISnackbar snackbar, IClusterClient clusterClient) : ComponentBase
+public partial class CreateKitchenDialog(
+    ISnackbar snackbar,
+    IClusterClient clusterClient,
+    CreateKitchenFormModelValidator validator
+) : ComponentBase
 {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
     [Parameter] public Guid GameId { get; set; }
@@ -19,7 +24,7 @@ public partial class CreateKitchenDialog(ISnackbar snackbar, IClusterClient clus
         await Form.Validate();
         if (!Form.IsValid)
             return;
-        
+
         Creating = true;
         try
         {
@@ -32,7 +37,7 @@ public partial class CreateKitchenDialog(ISnackbar snackbar, IClusterClient clus
                 snackbar.Add("Successfully created kitchen.", Severity.Success);
                 MudDialog.Close(DialogResult.Ok(createKitchenResult.Value));
             }
-                
+
             else
                 snackbar.Add(createKitchenResult.Error.Message, Severity.Error);
         }

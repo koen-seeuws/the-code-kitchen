@@ -1,13 +1,14 @@
-using TheCodeKitchen.Application.Contracts.Requests.Game;
-using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
+using FluentValidation;
+using TheCodeKitchen.Application.Validation;
+using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
 
-namespace TheCodeKitchen.Application.Business.Validators;
+namespace TheCodeKitchen.Presentation.ManagementUI.Validation;
 
-public class CreateGameValidator : AbstractValidator<CreateGameRequest>
+public class CreateGameFormModelValidator : ValidatorBase<CreateGameFormModel>
 {
-    public CreateGameValidator()
+    public CreateGameFormModelValidator()
     {
-        RuleFor(g => g.Name).NotEmpty();
+        RuleFor(g => g.Name).NotEmpty().MaximumLength(50);
         RuleFor(g => g.SpeedModifier).InclusiveBetween(0.1, 10);
         RuleFor(g => g.MinimumItemsPerOrder)
             .InclusiveBetween((short)1, (short)250)

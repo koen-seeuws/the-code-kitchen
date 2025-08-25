@@ -6,10 +6,15 @@ using TheCodeKitchen.Application.Contracts.Requests.CookBook;
 using TheCodeKitchen.Application.Contracts.Response.CookBook;
 using TheCodeKitchen.Application.Contracts.Response.Pantry;
 using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
+using TheCodeKitchen.Presentation.ManagementUI.Validation;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 
-public partial class CreateRecipeDialog(ISnackbar snackbar, IClusterClient clusterClient) : ComponentBase
+public partial class CreateRecipeDialog(
+    ISnackbar snackbar,
+    IClusterClient clusterClient,
+    CreateRecipeFormModelValidator validator
+) : ComponentBase
 {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
     [Parameter] public ICollection<GetIngredientResponse>? Ingredients { get; set; }

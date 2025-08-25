@@ -2,7 +2,9 @@ namespace TheCodeKitchen.Application.Contracts.Results;
 
 [GenerateSerializer]
 public abstract record Error
-{
+{   
+    [Id(0)] public string Message { get; set; }
+    
     public Error()
     {
         Message = string.Empty;
@@ -12,6 +14,4 @@ public abstract record Error
     {
         Message = message;
     }
-
-    [Id(0)] public string Message { get; set; }
 }

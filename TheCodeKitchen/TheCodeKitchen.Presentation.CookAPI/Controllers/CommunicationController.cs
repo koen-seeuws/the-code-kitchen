@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
+using TheCodeKitchen.Application.Validation;
+using TheCodeKitchen.Application.Validation.Cook;
 using TheCodeKitchen.Infrastructure.Security.Extensions;
 
 namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
@@ -11,11 +13,17 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class CommunicationController(IClusterClient clusterClient) : ControllerBase
+public class CommunicationController(
+    IClusterClient clusterClient, 
+    SendMessageValidator sendMessageValidator,
+    ConfirmMessageValidator confirmMessageValidator
+    ) : ControllerBase
 {
     [HttpPost("[action]")]
     public async Task<IActionResult> SendMessage(SendMessageRequest request)
     {
+        if (!sendMessageValidator.ValidateAndError(request, out var error)) return this.MatchActionResult(error);
+        
         var kitchen = HttpContext.User.GetKitchenId();
         var cook = HttpContext.User.GetUsername();
         var kitchenGrain = clusterClient.GetGrain<IKitchenGrain>(kitchen);
@@ -37,6 +45,7 @@ public class CommunicationController(IClusterClient clusterClient) : ControllerB
     [HttpPost("[action]")]
     public async Task<IActionResult> Confirm(ConfirmMessageRequest request)
     {
+        if (!confirmMessageValidator.ValidateAndError(request, out var error)) return this.MatchActionResult(error);
         var kitchen = HttpContext.User.GetKitchenId();
         var cook = HttpContext.User.GetUsername();
         var cookGrain = clusterClient.GetGrain<ICookGrain>(kitchen, cook);
