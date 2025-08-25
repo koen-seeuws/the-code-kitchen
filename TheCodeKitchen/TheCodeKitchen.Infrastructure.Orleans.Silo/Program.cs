@@ -46,7 +46,7 @@ builder.UseOrleans(silo =>
     silo.UseAzureStorageClustering(options =>
     {
         options.TableServiceClient = tableClient;
-        options.TableName = "TheCodeKitchenClustering";
+        options.TableName = TheCodeKitchenState.Clustering;
     });
     
     foreach (var storage in TheCodeKitchenState.All)
@@ -62,7 +62,7 @@ builder.UseOrleans(silo =>
     silo.UseAzureTableReminderService(options =>
     {
         options.TableServiceClient = tableClient;
-        options.TableName = "TheCodeKitchenReminders";
+        options.TableName = TheCodeKitchenState.Reminders;
     });
 
     silo

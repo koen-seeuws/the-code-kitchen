@@ -1,5 +1,6 @@
 using Azure.Data.Tables;
 using Orleans.Configuration;
+using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Infrastructure.Extensions;
 using TheCodeKitchen.Infrastructure.Orleans;
 
@@ -13,6 +14,10 @@ var siloConfiguration =
 var azureStorageConnectionString =
     builder.Configuration.GetConnectionString("AzureStorage") ??
     throw new InvalidOperationException("ConnectionStrings__AzureStorage is not configured.");
+
+var eventHubConnectionString =
+    builder.Configuration.GetConnectionString("EventHubNamespace") ??
+    throw new InvalidOperationException("ConnectionStrings__EventHubNamespace is not configured.");
 
 var tableClient = new TableServiceClient(azureStorageConnectionString);
 
@@ -30,12 +35,52 @@ builder.UseOrleans(silo =>
     silo.UseAzureStorageClustering(options =>
     {
         options.TableServiceClient = tableClient;
-        options.TableName = "TheCodeKitchenClustering";
+        options.TableName = TheCodeKitchenState.Clustering;
     });
+
+    foreach (var storage in TheCodeKitchenState.All)
+    {
+        silo.AddAzureTableGrainStorage(storage, options =>
+        {
+            options.TableServiceClient = tableClient;
+            options.TableName = storage;
+            options.UseStringFormat = true;
+        });
+    }
+
+    silo.UseAzureTableReminderService(options =>
+    {
+        options.TableServiceClient = tableClient;
+        options.TableName = TheCodeKitchenState.Reminders;
+    });
+
+    silo
+        .AddStreaming()
+        .AddEventHubStreams(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider, eventHubConfigurator =>
+        {
+            eventHubConfigurator.ConfigureEventHub(eventHubBuilder =>
+            {
+                eventHubBuilder.Configure(options =>
+                {
+                    options.ConfigureEventHubConnection(
+                        eventHubConnectionString,
+                        siloConfiguration.Streaming?.EventHub,
+                        siloConfiguration.Streaming?.ConsumerGroup
+                    );
+                });
+            });
+
+            eventHubConfigurator.UseAzureTableCheckpointer(azureTableBuilder =>
+                azureTableBuilder.Configure(options =>
+                {
+                    options.TableServiceClient = tableClient;
+                    options.TableName = TheCodeKitchenState.EventHubCheckpoints;
+                })
+            );
+        });
 
     silo.UseDashboard(options => options.HostSelf = true);
 });
 
 var host = builder.Build();
-
 host.Run();

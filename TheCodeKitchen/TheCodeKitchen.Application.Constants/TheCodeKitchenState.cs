@@ -17,6 +17,9 @@ public static class TheCodeKitchenState
         Orders,
         Pantry,
         
+        // Reminders
+        Reminders,
+        
         // Persistent Streaming
         PubSubStore,
         EventHubCheckpoints,
@@ -35,7 +38,13 @@ public static class TheCodeKitchenState
     public const string KitchenOrders = "TheCodeKitchenKitchenOrderState";
     public const string Orders = "TheCodeKitchenOrderState";
     public const string Pantry = "TheCodeKitchenPantryState";
+    
+    // Clustering
+    public const string Clustering = "TheCodeKitchenClustering";
 
+    // Reminders
+    public const string Reminders = "TheCodeKitchenReminders";
+    
     // Persistent Streaming
     public const string PubSubStore = nameof(PubSubStore);
     public const string EventHubCheckpoints = "TheCodeKitchenEventHubCheckpoints";

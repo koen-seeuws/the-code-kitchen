@@ -38,7 +38,7 @@ public static class OrleansClientRegistration
             client.UseAzureStorageClustering(options =>
             {
                 options.TableServiceClient = tableClient;
-                options.TableName = "TheCodeKitchenClustering";
+                options.TableName = TheCodeKitchenState.Clustering;
             });
 
             client
