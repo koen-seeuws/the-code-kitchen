@@ -4,7 +4,11 @@ public class CreateRecipeFormModel
 {
     public string Name { get; set; } = string.Empty;
     public ICollection<StepFormModel> Steps { get; set; } = new List<StepFormModel>();
-    public ICollection<IngredientFormModel> Ingredients { get; set; } = Enumerable.Repeat(new IngredientFormModel(), 2).ToList();
+    public ICollection<IngredientFormModel> Ingredients { get; set; } = new List<IngredientFormModel>
+    {
+        new(),
+        new()
+    };
 }
 
 public class IngredientFormModel
