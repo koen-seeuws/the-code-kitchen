@@ -8,11 +8,11 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["TheCodeKitchen.Presentation.CookAPI/TheCodeKitchen.Presentation.CookAPI.csproj", "TheCodeKitchen.Presentation.CookAPI/"]
-COPY ["TheCodeKitchen.Application.Business/TheCodeKitchen.Application.Business.csproj", "TheCodeKitchen.Application.Business/"]
-COPY ["TheCodeKitchen.Application.Constants/TheCodeKitchen.Application.Constants.csproj", "TheCodeKitchen.Application.Constants/"]
+COPY ["TheCodeKitchen.Application.Validation/TheCodeKitchen.Application.Validation.csproj", "TheCodeKitchen.Application.Validation/"]
 COPY ["TheCodeKitchen.Application.Contracts/TheCodeKitchen.Application.Contracts.csproj", "TheCodeKitchen.Application.Contracts/"]
 COPY ["TheCodeKitchen.Core.Domain/TheCodeKitchen.Core.Domain.csproj", "TheCodeKitchen.Core.Domain/"]
 COPY ["TheCodeKitchen.Core.Enums/TheCodeKitchen.Core.Enums.csproj", "TheCodeKitchen.Core.Enums/"]
+COPY ["TheCodeKitchen.Application.Constants/TheCodeKitchen.Application.Constants.csproj", "TheCodeKitchen.Application.Constants/"]
 COPY ["TheCodeKitchen.Infrastructure.Security/TheCodeKitchen.Infrastructure.Security.csproj", "TheCodeKitchen.Infrastructure.Security/"]
 COPY ["TheCodeKitchen.Infrastructure/TheCodeKitchen.Infrastructure.csproj", "TheCodeKitchen.Infrastructure/"]
 COPY ["TheCodeKitchen.Infrastructure.AzureSignalR/TheCodeKitchen.Infrastructure.AzureSignalR.csproj", "TheCodeKitchen.Infrastructure.AzureSignalR/"]

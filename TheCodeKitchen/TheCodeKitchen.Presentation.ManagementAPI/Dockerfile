@@ -8,17 +8,17 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["TheCodeKitchen.Presentation.ManagementAPI/TheCodeKitchen.Presentation.ManagementAPI.csproj", "TheCodeKitchen.Presentation.ManagementAPI/"]
-COPY ["TheCodeKitchen.Application.Business/TheCodeKitchen.Application.Business.csproj", "TheCodeKitchen.Application.Business/"]
+COPY ["TheCodeKitchen.Infrastructure.Security/TheCodeKitchen.Infrastructure.Security.csproj", "TheCodeKitchen.Infrastructure.Security/"]
+COPY ["TheCodeKitchen.Infrastructure/TheCodeKitchen.Infrastructure.csproj", "TheCodeKitchen.Infrastructure/"]
+COPY ["TheCodeKitchen.Infrastructure.AzureSignalR/TheCodeKitchen.Infrastructure.AzureSignalR.csproj", "TheCodeKitchen.Infrastructure.AzureSignalR/"]
 COPY ["TheCodeKitchen.Application.Constants/TheCodeKitchen.Application.Constants.csproj", "TheCodeKitchen.Application.Constants/"]
 COPY ["TheCodeKitchen.Application.Contracts/TheCodeKitchen.Application.Contracts.csproj", "TheCodeKitchen.Application.Contracts/"]
 COPY ["TheCodeKitchen.Core.Domain/TheCodeKitchen.Core.Domain.csproj", "TheCodeKitchen.Core.Domain/"]
 COPY ["TheCodeKitchen.Core.Enums/TheCodeKitchen.Core.Enums.csproj", "TheCodeKitchen.Core.Enums/"]
-COPY ["TheCodeKitchen.Infrastructure.Security/TheCodeKitchen.Infrastructure.Security.csproj", "TheCodeKitchen.Infrastructure.Security/"]
-COPY ["TheCodeKitchen.Infrastructure/TheCodeKitchen.Infrastructure.csproj", "TheCodeKitchen.Infrastructure/"]
-COPY ["TheCodeKitchen.Infrastructure.AzureSignalR/TheCodeKitchen.Infrastructure.AzureSignalR.csproj", "TheCodeKitchen.Infrastructure.AzureSignalR/"]
 COPY ["TheCodeKitchen.Presentation/TheCodeKitchen.Presentation.csproj", "TheCodeKitchen.Presentation/"]
 COPY ["TheCodeKitchen.Infrastructure.Orleans.Client/TheCodeKitchen.Infrastructure.Orleans.Client.csproj", "TheCodeKitchen.Infrastructure.Orleans.Client/"]
 COPY ["TheCodeKitchen.Infrastructure.Orleans/TheCodeKitchen.Infrastructure.Orleans.csproj", "TheCodeKitchen.Infrastructure.Orleans/"]
+COPY ["TheCodeKitchen.Application.Validation/TheCodeKitchen.Application.Validation.csproj", "TheCodeKitchen.Application.Validation/"]
 RUN dotnet restore "TheCodeKitchen.Presentation.ManagementAPI/TheCodeKitchen.Presentation.ManagementAPI.csproj"
 COPY . .
 WORKDIR "/src/TheCodeKitchen.Presentation.ManagementAPI"
