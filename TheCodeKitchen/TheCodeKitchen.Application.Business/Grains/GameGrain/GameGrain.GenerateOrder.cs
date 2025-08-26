@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Requests.Order;
 
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
@@ -21,7 +22,12 @@ public sealed partial class GameGrain
         state.State.OrderNumbers.Add(orderNumber);
         await state.WriteStateAsync();
 
-        _timeUntilNewOrder = generateOrderResult.Value.MinimumTimeToPrepare / state.State.OrderSpeedModifier;
+        var timeBetweenOrders = generateOrderResult.Value.MinimumTimeToPrepare;
+
+        if (timeBetweenOrders < TheCodeKitchenMinimumTimeBetweenOrders.Value)
+            timeBetweenOrders = TheCodeKitchenMinimumTimeBetweenOrders.Value;
+
+        _timeUntilNewOrder = timeBetweenOrders / state.State.OrderSpeedModifier;
 
         return TheCodeKitchenUnit.Value;
     }
