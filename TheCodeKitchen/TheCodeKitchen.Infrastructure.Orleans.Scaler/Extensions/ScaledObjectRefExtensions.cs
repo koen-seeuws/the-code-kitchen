@@ -22,7 +22,7 @@ public static class ScaledObjectRefExtensions
             scaledObjectRef.ScalerMetadata.TryGetValue(Constants.OrleansScalerConstants.SiloNameFilterMetadataKey, out var siloNameFilter) &&
             !string.IsNullOrWhiteSpace(siloNameFilter))
         {
-            return siloNameFilter;
+            return siloNameFilter.Trim();
         }
 
         throw new InvalidOperationException($"ScaledObjectRef is missing required metadata key {Constants.OrleansScalerConstants.SiloNameFilterMetadataKey}");

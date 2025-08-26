@@ -17,8 +17,10 @@ public class ExternalScalerService(
     public override async Task<GetMetricsResponse> GetMetrics(GetMetricsRequest request, ServerCallContext context)
     {
         await ValidateRequestMetadata(request.ScaledObjectRef);
+        
+        var siloNameFilter = request.ScaledObjectRef.GetSiloNameFilter();
 
-        var metricValue = await GetHighestSiloGrainCount();
+        var metricValue = await GetHighestSiloGrainCount(siloNameFilter);
 
         var response = new GetMetricsResponse();
         response.MetricValues.Add(new MetricValue
@@ -50,8 +52,10 @@ public class ExternalScalerService(
     public override async Task<IsActiveResponse> IsActive(ScaledObjectRef request, ServerCallContext context)
     {
         await ValidateRequestMetadata(request);
+        
+        var siloNameFilter = request.GetSiloNameFilter();
 
-        var metricValue = await GetHighestSiloGrainCount();
+        var metricValue = await GetHighestSiloGrainCount(siloNameFilter);
         var metricThreshold = request.GetMaxGrainCountPerSilo();
 
         return new IsActiveResponse
@@ -64,10 +68,12 @@ public class ExternalScalerService(
         IServerStreamWriter<IsActiveResponse> responseStream, ServerCallContext context)
     {
         await ValidateRequestMetadata(request);
+        
+        var siloNameFilter = request.GetSiloNameFilter();
 
         while (!context.CancellationToken.IsCancellationRequested)
         {
-            var metricValue = await GetHighestSiloGrainCount();
+            var metricValue = await GetHighestSiloGrainCount(siloNameFilter);
             var metricThreshold = request.GetMaxGrainCountPerSilo();
 
             await responseStream.WriteAsync(new IsActiveResponse
@@ -87,11 +93,20 @@ public class ExternalScalerService(
             throw new ValidationException(result.Errors);
     }
 
-    private async Task<int> GetHighestSiloGrainCount()
+    private async Task<int> GetHighestSiloGrainCount(string siloNameFilter)
     {
+        siloNameFilter = siloNameFilter.Trim().ToLower();
         var grainStatistics = await _managementGrain.GetSimpleGrainStatistics();
+        var silos = await _managementGrain.GetDetailedHosts();
+
+        var activeSiloAddresses = silos
+            .Where(silo => silo.Status == SiloStatus.Active)
+            .Where(silo => silo.HostName.Trim().ToLower().Contains(siloNameFilter))
+            .Select(silo => silo.SiloAddress)
+            .ToList();
 
         var grainCountsPerSilo = grainStatistics
+            .Where(statistic => activeSiloAddresses.Contains(statistic.SiloAddress))
             .GroupBy(statistic => statistic.SiloAddress)
             .ToDictionary(
                 group => group.Key,
