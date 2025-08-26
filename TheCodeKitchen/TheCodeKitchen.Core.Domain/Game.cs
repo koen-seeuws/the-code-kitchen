@@ -10,6 +10,6 @@ public class Game(Guid id, string name, double speedModifier = 1.0, short minimu
     public double OrderSpeedModifier { get; set; } = orderSpeedModifier;
     public double Temperature { get; set; } = temperature;
     public DateTimeOffset? Started { get; set; }
-    public ICollection<Guid> Kitchens { get; set; } = new List<Guid>();
-    public ICollection<long> OrderNumbers { get; set; } = new List<long>();
+    public List<Guid> Kitchens { get; set; } = new();
+    public List<long> OrderNumbers { get; set; } = new();
 }

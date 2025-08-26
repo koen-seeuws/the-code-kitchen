@@ -7,6 +7,6 @@ public class Cook(string username, string passwordHash, Guid game, Guid kitchen)
     public Guid Game { get; set; } = game;
     public Guid Kitchen { get; set; } = kitchen;
     public Guid? Food { get; set; }
-    public ICollection<Message> Messages { get; set; } = new List<Message>();
-    public ICollection<Timer> Timers { get; set; } = new List<Timer>();
+    public List<Message> Messages { get; set; } = new();
+    public List<Timer> Timers { get; set; } = new();
 }

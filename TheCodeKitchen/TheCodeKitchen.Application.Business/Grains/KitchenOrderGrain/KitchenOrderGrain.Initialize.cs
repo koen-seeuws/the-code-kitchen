@@ -15,8 +15,10 @@ public sealed partial class KitchenOrderGrain
             return new AlreadyExistsError(
                 $"The order with number {orderNumber} has already been initialized in kitchen {kitchen}");
 
-        var requestedFoods = mapper.Map<List<OrderFoodRequest>>(request.RequestedFoods);
-
+        var requestedFoods = mapper
+            .Map<List<KitchenOrderFoodRequest>>(request.RequestedFoods)
+            .ToList();
+        
         var kitchenOrder = new KitchenOrder(requestedFoods, orderNumber, request.Game, kitchen);
         state.State = kitchenOrder;
         await state.WriteStateAsync();

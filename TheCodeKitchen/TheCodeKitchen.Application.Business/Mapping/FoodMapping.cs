@@ -15,6 +15,7 @@ public class FoodMapping : Profile
 
         CreateMap<FoodDto, Food>();
         CreateMap<FoodRequestDto, OrderFoodRequest>();
+        CreateMap<FoodRequestDto, KitchenOrderFoodRequest>();
 
         // TODO: In relation to TakeFood method TODOs, these 2 may become unnecessary
         CreateMap<GetFoodResponse, TakeFoodResponse>(); 

@@ -10,21 +10,15 @@ public class KitchenOrder
     public Guid Game { get; set; }
     public Guid Kitchen { get; set; }
 
-    public ICollection<KitchenOrderFoodRequest> RequestedFoods { get; set; }
+    public List<KitchenOrderFoodRequest> RequestedFoods { get; set; }
 
-    public ICollection<KitchenOrderFoodDelivery> DeliveredFoods { get; set; } = new List<KitchenOrderFoodDelivery>();
+    public List<KitchenOrderFoodDelivery> DeliveredFoods { get; set; } = new();
 
-    public KitchenOrder()
-    {
-    }
-
-    public KitchenOrder(ICollection<OrderFoodRequest>? requestedFoods, long number, Guid game, Guid kitchen)
+    public KitchenOrder(List<KitchenOrderFoodRequest> requestedFoods, long number, Guid game, Guid kitchen)
     {
         Number = number;
         Game = game;
         Kitchen = kitchen;
-        RequestedFoods = requestedFoods?
-            .Select(fr => new KitchenOrderFoodRequest(fr.Food, fr.MinimumTimeToPrepareFood))
-            .ToList() ?? [];
+        RequestedFoods = requestedFoods;
     }
 }

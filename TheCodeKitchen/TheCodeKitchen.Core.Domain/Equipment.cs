@@ -8,5 +8,5 @@ public class Equipment(Guid game, Guid kitchen, string equipmentType, int number
 
     public int Number { get; set; } = number;
     public TimeSpan? Time { get; set; }
-    public ICollection<Guid> Foods { get; set; } = new List<Guid>();
+    public List<Guid> Foods { get; set; } = new();
 }
