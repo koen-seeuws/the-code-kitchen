@@ -90,7 +90,7 @@ builder.UseOrleans(silo =>
             );
         });
 
-    silo.UseDashboard(options => options.HostSelf = false);
+    silo.UseDashboard();
 });
 
 var host = builder.Build();
