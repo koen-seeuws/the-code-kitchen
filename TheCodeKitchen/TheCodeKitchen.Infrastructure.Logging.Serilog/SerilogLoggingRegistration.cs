@@ -9,7 +9,7 @@ public static class SerilogLoggingRegistration
     {
         var logger = new LoggerConfiguration()
             .Destructure.With<MaskPasswordPolicy>()
-            .MinimumLevel.Debug()
+            .MinimumLevel.Information()
             .WriteTo.Console()
             .CreateLogger();
         

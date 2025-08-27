@@ -4,10 +4,14 @@ using TheCodeKitchen.Infrastructure.Orleans.Scaler.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Logging
+builder.Logging.ClearProviders();
 builder.Logging.RegisterSerilog();
 
+// Application services
 builder.Services.AddSingleton<ScaledObjectRefValidator>();
 
+// Presentation services
 builder.Services.AddGrpc();
 
 var app = builder.Build();

@@ -9,22 +9,14 @@ public sealed partial class CookBookGrain
 {
     public async Task<Result<CreateRecipeResponse>> CreateRecipe(CreateRecipeRequest request)
     {
-        logger.LogInformation("CookBook {CookBook}: Creating new recipe {newRecipeName}...", state.State.Id,
-            request.Name);
-
         var newRecipeName = request.Name.Trim().ToCamelCase();
 
         // Check if recipe already exists
         var availableRecipes = state.State.Recipes.Select(r => r.Name).ToList();
 
         if (availableRecipes.Any(i => i.Equals(newRecipeName, StringComparison.OrdinalIgnoreCase)))
-        {
-            logger.LogWarning("CookBook {CookBook}: The recipe {newRecipeName} already exists", state.State.Id,
-                newRecipeName);
             return new AlreadyExistsError($"The recipe {newRecipeName} already exists");
-        }
-
-
+        
         // Check if name is already used for an ingredient in pantry
         var pantryGrain = GrainFactory.GetGrain<IPantryGrain>(state.State.Id);
         var pantryIngredientsResult = await pantryGrain.GetIngredients();
@@ -37,12 +29,7 @@ public sealed partial class CookBookGrain
         var availableIngredients = pantryIngredientsResult.Value.Select(i => i.Name).ToList();
 
         if (availableIngredients.Any(i => i.Equals(newRecipeName, StringComparison.OrdinalIgnoreCase)))
-        {
-            logger.LogWarning(
-                "CookBook {CookBook}: {newRecipeName} already exists as an ingredient in the pantry",
-                state.State.Id, newRecipeName);
             return new AlreadyExistsError($"{newRecipeName} already exists as an ingredient in the pantry");
-        }
 
         // Check if recipe ingredients combination is unique
         var newIngredientCombo = request.Ingredients
@@ -56,13 +43,8 @@ public sealed partial class CookBookGrain
                 .GetRecipeComboIdentifier();
 
             if (ingredientCombo.Equals(newIngredientCombo, StringComparison.OrdinalIgnoreCase))
-            {
-                logger.LogWarning(
-                    "CookBook {CookBook}: The recipe {newRecipeName} cannot be created because this combination of ingredients is alreadyused for recipe {recipeName}",
-                    state.State.Id, newRecipeName, recipe.Name);
                 return new AlreadyExistsError(
                     $"This combination of ingredients is already used for recipe {recipe.Name}");
-            }
         }
 
         // Start crafting recipe

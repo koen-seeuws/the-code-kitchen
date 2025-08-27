@@ -14,9 +14,6 @@ public sealed partial class GameGrain
         var gameId = this.GetPrimaryKey();
         var moment = DateTimeOffset.Now;
 
-        logger.LogInformation("Game {id}: {moment} (x{modifier})",
-            gameId, moment, state.State.SpeedModifier);
-
         // Sending out event
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
         var stream = streamProvider.GetStream<NextMomentEvent>(nameof(NextMomentEvent), gameId);

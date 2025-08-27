@@ -17,7 +17,7 @@ public class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IIncomingG
 
             try
             {
-                logger.LogInformation("Invoking {grainTypeName}.{methodName} ({grainId})", grainTypeName, methodName,
+                logger.LogInformation("Invoking {grainTypeName}.{methodName} ({grainId})...", grainTypeName, methodName,
                     grainId);
 
                 await context.Invoke();

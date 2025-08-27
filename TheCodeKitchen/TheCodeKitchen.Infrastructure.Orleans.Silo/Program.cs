@@ -10,13 +10,14 @@ using TheCodeKitchen.Infrastructure.Orleans;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+// Logging
+builder.Logging.ClearProviders();
+builder.Logging.RegisterSerilog();
 
 // Application Services
 builder.Services.AddApplicationServices();
 
-// Infrastructure Services
-builder.Logging.RegisterSerilog();
-
+// Infrastructure services
 var siloConfiguration =
     builder.Configuration
         .BindAndValidateConfiguration<OrleansConfiguration, OrleansConfigurationValidator>(

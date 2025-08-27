@@ -9,10 +9,14 @@ using TheCodeKitchen.Presentation.API.Cook.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Logging
+builder.Logging.ClearProviders();
+builder.Logging.RegisterSerilog();
+
+// Application services
 builder.Services.AddValidatorsFromAssembly(typeof(AuthenticationRequestValidator).Assembly);
 
 // Infrastructure services
-builder.Logging.RegisterSerilog();
 builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);
 builder.Services.AddJwtSecurityServices(builder.Configuration);
 builder.Services.AddPasswordHashingServices();
