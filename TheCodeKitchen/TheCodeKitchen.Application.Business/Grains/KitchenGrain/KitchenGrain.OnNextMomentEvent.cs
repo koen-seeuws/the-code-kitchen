@@ -5,10 +5,19 @@ namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
 public sealed partial class KitchenGrain
 {
-    private async Task OnNextMomentEvent(NextMomentEvent nextMomentEvent, StreamSequenceToken _)
+    private Task OnNextMomentEvent(NextMomentEvent nextMomentEvent, StreamSequenceToken _)
     {
-        var @event = new KitchenRatingUpdatedEvent(state.State.Rating);
-        await realTimeKitchenService.SendKitchenRatingUpdatedEvent(state.State.Id, @event);
-        await state.WriteStateAsync();
+        var offset = TimeSpan.FromMilliseconds(500);
+        
+        if(nextMomentEvent.NextMomentDelay.HasValue)
+            offset = nextMomentEvent.NextMomentDelay.Value / 2;
+        
+        this.RegisterGrainTimer(async () =>
+        {
+            var @event = new KitchenRatingUpdatedEvent(state.State.Rating);
+            await realTimeKitchenService.SendKitchenRatingUpdatedEvent(state.State.Id, @event);
+        }, offset, Timeout.InfiniteTimeSpan);
+        
+        return Task.CompletedTask;
     }
 }

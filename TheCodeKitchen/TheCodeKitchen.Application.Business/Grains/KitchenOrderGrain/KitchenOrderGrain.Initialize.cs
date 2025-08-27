@@ -19,7 +19,7 @@ public sealed partial class KitchenOrderGrain
             .Map<List<KitchenOrderFoodRequest>>(request.RequestedFoods)
             .ToList();
         
-        var kitchenOrder = new KitchenOrder(requestedFoods, orderNumber, request.Game, kitchen);
+        var kitchenOrder = new KitchenOrder(orderNumber, requestedFoods, request.Game, kitchen);
         state.State = kitchenOrder;
         await state.WriteStateAsync();
 

@@ -4,6 +4,6 @@ public class Recipe(string name, List<RecipeIngredient>? ingredients, List<Recip
 {
 
     public string Name { get; set; } = name;
-    public List<RecipeStep> Steps { get; set; } = steps ?? new List<RecipeStep>();
-    public List<RecipeIngredient> Ingredients { get; set; } = ingredients ?? new List<RecipeIngredient>();
+    public List<RecipeStep> Steps { get; set; } = steps ?? [];
+    public List<RecipeIngredient> Ingredients { get; set; } = ingredients ?? [];
 }

@@ -2,8 +2,8 @@ namespace TheCodeKitchen.Application.Constants;
 
 public static class TheCodeKitchenEquipmentTypeConstants
 {
-    public static readonly string[] All = new[]
-    {        
+    public static readonly string[] All =
+    [
         EquipmentType.Bbq,
         EquipmentType.Blender,
         EquipmentType.Counter,
@@ -14,11 +14,11 @@ public static class TheCodeKitchenEquipmentTypeConstants
         EquipmentType.HotPlate,
         EquipmentType.Mixer,
         EquipmentType.Oven,
-        EquipmentType.Stove,
-    };
+        EquipmentType.Stove
+    ];
     
-    public static readonly string[] Steppable = new[]
-    {       
+    public static readonly string[] Steppable =
+    [
         EquipmentType.Bbq,
         EquipmentType.Blender,
         EquipmentType.CuttingBoard,
@@ -28,5 +28,5 @@ public static class TheCodeKitchenEquipmentTypeConstants
         EquipmentType.Mixer,
         EquipmentType.Oven,
         EquipmentType.Stove
-    };
+    ];
 }

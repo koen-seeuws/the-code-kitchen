@@ -133,7 +133,7 @@ public partial class PreGameLobby(
             var kitchenRecord = mapper.Map<KitchenTableRecordModel>(@event);
             KitchenRecords?.Add(kitchenRecord);
             if (CookRecordsPerKitchen is not null)
-                CookRecordsPerKitchen[kitchenRecord.Id] = new List<CookTableRecordModel>();
+                CookRecordsPerKitchen[kitchenRecord.Id] = [];
             await InvokeAsync(StateHasChanged);
         });
 
@@ -143,7 +143,7 @@ public partial class PreGameLobby(
 
             if (!CookRecordsPerKitchen.TryGetValue(@event.Kitchen, out var cookRecords))
             {
-                cookRecords = new List<CookTableRecordModel>();
+                cookRecords = [];
                 CookRecordsPerKitchen[@event.Kitchen] = cookRecords;
             }
 

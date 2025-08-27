@@ -20,7 +20,7 @@ public sealed partial class GameGrain
         // Sending out event
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
         var stream = streamProvider.GetStream<NextMomentEvent>(nameof(NextMomentEvent), gameId);
-        var nextMomentEvent = new NextMomentEvent(state.State.Id, moment, state.State.Temperature);
+        var nextMomentEvent = new NextMomentEvent(state.State.Id, moment, state.State.Temperature, _nextMomentDelay);
         await stream.OnNextAsync(nextMomentEvent);
 
         // Order generation
@@ -30,7 +30,7 @@ public sealed partial class GameGrain
         }
 
         if (_timeUntilNewOrder >= TimeSpan.Zero)
-            _timeUntilNewOrder = _timeUntilNewOrder - TheCodeKitchenMomentDuration.Value;
+            _timeUntilNewOrder -= TheCodeKitchenMomentDuration.Value;
 
         if (_timeUntilNewOrder <= TimeSpan.Zero)
         {
