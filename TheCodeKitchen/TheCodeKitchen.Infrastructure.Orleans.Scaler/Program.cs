@@ -1,4 +1,5 @@
 using TheCodeKitchen.Infrastructure.Logging.Serilog;
+using TheCodeKitchen.Infrastructure.Orleans.Client;
 using TheCodeKitchen.Infrastructure.Orleans.Scaler.Services;
 using TheCodeKitchen.Infrastructure.Orleans.Scaler.Validation;
 
@@ -10,6 +11,9 @@ builder.Logging.RegisterSerilog();
 
 // Application services
 builder.Services.AddSingleton<ScaledObjectRefValidator>();
+
+// Infrastructure services
+builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);
 
 // Presentation services
 builder.Services.AddGrpc();
