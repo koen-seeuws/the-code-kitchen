@@ -6,7 +6,7 @@ namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
 public sealed partial class KitchenGrain
 {
-    public async Task<Result<TheCodeKitchenUnit>> DeliverMessage(DeliverMessageToKitchenRequest request)
+    public async Task<Result<TheCodeKitchenUnit>> DeliverMessage(DeliverMessageRequest request)
     {
         var cooks = state.State.Cooks;
 
@@ -26,8 +26,8 @@ public sealed partial class KitchenGrain
             {
                 var cookGrain = GrainFactory.GetGrain<ICookGrain>(state.State.Id, cook);
                 var deliverMessageRequest =
-                    new DeliverMessageToCookRequest(request.From, cook, request.Content, timestamp);
-                return cookGrain.DeliverMessage(deliverMessageRequest);
+                    new ReceiveMessageRequest(request.From, cook, request.Content, timestamp);
+                return cookGrain.ReceiveMessage(deliverMessageRequest);
             });
 
         await Task.WhenAll(tasks);
