@@ -1,6 +1,7 @@
 using Azure.Data.Tables;
 using Orleans.Configuration;
 using TheCodeKitchen.Application.Business;
+using TheCodeKitchen.Application.Business.Interceptors;
 using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Infrastructure.Extensions;
@@ -43,6 +44,8 @@ builder.UseOrleans(silo =>
         options.ClusterId = siloConfiguration.ClusterId;
         options.ServiceId = siloConfiguration.ServiceId;
     });
+
+    silo.AddIncomingGrainCallFilter<LoggingInterceptor>();
 
     silo.UseAzureStorageClustering(options =>
     {
