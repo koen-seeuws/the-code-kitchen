@@ -23,8 +23,8 @@ public class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IIncomingG
                 await context.Invoke();
 
                 logger.LogInformation(
-                    "Completed {grainTypeName}.{methodName} ({grainId}) with result: {@result}",
-                    grainTypeName, methodName, grainId, context.Result);
+                    "Completed {grainTypeName}.{methodName} ({grainId})",
+                    grainTypeName, methodName, grainId);
             }
             catch (Exception exception)
             {

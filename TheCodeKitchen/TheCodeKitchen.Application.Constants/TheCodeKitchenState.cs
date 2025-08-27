@@ -2,7 +2,7 @@ namespace TheCodeKitchen.Application.Constants;
 
 public static class TheCodeKitchenState
 {
-    public static readonly string[] All =
+    public static readonly string[] Blobs =
     [
         //Grains
         CookBook,
@@ -17,6 +17,17 @@ public static class TheCodeKitchenState
         Orders,
         Pantry,
         
+        // Reminders
+        Reminders,
+        
+        // Persistent Streaming
+        PubSubStore,
+        EventHubCheckpoints,
+        StreamHandles
+    ];
+    
+    public static readonly string[] Tables =
+    [
         // Reminders
         Reminders,
         

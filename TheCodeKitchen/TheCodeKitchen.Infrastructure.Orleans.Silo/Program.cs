@@ -1,4 +1,5 @@
 using Azure.Data.Tables;
+using Azure.Storage.Blobs;
 using Orleans.Configuration;
 using TheCodeKitchen.Application.Business;
 using TheCodeKitchen.Application.Business.Interceptors;
@@ -32,10 +33,12 @@ var eventHubConnectionString =
     throw new InvalidOperationException("ConnectionStrings__EventHubNamespace is not configured.");
 
 var tableClient = new TableServiceClient(azureStorageConnectionString);
+var blobClient = new BlobServiceClient(azureStorageConnectionString);
 
 #if DEBUG
 // TODO: REMOVE, this is only for development purposes to ensure a clean state.
-//foreach (var storage in TheCodeKitchenState.All) { tableClient.DeleteTable(storage); }
+foreach (var storage in TheCodeKitchenState.Tables) { tableClient.DeleteTable(storage); }
+await blobClient.DeleteBlobContainerAsync("the-code-kitchen");
 #endif
 
 builder.Services.AddSignalRManagementServices(builder.Configuration);
@@ -56,13 +59,12 @@ builder.UseOrleans(silo =>
         options.TableName = TheCodeKitchenState.Clustering;
     });
     
-    foreach (var storage in TheCodeKitchenState.All)
+    foreach (var storage in TheCodeKitchenState.Blobs)
     {
-        silo.AddAzureTableGrainStorage(storage, options =>
+        silo.AddAzureBlobGrainStorage(storage, options =>
         {
-            options.TableServiceClient = tableClient;
-            options.TableName = storage;
-            options.UseStringFormat = true;
+            options.BlobServiceClient = blobClient;
+            options.ContainerName = "the-code-kitchen";
         });
     }
 
