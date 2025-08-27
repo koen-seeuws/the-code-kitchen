@@ -8,28 +8,14 @@ public sealed partial class CookGrain
     public async Task<Result<GetKitchenResponse>> GetKitchen()
     {
         if (!state.RecordExists)
-        {
-            logger.LogWarning("The cook with username {Username} does not exist in kitchen {Kitchen}",
-                this.GetPrimaryKeyString(), this.GetPrimaryKey());
             return new NotFoundError(
                 $"The cook with username {this.GetPrimaryKeyString()} does not exist in kitchen {this.GetPrimaryKey()}");
-        }
-
-        logger.LogInformation("Kitchen {Kitchen} - Cook {Username}: Getting kitchen details...",
-            state.State.Kitchen, state.State.Username);
-
+        
         var kitchenGrain = GrainFactory.GetGrain<IKitchenGrain>(state.State.Kitchen);
         var getKitchenResult = await kitchenGrain.GetKitchen();
 
         if (!getKitchenResult.Succeeded)
-        {
-            logger.LogWarning("Kitchen {Kitchen} - Cook {Username}: Failed to get kitchen details: {Error}",
-                state.State.Kitchen, state.State.Username, getKitchenResult.Error);
             return getKitchenResult.Error;
-        }
-
-        logger.LogInformation("Kitchen {Kitchen} - Cook {Username}: Successfully retrieved kitchen details",
-            state.State.Kitchen, state.State.Username);
 
         return getKitchenResult.Value;
     }

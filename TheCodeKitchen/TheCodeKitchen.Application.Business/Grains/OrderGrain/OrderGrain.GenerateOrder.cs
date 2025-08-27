@@ -18,8 +18,6 @@ public sealed partial class OrderGrain
         if(state.RecordExists)
             return new AlreadyExistsError($"The order with number {orderNumber} and game {game} has already been generated/initialized");
         
-        logger.LogInformation("Game {gameId}: Generating order {number}...", game, orderNumber);
-        
         var cookBookGrain = GrainFactory.GetGrain<ICookBookGrain>(Guid.Empty);
         
         var getRecipesResult = await cookBookGrain.GetRecipes();

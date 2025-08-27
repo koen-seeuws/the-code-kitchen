@@ -15,6 +15,5 @@ public sealed partial class CookGrain(
     [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
     IPersistentState<EquipmentGrainStreamSubscriptionHandles> streamSubscriptionHandles,
     IMapper mapper,
-    ILogger<CookGrain> logger,
     IRealTimeCookService realTimeCookService
 ) : Grain, ICookGrain;

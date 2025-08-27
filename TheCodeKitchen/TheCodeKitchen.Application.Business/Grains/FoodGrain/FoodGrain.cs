@@ -14,6 +14,5 @@ public sealed partial class FoodGrain(
     IPersistentState<Food> state,
     [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
     IPersistentState<FoodGrainStreamSubscriptionHandles> streamSubscriptionHandles,
-    IMapper mapper,
-    ILogger<FoodGrain> logger
+    IMapper mapper
 ) : Grain, IFoodGrain;

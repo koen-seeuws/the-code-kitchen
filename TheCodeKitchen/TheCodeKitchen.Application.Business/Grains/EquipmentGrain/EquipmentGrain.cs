@@ -14,6 +14,5 @@ public sealed partial class EquipmentGrain(
     IPersistentState<Equipment> state,
     [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
     IPersistentState<EquipmentGrainStreamSubscriptionHandles> streamSubscriptionHandles,
-    IMapper mapper,
-    ILogger<EquipmentGrain> logger
+    IMapper mapper
 ) : Grain, IEquipmentGrain;

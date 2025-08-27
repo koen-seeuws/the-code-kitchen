@@ -16,6 +16,5 @@ public sealed partial class KitchenOrderGrain(
     [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
     IPersistentState<KitchenOrderGrainStreamSubscriptionHandles> streamHandles,
     IMapper mapper,
-    ILogger<KitchenOrderGrain> logger,
     IRealTimeKitchenOrderService realTimeKitchenOrderService
 ) : Grain, IKitchenOrderGrain;

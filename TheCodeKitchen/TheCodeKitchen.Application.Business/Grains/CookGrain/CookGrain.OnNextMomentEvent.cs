@@ -19,9 +19,6 @@ public sealed partial class CookGrain
             if (timer.Time > TimeSpan.Zero)
                 continue;
 
-            logger.LogInformation("Kitchen {Kitchen} - Cook {Username}: Timer {TimerNumber} elapsed",
-                state.State.Kitchen, state.State.Username, timer.Number);
-
             var @event = new TimerElapsedEvent(timer.Number, timer.Note);
             var sendTimerElapsedTask = realTimeCookService.SendTimerElapsedEvent(state.State.Username, @event);
             timerElapsedTasks.Add(sendTimerElapsedTask);

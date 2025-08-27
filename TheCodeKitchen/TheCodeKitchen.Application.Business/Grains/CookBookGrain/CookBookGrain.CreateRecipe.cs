@@ -77,21 +77,13 @@ public sealed partial class CookBookGrain
 
             // Check if necessary ingredient is available in pantry or as a recipe
             if (!isRecipe && !isIngredient)
-            {
-                logger.LogWarning(
-                    "CookBook {CookBook}: The ingredient {necessaryIngredientName} is not available in the pantry or as a recipe",
-                    state.State.Id, necessaryIngredientName);
                 return new InvalidRecipeError(
                     $"The ingredient {necessaryIngredientName} is not available in the pantry or as a recipe");
-            }
+            
 
             if (isRecipe && necessaryIngredient.Steps.Count != 0)
-            {
-                logger.LogWarning("CookBook {CookBook}: The subrecipes in a new recipe should not contain any steps",
-                    state.State.Id);
                 return new InvalidRecipeError("The subrecipes in a new recipe should not contain any steps");
-            }
-
+            
             var necessaryIngredientSteps = necessaryIngredient.Steps
                 .Select(i =>
                 {
@@ -117,9 +109,6 @@ public sealed partial class CookBookGrain
         state.State.Recipes.Add(newRecipe);
         await state.WriteStateAsync();
         
-        logger.LogInformation("CookBook {CookBook}: Recipe {newRecipeName} created successfully", state.State.Id,
-            newRecipeName);
-
         return mapper.Map<CreateRecipeResponse>(newRecipe);
     }
 }

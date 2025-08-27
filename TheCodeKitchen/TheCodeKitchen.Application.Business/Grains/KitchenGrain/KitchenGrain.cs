@@ -21,7 +21,6 @@ public sealed partial class KitchenGrain(
     [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
     IPersistentState<KitchenGrainStreamSubscriptionHandles> streamHandles,
     IMapper mapper,
-    ILogger<KitchenGrain> logger,
     IRealTimeKitchenService realTimeKitchenService,
     IRealTimeGameService realTimeGameService
 ) : Grain, IKitchenGrain;
