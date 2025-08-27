@@ -14,6 +14,7 @@ builder.Services.AddAutoMapper(typeof(GameMapping));
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(CreateRecipeFormModelValidator));
 
 // Infrastructure services
+builder.Logging.AddConsole();
 builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);
 builder.Services.AddAzureSignalRServices(builder.Configuration);
 

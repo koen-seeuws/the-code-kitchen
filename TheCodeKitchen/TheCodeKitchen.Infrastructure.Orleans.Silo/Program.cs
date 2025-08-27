@@ -8,7 +8,11 @@ using TheCodeKitchen.Infrastructure.Orleans;
 
 var builder = Host.CreateApplicationBuilder(args);
 
+// Application Services
 builder.Services.AddApplicationServices();
+
+// Infrastructure Services
+builder.Logging.AddConsole();
 
 var siloConfiguration =
     builder.Configuration

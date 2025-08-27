@@ -11,6 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddValidatorsFromAssembly(typeof(AuthenticationRequestValidator).Assembly);
 
 // Infrastructure services
+builder.Logging.AddConsole();
 builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);
 builder.Services.AddJwtSecurityServices(builder.Configuration);
 builder.Services.AddPasswordHashingServices();

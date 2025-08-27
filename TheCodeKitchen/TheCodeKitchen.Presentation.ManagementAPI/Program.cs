@@ -5,6 +5,7 @@ using TheCodeKitchen.Infrastructure.Security.Configuration;
 var builder = WebApplication.CreateBuilder(args);
 
 // Infrastructure services
+builder.Logging.AddConsole();
 builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);
 builder.Services.AddPasswordHashingServices();
 builder.Services.AddJwtSecurityServices(builder.Configuration);

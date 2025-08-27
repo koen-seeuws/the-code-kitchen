@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Events.Game;
 
@@ -13,5 +14,6 @@ public sealed partial class FoodGrain(
     IPersistentState<Food> state,
     [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
     IPersistentState<FoodGrainStreamSubscriptionHandles> streamSubscriptionHandles,
-    IMapper mapper
+    IMapper mapper,
+    ILogger<FoodGrain> logger
 ) : Grain, IFoodGrain;

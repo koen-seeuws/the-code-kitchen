@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
 
@@ -11,5 +12,6 @@ public class GameManagementState
 public sealed partial class GameManagementGrain(
     [PersistentState(TheCodeKitchenState.GameManagement, TheCodeKitchenState.GameManagement)]
     IPersistentState<GameManagementState> state,
+    ILogger<GameManagementGrain> logger,
     IRealTimeGameManagementService realTimeGameManagementService
 ) : Grain, IGameManagementGrain;

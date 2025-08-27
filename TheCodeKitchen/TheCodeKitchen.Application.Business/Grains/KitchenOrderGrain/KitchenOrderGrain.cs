@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
@@ -15,5 +16,6 @@ public sealed partial class KitchenOrderGrain(
     [PersistentState(TheCodeKitchenState.StreamHandles, TheCodeKitchenState.StreamHandles)]
     IPersistentState<KitchenOrderGrainStreamSubscriptionHandles> streamHandles,
     IMapper mapper,
+    ILogger<KitchenOrderGrain> logger,
     IRealTimeKitchenOrderService realTimeKitchenOrderService
 ) : Grain, IKitchenOrderGrain;

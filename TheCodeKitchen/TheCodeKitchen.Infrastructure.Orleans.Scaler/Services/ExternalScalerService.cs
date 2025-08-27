@@ -9,7 +9,8 @@ namespace TheCodeKitchen.Infrastructure.Orleans.Scaler.Services;
 
 public class ExternalScalerService(
     IClusterClient clusterClient,
-    ScaledObjectRefValidator scaledObjectRefValidator
+    ScaledObjectRefValidator scaledObjectRefValidator,
+    ILogger<ExternalScalerService> logger
 ) : ExternalScaler.ExternalScalerBase
 {
     private readonly IManagementGrain _managementGrain = clusterClient.GetGrain<IManagementGrain>(0);
@@ -17,7 +18,7 @@ public class ExternalScalerService(
     public override async Task<GetMetricsResponse> GetMetrics(GetMetricsRequest request, ServerCallContext context)
     {
         await ValidateRequestMetadata(request.ScaledObjectRef);
-        
+
         var siloNameFilter = request.ScaledObjectRef.GetSiloNameFilter();
 
         var metricValue = await GetHighestSiloGrainCount(siloNameFilter);
@@ -52,7 +53,7 @@ public class ExternalScalerService(
     public override async Task<IsActiveResponse> IsActive(ScaledObjectRef request, ServerCallContext context)
     {
         await ValidateRequestMetadata(request);
-        
+
         var siloNameFilter = request.GetSiloNameFilter();
 
         var metricValue = await GetHighestSiloGrainCount(siloNameFilter);
@@ -68,7 +69,7 @@ public class ExternalScalerService(
         IServerStreamWriter<IsActiveResponse> responseStream, ServerCallContext context)
     {
         await ValidateRequestMetadata(request);
-        
+
         var siloNameFilter = request.GetSiloNameFilter();
 
         while (!context.CancellationToken.IsCancellationRequested)
@@ -114,7 +115,7 @@ public class ExternalScalerService(
             )
             .Select(group => group.Value)
             .ToList();
-        
+
         return grainCountsPerSilo.Count != 0 ? grainCountsPerSilo.Max() : 0;
     }
 }

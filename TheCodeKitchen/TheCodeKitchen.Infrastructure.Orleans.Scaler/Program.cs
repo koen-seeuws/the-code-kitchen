@@ -5,9 +5,10 @@ using TheCodeKitchen.Infrastructure.Orleans.Scaler.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.AddConsole();
+
 builder.Services.AddSingleton<ScaledObjectRefValidator>();
 
-// Add services to the container.
 builder.Services.AddGrpc();
 
 var app = builder.Build();

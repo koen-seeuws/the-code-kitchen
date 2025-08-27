@@ -7,6 +7,6 @@ namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 public sealed partial class GameGrain(
     [PersistentState(TheCodeKitchenState.Games, TheCodeKitchenState.Games)] IPersistentState<Game> state,
     IMapper mapper,
-    IRealTimeGameService realTimeGameService,
-    ILogger<GameGrain> logger
+    ILogger<GameGrain> logger,
+    IRealTimeGameService realTimeGameService
 ) : Grain, IGameGrain;

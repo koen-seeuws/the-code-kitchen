@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Constants;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenManagementGrain;
@@ -9,5 +10,6 @@ public class KitchenManagementState
 
 public sealed partial class KitchenManagementGrain(
     [PersistentState(TheCodeKitchenState.KitchenManagement, TheCodeKitchenState.KitchenManagement)]
-    IPersistentState<KitchenManagementState> state
+    IPersistentState<KitchenManagementState> state,
+    ILogger<KitchenManagementGrain> logger
 ) : Grain, IKitchenManagementGrain;
