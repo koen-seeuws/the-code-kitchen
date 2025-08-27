@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.OpenApi.Models;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
+using TheCodeKitchen.Infrastructure.Logging.Serilog;
 using TheCodeKitchen.Infrastructure.Orleans.Client;
 using TheCodeKitchen.Infrastructure.Security.Configuration;
 using TheCodeKitchen.Presentation.API.Cook.Hubs;
@@ -11,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddValidatorsFromAssembly(typeof(AuthenticationRequestValidator).Assembly);
 
 // Infrastructure services
-builder.Logging.AddConsole();
+builder.Logging.RegisterSerilog();
 builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);
 builder.Services.AddJwtSecurityServices(builder.Configuration);
 builder.Services.AddPasswordHashingServices();

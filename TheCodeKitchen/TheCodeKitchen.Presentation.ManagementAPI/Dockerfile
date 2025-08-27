@@ -18,6 +18,7 @@ COPY ["TheCodeKitchen.Core.Enums/TheCodeKitchen.Core.Enums.csproj", "TheCodeKitc
 COPY ["TheCodeKitchen.Presentation/TheCodeKitchen.Presentation.csproj", "TheCodeKitchen.Presentation/"]
 COPY ["TheCodeKitchen.Infrastructure.Orleans.Client/TheCodeKitchen.Infrastructure.Orleans.Client.csproj", "TheCodeKitchen.Infrastructure.Orleans.Client/"]
 COPY ["TheCodeKitchen.Infrastructure.Orleans/TheCodeKitchen.Infrastructure.Orleans.csproj", "TheCodeKitchen.Infrastructure.Orleans/"]
+COPY ["TheCodeKitchen.Infrastructure.Logging.Serilog/TheCodeKitchen.Infrastructure.Logging.Serilog.csproj", "TheCodeKitchen.Infrastructure.Logging.Serilog/"]
 COPY ["TheCodeKitchen.Application.Validation/TheCodeKitchen.Application.Validation.csproj", "TheCodeKitchen.Application.Validation/"]
 RUN dotnet restore "TheCodeKitchen.Presentation.ManagementAPI/TheCodeKitchen.Presentation.ManagementAPI.csproj"
 COPY . .

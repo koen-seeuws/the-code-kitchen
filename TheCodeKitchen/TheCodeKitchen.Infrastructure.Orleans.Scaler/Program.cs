@@ -1,11 +1,10 @@
-
-
+using TheCodeKitchen.Infrastructure.Logging.Serilog;
 using TheCodeKitchen.Infrastructure.Orleans.Scaler.Services;
 using TheCodeKitchen.Infrastructure.Orleans.Scaler.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.AddConsole();
+builder.Logging.RegisterSerilog();
 
 builder.Services.AddSingleton<ScaledObjectRefValidator>();
 

@@ -12,6 +12,7 @@ COPY ["TheCodeKitchen.Infrastructure.Orleans/TheCodeKitchen.Infrastructure.Orlea
 COPY ["TheCodeKitchen.Infrastructure/TheCodeKitchen.Infrastructure.csproj", "TheCodeKitchen.Infrastructure/"]
 COPY ["TheCodeKitchen.Application.Constants/TheCodeKitchen.Application.Constants.csproj", "TheCodeKitchen.Application.Constants/"]
 COPY ["TheCodeKitchen.Infrastructure.Orleans.Client/TheCodeKitchen.Infrastructure.Orleans.Client.csproj", "TheCodeKitchen.Infrastructure.Orleans.Client/"]
+COPY ["TheCodeKitchen.Infrastructure.Logging.Serilog/TheCodeKitchen.Infrastructure.Logging.Serilog.csproj", "TheCodeKitchen.Infrastructure.Logging.Serilog/"]
 RUN dotnet restore "TheCodeKitchen.Infrastructure.Orleans.Scaler/TheCodeKitchen.Infrastructure.Orleans.Scaler.csproj"
 COPY . .
 WORKDIR "/src/TheCodeKitchen.Infrastructure.Orleans.Scaler"
