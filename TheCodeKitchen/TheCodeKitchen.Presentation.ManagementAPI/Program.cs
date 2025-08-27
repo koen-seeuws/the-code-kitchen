@@ -1,11 +1,12 @@
 using TheCodeKitchen.Infrastructure.AzureSignalR;
+using TheCodeKitchen.Infrastructure.Logging.Serilog;
 using TheCodeKitchen.Infrastructure.Orleans.Client;
 using TheCodeKitchen.Infrastructure.Security.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Infrastructure services
-builder.Logging.AddConsole();
+builder.Logging.RegisterSerilog();
 builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);
 builder.Services.AddPasswordHashingServices();
 builder.Services.AddJwtSecurityServices(builder.Configuration);

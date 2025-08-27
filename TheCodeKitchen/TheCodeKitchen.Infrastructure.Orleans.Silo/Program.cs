@@ -5,15 +5,17 @@ using TheCodeKitchen.Application.Business.Interceptors;
 using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Infrastructure.Extensions;
+using TheCodeKitchen.Infrastructure.Logging.Serilog;
 using TheCodeKitchen.Infrastructure.Orleans;
 
 var builder = Host.CreateApplicationBuilder(args);
+
 
 // Application Services
 builder.Services.AddApplicationServices();
 
 // Infrastructure Services
-builder.Logging.AddConsole();
+builder.Logging.RegisterSerilog();
 
 var siloConfiguration =
     builder.Configuration
