@@ -23,13 +23,13 @@ public class ExternalScalerService(
 
         var siloNameFilter = request.ScaledObjectRef.GetSiloNameFilter();
 
-        var metricValue = await GetHighestSiloGrainCount(siloNameFilter);
+        var metricValue = await GetAverageSiloGrainCount(siloNameFilter);
 
         var response = new GetMetricsResponse();
 
         response.MetricValues.Add(new MetricValue
         {
-            MetricName = OrleansScalerConstants.GrainCountMetricName,
+            MetricName = OrleansScalerConstants.AverageGrainCountMetricName,
             MetricValue_ = metricValue
         });
 
@@ -44,13 +44,13 @@ public class ExternalScalerService(
 
         await ValidateRequestMetadata(request);
 
-        var metricThreshold = request.GetMaxGrainCountPerSilo();
+        var metricThreshold = request.GetAverageGrainCountPerSilo();
 
         var response = new GetMetricSpecResponse();
 
         response.MetricSpecs.Add(new MetricSpec
         {
-            MetricName = OrleansScalerConstants.GrainCountMetricName,
+            MetricName = OrleansScalerConstants.AverageGrainCountMetricName,
             TargetSize = metricThreshold
         });
 
@@ -67,8 +67,8 @@ public class ExternalScalerService(
 
         var siloNameFilter = request.GetSiloNameFilter();
 
-        var metricValue = await GetHighestSiloGrainCount(siloNameFilter);
-        var metricThreshold = request.GetMaxGrainCountPerSilo();
+        var metricValue = await GetAverageSiloGrainCount(siloNameFilter);
+        var metricThreshold = request.GetAverageGrainCountPerSilo();
 
         var isActiveResponse = new IsActiveResponse
         {
@@ -91,8 +91,8 @@ public class ExternalScalerService(
 
         while (!context.CancellationToken.IsCancellationRequested)
         {
-            var metricValue = await GetHighestSiloGrainCount(siloNameFilter);
-            var metricThreshold = request.GetMaxGrainCountPerSilo();
+            var metricValue = await GetAverageSiloGrainCount(siloNameFilter);
+            var metricThreshold = request.GetAverageGrainCountPerSilo();
 
             await responseStream.WriteAsync(new IsActiveResponse
             {
@@ -111,9 +111,9 @@ public class ExternalScalerService(
             throw new ValidationException(result.Errors);
     }
 
-    private async Task<int> GetHighestSiloGrainCount(string siloNameFilter)
+    private async Task<int> GetAverageSiloGrainCount(string siloNameFilter)
     {
-        logger.LogInformation("Calculating highest silo grain count: {siloNameFilter}", siloNameFilter);
+        logger.LogInformation("Calculating average silo grain count: {siloNameFilter}", siloNameFilter);
 
         try
         {
@@ -127,26 +127,21 @@ public class ExternalScalerService(
                 .Select(silo => silo.SiloAddress)
                 .ToList();
 
-            var grainCountsPerSilo = grainStatistics
+            var totalGrainCount = grainStatistics
                 .Where(statistic => activeSiloAddresses.Contains(statistic.SiloAddress))
-                .GroupBy(statistic => statistic.SiloAddress)
-                .ToDictionary(
-                    group => group.Key,
-                    group => group.Sum(statistic => statistic.ActivationCount)
-                )
-                .Select(group => group.Value)
-                .ToList();
+                .Select(statistic => statistic.ActivationCount)
+                .Sum();
 
-            var highestSiloCountPerGrain = grainCountsPerSilo.Count != 0 ? grainCountsPerSilo.Max() : 0;
+            var averageGrainCountPerSilo = totalGrainCount / activeSiloAddresses.Count;
 
-            logger.LogInformation("Calculatied highest silo grain count: {siloNameFilter} - {highestSiloGrainCount}",
-                siloNameFilter, highestSiloCountPerGrain);
+            logger.LogInformation("Calculated average silo grain count: {siloNameFilter} - {highestSiloGrainCount}",
+                siloNameFilter, averageGrainCountPerSilo);
 
-            return highestSiloCountPerGrain;
+            return averageGrainCountPerSilo;
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error while getting highest silo grain count: {message}", ex.Message);
+            logger.LogError(ex, "Error while getting average silo grain count: {message}", ex.Message);
             throw;
         }
     }

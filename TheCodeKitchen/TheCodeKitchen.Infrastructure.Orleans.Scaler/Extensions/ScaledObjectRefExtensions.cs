@@ -4,16 +4,16 @@ namespace TheCodeKitchen.Infrastructure.Orleans.Scaler.Extensions;
 
 public static class ScaledObjectRefExtensions
 {
-    public static long GetMaxGrainCountPerSilo(this ScaledObjectRef scaledObjectRef)
+    public static long GetAverageGrainCountPerSilo(this ScaledObjectRef scaledObjectRef)
     {
         if (scaledObjectRef.ScalerMetadata != null &&
-            scaledObjectRef.ScalerMetadata.TryGetValue(Constants.OrleansScalerConstants.MaxGrainCountPerSiloMetadataKey, out var maxGrainCountPerSiloString) &&
-            long.TryParse(maxGrainCountPerSiloString, out var maxGrainCountPerSilo))
+            scaledObjectRef.ScalerMetadata.TryGetValue(Constants.OrleansScalerConstants.AverageGrainCountPerSiloMetadataKey, out var averageGrainCountPerSiloString) &&
+            long.TryParse(averageGrainCountPerSiloString, out var averageGrainCountPerSilo))
         {
-            return maxGrainCountPerSilo;
+            return averageGrainCountPerSilo;
         }
 
-        throw new InvalidOperationException($"ScaledObjectRef is missing required metadata key {Constants.OrleansScalerConstants.MaxGrainCountPerSiloMetadataKey}");
+        throw new InvalidOperationException($"ScaledObjectRef is missing required metadata key {Constants.OrleansScalerConstants.AverageGrainCountPerSiloMetadataKey}");
     }
     
     public static string GetSiloNameFilter(this ScaledObjectRef scaledObjectRef)
