@@ -29,6 +29,8 @@ builder.Services.AddMudServices();
 builder.Services.AddScoped<ClientTimeService>();
 builder.Services.AddScoped<ScrollService>();
 
+builder.Services.AddHttpLogging();
+
 builder.Services
     .AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -44,6 +46,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseHttpLogging();
 
 app.UseAntiforgery();
 

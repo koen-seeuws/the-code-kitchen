@@ -23,6 +23,8 @@ builder.Services.AddPasswordHashingServices();
 builder.Services.AddAzureSignalRServices(builder.Configuration);
 
 // Presentation services
+builder.Services.AddHttpLogging();
+
 builder.Services.AddControllers();
 builder.Services.AddOpenApi(); // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddSwaggerGen(swagger =>
@@ -64,6 +66,8 @@ app.MapHub<CookHub>("/CookHub");
 app.MapOpenApi();
 
 app.UseHttpsRedirection();
+
+app.UseHttpLogging();
 
 app.UseAuthentication();
 app.UseAuthorization();

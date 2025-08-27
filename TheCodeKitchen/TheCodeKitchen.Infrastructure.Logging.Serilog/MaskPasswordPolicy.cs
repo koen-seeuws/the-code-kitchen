@@ -4,30 +4,24 @@ using System.Reflection;
 
 public class MaskPasswordPolicy : IDestructuringPolicy
 {
-    public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory, out LogEventPropertyValue result)
+    private const string DefaultMaskValue = "******";
+
+    public bool TryDestructure(object value, ILogEventPropertyValueFactory propertyValueFactory,
+        out LogEventPropertyValue result)
     {
-        var type = value.GetType();
-
-        // Only destructure classes/objects
-        if (type.IsClass)
+        var props = value.GetType().GetTypeInfo().DeclaredProperties;
+        
+        var logEventProperties = props.Select(propertyInfo =>
         {
-            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .ToDictionary(
-                    p => p.Name,
-                    p =>
-                    {
-                        if (p.Name.ToLower().Contains("password"))
-                            return new ScalarValue("***REDACTED***");
-                        var propValue = p.GetValue(value);
-                        return propertyValueFactory.CreatePropertyValue(propValue, true);
-                    }
-                );
+            var targetValue = propertyInfo.Name.Contains("Password", StringComparison.OrdinalIgnoreCase)
+                ? DefaultMaskValue
+                : propertyInfo.GetValue(value);
+            var propertyValue = propertyValueFactory.CreatePropertyValue(targetValue);
+            return new LogEventProperty(propertyInfo.Name, propertyValue);
+        });
 
-            result = new StructureValue(props.Select(kvp => new LogEventProperty(kvp.Key, kvp.Value)));
-            return true;
-        }
+        result = new StructureValue(logEventProperties);
 
-        result = null!;
-        return false;
+        return true;
     }
 }
