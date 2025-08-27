@@ -12,15 +12,15 @@ public sealed partial class GameGrain
         var game = state.State.Id;
         var orderGrain = GrainFactory.GetGrain<IOrderGrain>(orderNumber, game.ToString());
 
+        state.State.OrderNumbers.Add(orderNumber); // Already add number here in case something went wrong with persistence
+        await state.WriteStateAsync();
+        
         var generateOrderRequest =
             new GenerateOrderRequest(state.State.MinimumItemsPerOrder, state.State.MaximumItemsPerOrder);
         var generateOrderResult = await orderGrain.GenerateOrder(generateOrderRequest);
 
         if (!generateOrderResult.Succeeded)
             return generateOrderResult.Error;
-
-        state.State.OrderNumbers.Add(orderNumber);
-        await state.WriteStateAsync();
 
         var timeBetweenOrders = generateOrderResult.Value.MinimumTimeToPrepare;
 
