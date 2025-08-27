@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Events.Cook;
 using TheCodeKitchen.Application.Contracts.Events.Game;
@@ -17,6 +18,9 @@ public sealed partial class CookGrain
 
             if (timer.Time > TimeSpan.Zero)
                 continue;
+
+            logger.LogInformation("Kitchen {Kitchen} - Cook {Username}: Timer {TimerNumber} elapsed",
+                state.State.Kitchen, state.State.Username, timer.Number);
 
             var @event = new TimerElapsedEvent(timer.Number, timer.Note);
             var sendTimerElapsedTask = realTimeCookService.SendTimerElapsedEvent(state.State.Username, @event);

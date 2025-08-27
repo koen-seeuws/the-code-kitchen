@@ -27,7 +27,7 @@ public class CommunicationController(
         var kitchen = HttpContext.User.GetKitchenId();
         var cook = HttpContext.User.GetUsername();
         var kitchenGrain = clusterClient.GetGrain<IKitchenGrain>(kitchen);
-        var deliverMessageToKitchenRequest = new DeliverMessageToKitchenRequest(cook, request.To, request.Content);
+        var deliverMessageToKitchenRequest = new DeliverMessageRequest(cook, request.To, request.Content);
         var result = await kitchenGrain.DeliverMessage(deliverMessageToKitchenRequest);
         return this.MatchActionResult(result);
     }
