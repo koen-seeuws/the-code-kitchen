@@ -79,6 +79,9 @@ public sealed partial class KitchenOrderGrain
         adjustedCorrectCount = Math.Max(0, adjustedCorrectCount); // Avoid negative score
 
         state.State.CompletenessRating = adjustedCorrectCount / requestedFoods.Count;
+        
+        // Food has been rated, grain is no longer needed
+        await foodGrain.Trash();
 
         // Update state
         await state.WriteStateAsync();

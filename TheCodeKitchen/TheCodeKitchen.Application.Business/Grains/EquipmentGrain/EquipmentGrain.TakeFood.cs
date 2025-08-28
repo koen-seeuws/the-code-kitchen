@@ -66,6 +66,15 @@ public sealed partial class EquipmentGrain
         state.State.Foods.Clear();
         await state.WriteStateAsync();
 
+        if (streamSubscriptionHandles.State.NextMomentStreamSubscriptionHandle is not null)
+        {
+            // Unsubscribe from NextMomentEvent if last food is taken
+            await streamSubscriptionHandles.State.NextMomentStreamSubscriptionHandle.UnsubscribeAsync();
+            streamSubscriptionHandles.State.NextMomentStreamSubscriptionHandle = null;
+            await streamSubscriptionHandles.WriteStateAsync();
+        }
+
+
         //TODO: Check if this can be improved (so that this call becomes unnecessary)
         var getFoodResult = await foodGrain.GetFood();
         if (!getFoodResult.Succeeded)

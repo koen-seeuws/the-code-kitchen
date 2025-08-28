@@ -20,8 +20,6 @@ public sealed partial class EquipmentGrain
         state.State = equipment;
         await state.WriteStateAsync();
 
-        await SubscribeToNextMomentEvent();
-
         return mapper.Map<CreateEquipmentResponse>(equipment);
     }
 }
