@@ -33,7 +33,7 @@ public sealed partial class EquipmentGrain
         }
 
         var food = state.State.Foods.First();
-        
+
 
         if (state.State.MixtureTime.HasValue)
         {
@@ -43,8 +43,17 @@ public sealed partial class EquipmentGrain
 
             if (isSteppable)
             {
-                var step = new RecipeStep(state.State.EquipmentType, state.State.MixtureTime.Value);
-                food.Steps.Add(step);
+                var lastStep = food.Steps.LastOrDefault();
+                if (lastStep is not null &&
+                    lastStep.EquipmentType.Equals(state.State.EquipmentType, StringComparison.OrdinalIgnoreCase))
+                {
+                    lastStep.Time += state.State.MixtureTime.Value;
+                }
+                else
+                {
+                    var step = new RecipeStep(state.State.EquipmentType, state.State.MixtureTime.Value);
+                    food.Steps.Add(step);
+                }
             }
         }
 
