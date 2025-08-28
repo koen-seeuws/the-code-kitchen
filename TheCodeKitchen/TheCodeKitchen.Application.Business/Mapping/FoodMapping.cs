@@ -8,8 +8,6 @@ public class FoodMapping : Profile
 {
     public FoodMapping()
     {
-        CreateMap<Food, CreateFoodResponse>();
-        CreateMap<Food, GetFoodResponse>();
         CreateMap<Food, FoodDto>();
         CreateMap<OrderFoodRequest, FoodRequestDto>();
 
@@ -18,7 +16,6 @@ public class FoodMapping : Profile
         CreateMap<FoodRequestDto, KitchenOrderFoodRequest>();
 
         // TODO: In relation to TakeFood method TODOs, these 2 may become unnecessary
-        CreateMap<GetFoodResponse, TakeFoodResponse>(); 
-        CreateMap<FoodDto, SimpleFoodDto>();
+        CreateMap<Food, TakeFoodResponse>(); 
     }
 }

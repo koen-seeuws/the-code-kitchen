@@ -7,7 +7,7 @@ namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
 
 public sealed partial class KitchenOrderGrain
 {
-    private double RateFood(string food, ICollection<RecipeStepDto> executedSteps, ICollection<FoodDto> ingredients,
+    private double RateFood(string food, ICollection<RecipeStep> executedSteps, ICollection<Food> ingredients,
         ICollection<GetRecipeResponse> recipes)
     {
         var recipe = recipes.FirstOrDefault(r => r.Name.Equals(food, StringComparison.OrdinalIgnoreCase));
@@ -51,7 +51,7 @@ public sealed partial class KitchenOrderGrain
         return ingredientRatings.Average();
     }
 
-    private double RateSteps(ICollection<RecipeStepDto> executedSteps, ICollection<RecipeStepDto> expectedSteps)
+    private double RateSteps(ICollection<RecipeStep> executedSteps, ICollection<RecipeStepDto> expectedSteps)
     {
         var executed = executedSteps.ToList();
         var expected = expectedSteps.ToList();

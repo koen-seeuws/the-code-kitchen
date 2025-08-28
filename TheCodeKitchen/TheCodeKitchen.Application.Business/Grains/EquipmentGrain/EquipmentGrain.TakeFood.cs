@@ -1,7 +1,7 @@
 using TheCodeKitchen.Application.Constants;
+using TheCodeKitchen.Application.Contracts.Models.Food;
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
-using TheCodeKitchen.Application.Contracts.Requests.Food;
 using TheCodeKitchen.Application.Contracts.Response.Food;
 
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
@@ -33,19 +33,9 @@ public sealed partial class EquipmentGrain
         }
 
         var food = state.State.Foods.First();
+        
 
-        var foodGrain = GrainFactory.GetGrain<IFoodGrain>(food);
-
-
-        var cookGrain = GrainFactory.GetGrain<ICookGrain>(state.State.Kitchen, request.Cook);
-        var holdFoodRequest = new HoldFoodRequest(food);
-
-        var holdFoodResult = await cookGrain.HoldFood(holdFoodRequest);
-
-        if (!holdFoodResult.Succeeded)
-            return holdFoodResult.Error;
-
-        if (state.State.Time.HasValue)
+        if (state.State.MixtureTime.HasValue)
         {
             var isSteppable = TheCodeKitchenEquipmentTypeConstants.Steppable
                 .Any(et => et.Equals(state.State.EquipmentType, StringComparison.OrdinalIgnoreCase)
@@ -53,16 +43,21 @@ public sealed partial class EquipmentGrain
 
             if (isSteppable)
             {
-                var addStepRequest = new AddStepRequest(state.State.EquipmentType, state.State.Time.Value);
-                var addStepResult = await foodGrain.AddStep(addStepRequest);
-
-                if (!addStepResult.Succeeded)
-                    return addStepResult.Error;
+                var step = new RecipeStep(state.State.EquipmentType, state.State.MixtureTime.Value);
+                food.Steps.Add(step);
             }
-
-            state.State.Time = null;
         }
 
+        var foodDto = mapper.Map<FoodDto>(food);
+        var cookGrain = GrainFactory.GetGrain<ICookGrain>(state.State.Kitchen, request.Cook);
+        var holdFoodRequest = new HoldFoodRequest(foodDto);
+        var holdFoodResult = await cookGrain.HoldFood(holdFoodRequest);
+
+        if (!holdFoodResult.Succeeded)
+            return holdFoodResult.Error;
+
+        state.State.MixtureTime = null;
+        state.State.MixtureTemperature = null;
         state.State.Foods.Clear();
         await state.WriteStateAsync();
 
@@ -74,12 +69,6 @@ public sealed partial class EquipmentGrain
             await streamSubscriptionHandles.WriteStateAsync();
         }
 
-
-        //TODO: Check if this can be improved (so that this call becomes unnecessary)
-        var getFoodResult = await foodGrain.GetFood();
-        if (!getFoodResult.Succeeded)
-            return getFoodResult.Error;
-
-        return mapper.Map<TakeFoodResponse>(getFoodResult.Value);
+        return mapper.Map<TakeFoodResponse>(food);
     }
 }

@@ -1,7 +1,6 @@
 using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Requests.Equipment;
-using TheCodeKitchen.Application.Contracts.Requests.Food;
 
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
@@ -26,16 +25,19 @@ public sealed partial class EquipmentGrain
         if (!releaseFoodResult.Succeeded)
             return releaseFoodResult.Error;
 
-        var foodGrain = GrainFactory.GetGrain<IFoodGrain>(releaseFoodResult.Value.Food);
-        var setEquipmentRequest =
-            new SetEquipmentRequest(state.State.EquipmentType, state.State.Number);
+        var food = mapper.Map<Food>(releaseFoodResult.Value.Food);
 
-        var setEquipmentResult = await foodGrain.SetEquipment(setEquipmentRequest);
-
-        if (!setEquipmentResult.Succeeded)
-            return setEquipmentResult.Error;
-
-        state.State.Time ??= TimeSpan.Zero;
+        state.State.MixtureTime ??= TimeSpan.Zero;
+        
+        if (state.State.MixtureTemperature.HasValue)
+        {
+            double[] temperatures = [state.State.MixtureTemperature.Value, food.Temperature];
+            state.State.MixtureTemperature = temperatures.Average();
+        }
+        else
+        {
+            state.State.MixtureTemperature = food.Temperature;
+        }
 
         if (state.State.Foods.Count <= 0)
         {
@@ -47,9 +49,8 @@ public sealed partial class EquipmentGrain
             await streamSubscriptionHandles.WriteStateAsync();
         }
 
-        state.State.Foods.Add(releaseFoodResult.Value.Food);
+        state.State.Foods.Add(food);
         await state.WriteStateAsync();
-
 
         return TheCodeKitchenUnit.Value;
     }

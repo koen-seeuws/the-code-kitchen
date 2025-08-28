@@ -1,5 +1,5 @@
+using TheCodeKitchen.Application.Contracts.Models.Food;
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
-using TheCodeKitchen.Application.Contracts.Requests.Food;
 using TheCodeKitchen.Application.Contracts.Requests.Pantry;
 using TheCodeKitchen.Application.Contracts.Response.Food;
 
@@ -22,27 +22,15 @@ public sealed partial class PantryGrain
         if (!getKitchenResult.Succeeded)
             return getKitchenResult.Error;
         
-        var foodId = Guid.CreateVersion7();
-        var foodGrain = GrainFactory.GetGrain<IFoodGrain>(foodId);
-        var createFoodRequest = new CreateFoodRequest(ingredient.Name, state.State.Temperature, getKitchenResult.Value.Game, getKitchenResult.Value.Id);
-        var createFoodResult = await foodGrain.Initialize(createFoodRequest);
-
-        if (!createFoodResult.Succeeded)
-            return createFoodResult.Error;
+        var food = new Food(ingredient.Name, state.State.Temperature, getKitchenResult.Value.Game, getKitchenResult.Value.Id);
+        var foodDto = mapper.Map<FoodDto>(food);
         
-        var holdFoodRequest = new HoldFoodRequest(foodId);
+        var holdFoodRequest = new HoldFoodRequest(foodDto);
         var holdFoodResult = await cookGrain.HoldFood(holdFoodRequest);
-
-        if (!holdFoodResult.Succeeded)
-        {
-            await foodGrain.Trash(); // Try to clean up if holding food fails
-            return holdFoodResult.Error;
-        }
         
-        //TODO: Check if this can be improved (that this call becomes unnecessary)
-        var getFoodResult = await foodGrain.GetFood();
-        if (!getFoodResult.Succeeded)
-            return getFoodResult.Error;
-        return mapper.Map<TakeFoodResponse>(getFoodResult.Value);
+        if(!holdFoodResult.Succeeded)
+            return holdFoodResult.Error;
+        
+        return mapper.Map<TakeFoodResponse>(food);
     }
 }

@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Logging;
+using TheCodeKitchen.Application.Business.Extensions;
+using TheCodeKitchen.Application.Business.Helpers;
 using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Events.Cook;
 using TheCodeKitchen.Application.Contracts.Events.Game;
@@ -25,5 +27,11 @@ public sealed partial class CookGrain
         }
 
         await Task.WhenAll(timerElapsedTasks);
+
+        if (state.State.Food is not null)
+            state.State.Food.Temperature = TemperatureHelper.CalculateNextMomentFoodTemperature(
+                state.State.Food.Temperature, nextMomentEvent.Temperature,
+                TheCodeKitchenRoomTemperatureTransferRate.Value
+            );
     }
 }
