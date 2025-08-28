@@ -1,5 +1,4 @@
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
-using TheCodeKitchen.Application.Contracts.Requests.Food;
 
 namespace TheCodeKitchen.Application.Business.Grains.CookGrain;
 
@@ -13,15 +12,8 @@ public sealed partial class CookGrain
         if (state.State.Food is not null)
             return new AlreadyHoldingFoodError(
                 $"The cook with name {state.State.Username} is already holding food");
-
-        var foodGrain = GrainFactory.GetGrain<IFoodGrain>(request.FoodId);
-        var setCookRequest = new SetCookRequest(state.State.Username);
-        var setCookResult = await foodGrain.SetCook(setCookRequest);
         
-        if(!setCookResult.Succeeded)
-            return setCookResult.Error;
-        
-        state.State.Food = request.FoodId;
+        state.State.Food = mapper.Map<Food>(request.Food);
         await state.WriteStateAsync();
 
         return TheCodeKitchenUnit.Value;

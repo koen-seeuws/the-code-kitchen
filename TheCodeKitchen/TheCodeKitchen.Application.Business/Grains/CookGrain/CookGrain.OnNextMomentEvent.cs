@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using TheCodeKitchen.Application.Business.Helpers;
 using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Events.Cook;
 using TheCodeKitchen.Application.Contracts.Events.Game;
@@ -9,20 +9,29 @@ public sealed partial class CookGrain
 {
     private async Task OnNextMomentEvent(NextMomentEvent nextMomentEvent, StreamSequenceToken _)
     {
-        var timerElapsedTasks = new List<Task>();
+        if (state.State.Food is not null)
+            state.State.Food.Temperature = TemperatureHelper.CalculateNextMomentFoodTemperature(
+                state.State.Food.Temperature, nextMomentEvent.Temperature,
+                TheCodeKitchenRoomTemperatureTransferRate.Value
+            );
 
-        foreach (var timer in state.State.Timers)
+        var nonElapsedTimers = state.State.Timers
+            .Where(timer => timer.Time > TimeSpan.Zero)
+            .ToArray();
+
+        foreach (var timer in nonElapsedTimers)
         {
-            if (timer.Time > TimeSpan.Zero)
-                timer.Time -= TheCodeKitchenMomentDuration.Value;
-
-            if (timer.Time > TimeSpan.Zero)
-                continue;
-
-            var @event = new TimerElapsedEvent(timer.Number, timer.Note);
-            var sendTimerElapsedTask = realTimeCookService.SendTimerElapsedEvent(state.State.Username, @event);
-            timerElapsedTasks.Add(sendTimerElapsedTask);
+            timer.Time -= TheCodeKitchenMomentDuration.Value;
         }
+
+        var timerElapsedTasks = state.State.Timers
+            .Except(nonElapsedTimers)
+            .Select(t =>
+            {
+                var @event = new TimerElapsedEvent(t.Number, t.Note);
+                return realTimeCookService.SendTimerElapsedEvent(state.State.Username, @event);
+            })
+            .ToArray();
 
         await Task.WhenAll(timerElapsedTasks);
     }
