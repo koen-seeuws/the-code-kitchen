@@ -10,7 +10,7 @@ public sealed partial class CookGrain
         if (!state.RecordExists)
             return new NotFoundError($"The cook with username {this.GetPrimaryKeyString()} does not exist in kitchen {this.GetPrimaryKey()}");
 
-        if (state.State.Food is not null)
+        if (state.State.Food is null)
             return new NotHoldingFoodError(
                 $"The cook with name {state.State.Username} is not holding any food");
 
