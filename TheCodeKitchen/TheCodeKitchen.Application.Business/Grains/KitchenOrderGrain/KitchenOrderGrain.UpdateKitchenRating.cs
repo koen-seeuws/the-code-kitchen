@@ -7,24 +7,30 @@ public sealed partial class KitchenOrderGrain
 {
     private async Task<Result<TheCodeKitchenUnit>> UpdateKitchenRating()
     {
-        ICollection<double> ratings =
-        [
-            state.State.RequestedFoods
-                .Select(r => r.Rating)
-                .DefaultIfEmpty(1.0)
-                .Average(),
-            state.State.DeliveredFoods
-                .Select(r => r.Rating)
-                .DefaultIfEmpty(0.0)
-                .Average(),
-            state.State.CompletenessRating
-        ];
+        var previousRating = state.State.TotalRating;
 
-        var rating = ratings.Average();
+        var requestedFoodRating = state.State.RequestedFoods
+            .Select(r => r.Rating)
+            .DefaultIfEmpty(1.0)
+            .Average();
 
+        var deliveredFoodRating = state.State.DeliveredFoods
+            .Select(r => r.Rating)
+            .DefaultIfEmpty(0.0)
+            .Average();
+
+        double[] ratings = [requestedFoodRating, deliveredFoodRating, state.State.CompletenessRating];
+
+        var newRating = state.State.TotalRating = ratings.Average();
+
+        if (Math.Abs(previousRating - newRating) <= 0.01)
+            return TheCodeKitchenUnit.Value;
+
+        // Only update kitchen rating if rating changed significantly (> 1%)
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
-        var stream = streamProvider.GetStream<KitchenOrderRatingUpdatedEvent>(nameof(KitchenOrderRatingUpdatedEvent), state.State.Kitchen);
-        var kitchenOrderRatingUpdatedEvent = new KitchenOrderRatingUpdatedEvent(rating);
+        var stream = streamProvider.GetStream<KitchenOrderRatingUpdatedEvent>(
+            nameof(KitchenOrderRatingUpdatedEvent), state.State.Kitchen);
+        var kitchenOrderRatingUpdatedEvent = new KitchenOrderRatingUpdatedEvent(state.State.TotalRating);
         await stream.OnNextAsync(kitchenOrderRatingUpdatedEvent);
 
         return TheCodeKitchenUnit.Value;
