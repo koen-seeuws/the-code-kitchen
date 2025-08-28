@@ -33,8 +33,7 @@ public sealed partial class EquipmentGrain
         }
 
         var food = state.State.Foods.First();
-
-
+        
         if (state.State.MixtureTime.HasValue)
         {
             var isSteppable = TheCodeKitchenEquipmentTypeConstants.Steppable
