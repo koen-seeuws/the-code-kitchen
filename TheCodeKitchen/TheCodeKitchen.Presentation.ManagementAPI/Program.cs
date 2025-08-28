@@ -1,3 +1,4 @@
+using TheCodeKitchen.Application.Validation;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Infrastructure.Logging.Serilog;
 using TheCodeKitchen.Infrastructure.Orleans.Client;
@@ -8,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Logging
 builder.Logging.ClearProviders();
 builder.Logging.RegisterSerilog();
+
+// Application services
+builder.Services.AddValidationServices();
 
 // Infrastructure services
 builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);

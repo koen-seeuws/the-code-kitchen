@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.OpenApi.Models;
+using TheCodeKitchen.Application.Validation;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Infrastructure.Logging.Serilog;
 using TheCodeKitchen.Infrastructure.Orleans.Client;
@@ -14,6 +15,7 @@ builder.Logging.ClearProviders();
 builder.Logging.RegisterSerilog();
 
 // Application services
+builder.Services.AddValidationServices();
 builder.Services.AddValidatorsFromAssembly(typeof(AuthenticationRequestValidator).Assembly);
 
 // Infrastructure services
