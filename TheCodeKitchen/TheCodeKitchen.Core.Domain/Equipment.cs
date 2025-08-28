@@ -9,6 +9,5 @@ public class Equipment(Guid game, Guid kitchen, string equipmentType, int number
     public double? Temperature { get; set; } = temperature;
     public double? TemperatureTransferRate { get; set; } = temperatureTransferRate;
     public TimeSpan? MixtureTime { get; set; }
-    public double? MixtureTemperature { get; set; }
     public List<Food> Foods { get; set; } = [];
 }

@@ -6,18 +6,20 @@ namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
 public sealed partial class EquipmentGrain
 {
-    private async Task OnNextMomentEvent(NextMomentEvent nextMomentEvent, StreamSequenceToken _)
+    private Task OnNextMomentEvent(NextMomentEvent nextMomentEvent, StreamSequenceToken _)
     {
         if (state.State.MixtureTime.HasValue)
             state.State.MixtureTime += TheCodeKitchenMomentDuration.Value;
 
-        if (state.State.MixtureTemperature.HasValue)
+        foreach (var food in state.State.Foods)
         {
-            state.State.MixtureTemperature = TemperatureHelper.CalculateNextMomentFoodTemperature(
-                state.State.MixtureTemperature.Value,
+            food.Temperature = TemperatureHelper.CalculateNextMomentFoodTemperature(
+                food.Temperature,
                 state.State.Temperature ?? nextMomentEvent.Temperature,
                 state.State.TemperatureTransferRate ?? TheCodeKitchenRoomTemperatureTransferRate.Value
             );
         }
+
+        return Task.CompletedTask;
     }
 }

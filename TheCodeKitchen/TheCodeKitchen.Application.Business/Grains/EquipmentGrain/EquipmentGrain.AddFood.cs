@@ -28,16 +28,6 @@ public sealed partial class EquipmentGrain
         var food = mapper.Map<Food>(releaseFoodResult.Value.Food);
 
         state.State.MixtureTime ??= TimeSpan.Zero;
-        
-        if (state.State.MixtureTemperature.HasValue)
-        {
-            double[] temperatures = [state.State.MixtureTemperature.Value, food.Temperature];
-            state.State.MixtureTemperature = temperatures.Average();
-        }
-        else
-        {
-            state.State.MixtureTemperature = food.Temperature;
-        }
 
         if (state.State.Foods.Count <= 0)
         {

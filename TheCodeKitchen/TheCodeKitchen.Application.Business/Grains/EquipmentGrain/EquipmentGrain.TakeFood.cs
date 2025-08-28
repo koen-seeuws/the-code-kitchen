@@ -57,7 +57,6 @@ public sealed partial class EquipmentGrain
             return holdFoodResult.Error;
 
         state.State.MixtureTime = null;
-        state.State.MixtureTemperature = null;
         state.State.Foods.Clear();
         await state.WriteStateAsync();
 
