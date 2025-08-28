@@ -24,6 +24,7 @@ public partial class Game(
     private ICollection<KitchenViewModel>? Kitchens { get; set; }
     private string? KitchenErrorMessage { get; set; }
     private bool? Paused { get; set; }
+    private TimeSpan TimePassed { get; set; }
     public bool Busy { get; set; }
 
 
@@ -46,6 +47,7 @@ public partial class Game(
             {
                 GetGameResponse = getGameResult.Value;
                 Paused = getGameResult.Value.Paused;
+                TimePassed = getGameResult.Value.Time;
             }
             else
                 GameErrorMessage = getGameResult.Error.Message;
@@ -87,6 +89,13 @@ public partial class Game(
             async (GamePausedOrResumedEvent @event) =>
             {
                 Paused = @event.Paused;
+                await InvokeAsync(StateHasChanged);
+            });
+
+        _gameHubConnection.On(nameof(MomentPassedEvent),
+            async (MomentPassedEvent @event) =>
+            {
+                TimePassed = @event.TimePassed;
                 await InvokeAsync(StateHasChanged);
             });
 
@@ -150,7 +159,7 @@ public partial class Game(
             Busy = false;
         }
     }
-    
+
     private async Task GenerateOrder()
     {
         try

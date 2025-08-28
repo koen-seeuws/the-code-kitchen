@@ -1,4 +1,4 @@
 namespace TheCodeKitchen.Application.Contracts.Events.Game;
 
 [GenerateSerializer]
-public record NextMomentEvent(Guid GameId, DateTimeOffset Moment, double Temperature, TimeSpan? NextMomentDelay);
+public record NextMomentEvent(double Temperature, TimeSpan? NextMomentDelay);

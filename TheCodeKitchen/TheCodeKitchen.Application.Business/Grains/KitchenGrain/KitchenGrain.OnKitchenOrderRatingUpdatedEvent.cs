@@ -7,7 +7,7 @@ public sealed partial class KitchenGrain
     private Task OnKitchenOrderRatingUpdatedEvent(KitchenOrderRatingUpdatedEvent kitchenOrderRatingUpdatedEvent,
         StreamSequenceToken _)
     {
-        ICollection<double> ratings = [state.State.Rating, kitchenOrderRatingUpdatedEvent.Rating];
+        double[] ratings = [state.State.Rating, kitchenOrderRatingUpdatedEvent.Rating];
         state.State.Rating = ratings.Average();
         return Task.CompletedTask;
     }

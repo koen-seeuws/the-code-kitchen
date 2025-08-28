@@ -12,13 +12,17 @@ public sealed partial class GameGrain
     public async Task<Result<TheCodeKitchenUnit>> NextMoment()
     {
         var gameId = this.GetPrimaryKey();
-        var moment = DateTimeOffset.Now;
+
+        state.State.Time += TheCodeKitchenMomentDuration.Value;
 
         // Sending out event
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
         var stream = streamProvider.GetStream<NextMomentEvent>(nameof(NextMomentEvent), gameId);
-        var nextMomentEvent = new NextMomentEvent(state.State.Id, moment, state.State.Temperature, _nextMomentDelay);
+        var nextMomentEvent = new NextMomentEvent(state.State.Temperature, _nextMomentDelay);
         await stream.OnNextAsync(nextMomentEvent);
+        
+        var momentPassedEvent = new MomentPassedEvent(state.State.Time);
+        await realTimeGameService.SendMomentPassedEvent(state.State.Id, momentPassedEvent);
 
         // Order generation
         if (_timeUntilNewOrder is null)

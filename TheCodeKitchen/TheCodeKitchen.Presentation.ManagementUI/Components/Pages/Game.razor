@@ -13,7 +13,7 @@ else if (GetGameResponse is null)
 }
 else
 {
-    <MudText Typo="Typo.h3" Class="mb-3">@GetGameResponse.Name</MudText>
+    <MudText Typo="Typo.h3" Class="mb-3">@GetGameResponse.Name - @GetGameResponse.Time</MudText>
 
     if (GetGameResponse.Started is null)
     {
@@ -68,11 +68,11 @@ else
                 var md = 0;
                 if (Kitchens.Count >= 2)
                     md = 6;
-                
+
                 var xl = 0;
                 if (Kitchens.Count >= 3)
                     xl = 4;
-                
+
                 foreach (var kitchen in Kitchens)
                 {
                     <MudItem xs="12" md="@md" xl="@xl">

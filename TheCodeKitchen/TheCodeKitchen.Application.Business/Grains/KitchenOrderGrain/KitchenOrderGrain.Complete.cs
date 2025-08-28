@@ -19,6 +19,8 @@ public sealed partial class KitchenOrderGrain
             try
             {
                 await streamHandles.State.NextMomentStreamSubscriptionHandle.UnsubscribeAsync();
+                streamHandles.State.NextMomentStreamSubscriptionHandle = null;
+                await streamHandles.WriteStateAsync();
             }
             catch
             {

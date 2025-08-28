@@ -21,11 +21,18 @@ public class RealTimeGameService(HubContextProvider hubContextProvider) : IRealT
         var gameGroup = GroupConstants.GetGameGroup(gameId);
         await gameHubContext.Clients.Group(gameGroup).SendAsync(nameof(CookJoinedEvent), @event);
     }
-
+    
     public async Task SendGamePausedOrResumedEvent(Guid gameId, GamePausedOrResumedEvent @event)
     {
         var gameHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.GameHub);
         var gameGroup = GroupConstants.GetGameGroup(gameId);
         await gameHubContext.Clients.Group(gameGroup).SendAsync(nameof(GamePausedOrResumedEvent), @event);
+    }
+
+    public async Task SendMomentPassedEvent(Guid gameId, MomentPassedEvent @event)
+    {
+        var gameHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.GameHub);
+        var gameGroup = GroupConstants.GetGameGroup(gameId);
+        await gameHubContext.Clients.Group(gameGroup).SendAsync(nameof(MomentPassedEvent), @event);
     }
 }

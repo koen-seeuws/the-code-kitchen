@@ -8,4 +8,4 @@ public sealed partial class GameGrain(
     [PersistentState(TheCodeKitchenState.Games, TheCodeKitchenState.Games)] IPersistentState<Game> state,
     IMapper mapper,
     IRealTimeGameService realTimeGameService
-) : Grain, IGameGrain;
+) : Grain, IGameGrain, IRemindable;
