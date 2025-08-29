@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Contracts.Events.Cook;
 using TheCodeKitchen.Application.Contracts.Requests.Cook;
 

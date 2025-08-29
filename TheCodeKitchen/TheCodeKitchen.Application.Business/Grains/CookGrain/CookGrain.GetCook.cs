@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Contracts.Response.Cook;
 
 namespace TheCodeKitchen.Application.Business.Grains.CookGrain;

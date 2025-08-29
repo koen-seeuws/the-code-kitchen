@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
 

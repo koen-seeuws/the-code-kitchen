@@ -1,6 +1,4 @@
-using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Business.Extensions;
-using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Models.Order;
 using TheCodeKitchen.Application.Contracts.Requests.Order;

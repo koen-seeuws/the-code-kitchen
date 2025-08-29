@@ -14,16 +14,16 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 [Route("[controller]")]
 [Authorize]
 public class CommunicationController(
-    IClusterClient clusterClient, 
+    IClusterClient clusterClient,
     SendMessageValidator sendMessageValidator,
     ConfirmMessageValidator confirmMessageValidator
-    ) : ControllerBase
+) : ControllerBase
 {
     [HttpPost("[action]")]
     public async Task<IActionResult> SendMessage(SendMessageRequest request)
     {
         if (!sendMessageValidator.ValidateAndError(request, out var error)) return this.MatchActionResult(error);
-        
+
         var kitchen = HttpContext.User.GetKitchenId();
         var cook = HttpContext.User.GetUsername();
         var kitchenGrain = clusterClient.GetGrain<IKitchenGrain>(kitchen);

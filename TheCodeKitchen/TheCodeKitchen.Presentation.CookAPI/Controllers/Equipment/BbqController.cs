@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
 using TheCodeKitchen.Application.Constants;
-using TheCodeKitchen.Core.Enums;
 
 namespace TheCodeKitchen.Presentation.API.Cook.Controllers.Equipment;
 

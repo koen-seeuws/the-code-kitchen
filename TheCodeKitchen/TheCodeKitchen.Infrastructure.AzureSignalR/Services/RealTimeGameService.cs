@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.SignalR;
 using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Events.Kitchen;
-using TheCodeKitchen.Application.Contracts.Realtime;
-using TheCodeKitchen.Infrastructure.AzureSignalR.Constants;
 
 namespace TheCodeKitchen.Infrastructure.AzureSignalR.Services;
 

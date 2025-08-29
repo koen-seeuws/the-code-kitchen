@@ -1,5 +1,3 @@
-using TheCodeKitchen.Application.Constants;
-
 namespace TheCodeKitchen.Application.Business.Helpers;
 
 public static class TemperatureHelper

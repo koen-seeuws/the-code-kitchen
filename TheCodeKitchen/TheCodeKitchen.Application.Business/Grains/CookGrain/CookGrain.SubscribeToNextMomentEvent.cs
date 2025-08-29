@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Logging;
-using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Events.Game;
 
 namespace TheCodeKitchen.Application.Business.Grains.CookGrain;

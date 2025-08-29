@@ -1,6 +1,5 @@
 using FluentValidation;
 using MudBlazor.Services;
-using Serilog;
 using TheCodeKitchen.Application.Validation;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Infrastructure.Logging.Serilog;
