@@ -23,7 +23,7 @@ public sealed partial class KitchenGrain
         if (!orders.Succeeded)
             return orders.Error;
 
-        var simpleOrders = orders.Value
+        var openOrders = orders.Value
             .Select(o =>
             {
                 var requestedFoods = o.RequestedFoods
@@ -31,13 +31,13 @@ public sealed partial class KitchenGrain
                     .ToList();
                 
                 var deliveredFoods = o.DeliveredFoods
-                    .Select(f => f.Food)
+                    .Select(f => f.Food.Name)
                     .ToList();
                 
                 return new GetOpenOrderResponse(o.Number, requestedFoods, deliveredFoods);
             })
             .ToList();
 
-        return simpleOrders;
+        return openOrders;
     }
 }
