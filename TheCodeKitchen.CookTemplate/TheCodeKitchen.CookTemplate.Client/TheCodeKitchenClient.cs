@@ -113,6 +113,10 @@ public class TheCodeKitchenClient
 
     public async Task StopTimer(StopTimerRequest request, CancellationToken cancellationToken = default)
         => await _httpClient.PostAsJsonAsync("Timer/Stop", request, cancellationToken: cancellationToken);
+    
+    // Trash
+    public async Task ThrowFoodAway(CancellationToken cancellationToken = default)
+        => await _httpClient.PostAsync("Trash/ThrowAway", null, cancellationToken);
 
     // Kitchen (/Authentication)
     private async Task Authenticate(CancellationToken cancellationToken = default)
