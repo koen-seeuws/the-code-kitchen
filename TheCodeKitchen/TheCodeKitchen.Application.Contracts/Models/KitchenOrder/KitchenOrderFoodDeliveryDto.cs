@@ -1,4 +1,6 @@
+using TheCodeKitchen.Application.Contracts.Models.Food;
+
 namespace TheCodeKitchen.Application.Contracts.Models.KitchenOrder;
 
 [GenerateSerializer]
-public record KitchenOrderFoodDeliveryDto(Guid FoodId, string Food, double Rating);
+public record KitchenOrderFoodDeliveryDto(FoodDto Food, double Rating);
