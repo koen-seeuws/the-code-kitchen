@@ -34,13 +34,11 @@ else
         <HeaderContent>
             <MudTh>Name</MudTh>
             <MudTh>Code</MudTh>
-            <MudTh>Rating</MudTh>
             <MudTh>Cooks</MudTh>
         </HeaderContent>
         <RowTemplate>
             <MudTd DataLabel="Name">@context.Name</MudTd>
             <MudTd DataLabel="Code">@context.Code</MudTd>
-            <MudTd DataLabel="Rating">@context.Rating</MudTd>
             @if (CookRecordsPerKitchen is not null)
             {
                 <MudTd DataLabel="Cooks">
