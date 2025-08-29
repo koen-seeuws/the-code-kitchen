@@ -3,7 +3,7 @@ using Orleans.Placement;
 using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
-using TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
+using TheCodeKitchen.Application.Contracts.Realtime;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 

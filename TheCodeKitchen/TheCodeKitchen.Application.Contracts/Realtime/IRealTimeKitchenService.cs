@@ -1,6 +1,6 @@
 using TheCodeKitchen.Application.Contracts.Events.Kitchen;
 
-namespace TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
+namespace TheCodeKitchen.Application.Contracts.Realtime;
 
 public interface IRealTimeKitchenService
 {

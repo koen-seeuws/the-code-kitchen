@@ -1,7 +1,7 @@
 ﻿using Microsoft.Azure.SignalR.Management;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
+using TheCodeKitchen.Application.Contracts.Realtime;
 using TheCodeKitchen.Infrastructure.AzureSignalR.Services;
 using TheCodeKitchen.Infrastructure.Extensions;
 

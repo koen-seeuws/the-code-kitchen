@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Logging;
 using TheCodeKitchen.Application.Constants;
 using TheCodeKitchen.Application.Contracts.Events.Game;
-using TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
+using TheCodeKitchen.Application.Contracts.Realtime;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
 

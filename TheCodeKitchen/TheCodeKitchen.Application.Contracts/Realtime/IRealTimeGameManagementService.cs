@@ -1,6 +1,6 @@
 using TheCodeKitchen.Application.Contracts.Events.GameManagement;
 
-namespace TheCodeKitchen.Application.Contracts.Interfaces.Realtime;
+namespace TheCodeKitchen.Application.Contracts.Realtime;
 
 public interface IRealTimeGameManagementService
 {

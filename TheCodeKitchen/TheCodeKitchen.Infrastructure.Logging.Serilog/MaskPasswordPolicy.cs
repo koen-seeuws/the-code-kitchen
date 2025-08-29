@@ -1,6 +1,8 @@
+using System.Reflection;
 using Serilog.Core;
 using Serilog.Events;
-using System.Reflection;
+
+namespace TheCodeKitchen.Infrastructure.Logging.Serilog;
 
 public class MaskPasswordPolicy : IDestructuringPolicy
 {
