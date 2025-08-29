@@ -11,6 +11,7 @@ public interface ICookGrain : IGrainWithGuidCompoundKey
     Task<Result<GetKitchenResponse>> GetKitchen();
     Task<Result<TheCodeKitchenUnit>> HoldFood(HoldFoodRequest request); 
     Task<Result<ReleaseFoodResponse>> ReleaseFood();
+    Task<Result<TheCodeKitchenUnit>> ThrowFoodAway();
     Task<Result<TheCodeKitchenUnit>> ReceiveMessage(ReceiveMessageRequest request);
     Task<Result<IEnumerable<ReadMessageResponse>>> ReadMessages();
     Task<Result<TheCodeKitchenUnit>> ConfirmMessage(ConfirmMessageRequest request);
