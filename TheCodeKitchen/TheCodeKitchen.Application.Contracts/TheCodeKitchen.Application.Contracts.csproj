@@ -15,8 +15,4 @@
       <ProjectReference Include="..\TheCodeKitchen.Core.Domain\TheCodeKitchen.Core.Domain.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Requests\Food\" />
-    </ItemGroup>
-
 </Project>
