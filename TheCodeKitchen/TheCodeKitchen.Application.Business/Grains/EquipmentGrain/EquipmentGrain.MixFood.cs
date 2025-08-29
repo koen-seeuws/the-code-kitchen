@@ -1,6 +1,4 @@
 using TheCodeKitchen.Application.Business.Extensions;
-using TheCodeKitchen.Application.Contracts.Models.Food;
-using TheCodeKitchen.Application.Contracts.Requests.Food;
 
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
@@ -18,22 +16,6 @@ public sealed partial class EquipmentGrain
             return new AlreadyExistsError(
                 $"The equipment {equipmentType} {number} does not exist in kitchen {kitchen}");
         }
-        
-        var getFoodTasks = state.State.Foods.Select(async id =>
-        {
-            var foodGrain = GrainFactory.GetGrain<IFoodGrain>(id);
-            var result = await foodGrain.GetFood();
-            return result;
-        });
-
-        var getFoodResults = await Task.WhenAll(getFoodTasks);
-
-        var getFoodsResult = getFoodResults.Combine();
-
-        if (!getFoodsResult.Succeeded)
-            return getFoodsResult.Error;
-
-        var foods = getFoodsResult.Value.ToList();
 
         var recipes = GrainFactory.GetGrain<ICookBookGrain>(Guid.Empty);
         var recipesResult = await recipes.GetRecipes();
@@ -41,7 +23,7 @@ public sealed partial class EquipmentGrain
         if (!recipesResult.Succeeded)
             return recipesResult.Error;
 
-        var necessaryIngredientCombo = foods
+        var necessaryIngredientCombo = state.State.Foods
             .Select(i => i.Name)
             .GetRecipeComboIdentifier();
 
@@ -52,52 +34,16 @@ public sealed partial class EquipmentGrain
                 .Equals(necessaryIngredientCombo, StringComparison.OrdinalIgnoreCase)
             );
 
-        var foodId = Guid.CreateVersion7();
-        var newFoodGrain = GrainFactory.GetGrain<IFoodGrain>(foodId);
-
-        var createFoodRequest = new CreateFoodRequest(
+        var food = new Food(
             recipe?.Name ?? "UNKNOWN MIXTURE",
-            foods.Select(f => f.Temperature).Average(),
+         state.State.Foods.Select(f => f.Temperature).Average(),
             state.State.Game,
             state.State.Kitchen,
-            foods
-                .Select(f =>
-                    new FoodDto(
-                        f.Id,
-                        f.Name,
-                        f.Temperature,
-                        f.Ingredients,
-                        f.Steps,
-                        f.Game,
-                        f.Kitchen,
-                        null,
-                        null,
-                        null,
-                        null
-                    )
-                )
-                .ToList()
+            state.State.Foods
         );
 
-        var createFoodResult = await newFoodGrain.Initialize(createFoodRequest);
-
-        if (!createFoodResult.Succeeded)
-            return createFoodResult.Error;
-
-        var ingredients = state.State.Foods;
-        state.State.Foods = [foodId];
-
+        state.State.Foods = [food];
         await state.WriteStateAsync();
-
-        foreach (var ingredient in ingredients)
-        {
-            // Fire and forget to trash the ingredients
-            _ = Task.Run(async () =>
-            {
-                var foodGrain = GrainFactory.GetGrain<IFoodGrain>(ingredient);
-                await foodGrain.Trash();
-            });
-        }
 
         return TheCodeKitchenUnit.Value;
     }

@@ -1,6 +1,5 @@
 using TheCodeKitchen.Application.Business.Extensions;
 using TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
-using TheCodeKitchen.Application.Contracts.Requests.Food;
 using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
@@ -24,18 +23,8 @@ public sealed partial class KitchenOrderGrain
         var releaseFoodResult = await cookGrain.ReleaseFood();
         if (!releaseFoodResult.Succeeded)
             return releaseFoodResult.Error;
-
-        var foodGrain = GrainFactory.GetGrain<IFoodGrain>(releaseFoodResult.Value.Food);
-
-        var setOrderRequest = new SetOrderRequest(request.Cook, state.State.Number);
-        var setOrderResult = await foodGrain.SetOrder(setOrderRequest);
-        if (!setOrderResult.Succeeded)
-            return setOrderResult.Error;
-
-        var getFoodResult = await foodGrain.GetFood();
-        if (!getFoodResult.Succeeded)
-            return getFoodResult.Error;
-        var food = getFoodResult.Value;
+        
+        var food = mapper.Map<Food>(releaseFoodResult.Value.Food);
 
         // Rating the delivered food quality
         var cookbookGrain = GrainFactory.GetGrain<ICookBookGrain>(Guid.Empty);
@@ -47,7 +36,7 @@ public sealed partial class KitchenOrderGrain
 
         var qualityRating = RateFood(food.Name, food.Steps, food.Ingredients, recipes);
 
-        var foodDelivery = new KitchenOrderFoodDelivery(food.Id, food.Name, qualityRating);
+        var foodDelivery = new KitchenOrderFoodDelivery(food, qualityRating);
         state.State.DeliveredFoods.Add(foodDelivery);
 
         // Making sure the customer is no longer waiting for its food (wont be picked up anymore OnNextMoment)
@@ -64,7 +53,7 @@ public sealed partial class KitchenOrderGrain
             .ToList();
 
         var deliveredFoods = state.State.DeliveredFoods
-            .Select(d => d.Food)
+            .Select(d => d.Food.Name)
             .ToList();
 
         var missingFoods = requestedFoods.MultiExcept(deliveredFoods).ToList();
@@ -79,9 +68,6 @@ public sealed partial class KitchenOrderGrain
         adjustedCorrectCount = Math.Max(0, adjustedCorrectCount); // Avoid negative score
 
         state.State.CompletenessRating = adjustedCorrectCount / requestedFoods.Count;
-        
-        // Food has been rated, grain is no longer needed
-        await foodGrain.Trash();
 
         // Update state
         await state.WriteStateAsync();
