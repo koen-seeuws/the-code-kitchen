@@ -6,14 +6,11 @@ public static class TemperatureHelper
     {
         var seconds = TheCodeKitchenMomentDuration.Value.TotalSeconds;
 
-        // Apply time-based temperature change
-        var temperatureDelta = (environmentTemperature - currentTemperature)
-                               * temperatureTransferRate
-                               * seconds;
-
-        currentTemperature += temperatureDelta;
+        // Exponential approach to equilibrium
+        var decayFactor = Math.Exp(-temperatureTransferRate * seconds);
+        var newTemperature = environmentTemperature + (currentTemperature - environmentTemperature) * decayFactor;
 
         // Clamp to realistic bounds
-        return Math.Clamp(currentTemperature, -30, 400);
+        return Math.Clamp(newTemperature, -30, 400);
     }
 }

@@ -9,6 +9,7 @@ namespace TheCodeKitchen.Application.Contracts.Grains;
 public interface IKitchenGrain : IGrainWithGuidKey
 {
     Task<Result<CreateKitchenResponse>> Initialize(CreateKitchenRequest request, int count);
+    Task<Result<TheCodeKitchenUnit>> InitializeEquipment();
     Task<Result<GetKitchenResponse>> GetKitchen();    
     Task<Result<IEnumerable<GetCookResponse>>> GetCooks(GetCookRequest request);
     Task<Result<TheCodeKitchenUnit>> ReleaseJoinCode();

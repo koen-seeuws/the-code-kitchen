@@ -43,19 +43,6 @@ public sealed partial class KitchenGrain
         var kitchen = new Kitchen(id, name, codeResult.Value, request.GameId, equipments);
         state.State = kitchen;
         await state.WriteStateAsync();
-
-        // Equipment 
-        foreach (var equipment in state.State.Equipment)
-        {
-            for (var number = 0; number < equipment.Value; number++)
-            {
-                var equipmentGrainIdExtension = EquipmentGrainId.Create(equipment.Key, number);
-                var equipmentGrain = GrainFactory.GetGrain<IEquipmentGrain>(id, equipmentGrainIdExtension);
-
-                var createEquipmentRequest = new CreateEquipmentRequest(request.GameId,id, number);
-                await equipmentGrain.Initialize(createEquipmentRequest);
-            }
-        }
         
         // Streams
         await SubscribeToNextMomentEvent();

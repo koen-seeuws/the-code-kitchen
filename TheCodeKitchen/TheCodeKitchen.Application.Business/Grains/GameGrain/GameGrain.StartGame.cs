@@ -1,3 +1,5 @@
+using TheCodeKitchen.Application.Business.Extensions;
+
 namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public sealed partial class GameGrain
@@ -12,6 +14,19 @@ public sealed partial class GameGrain
         
         if (state.State.Kitchens.Count is 0)
             return new EmptyError($"The game with id {this.GetPrimaryKey()} has no kitchens");
+        
+        var initializeKitchenEquipmentTasks = state.State.Kitchens
+            .Select(kitchen =>
+            {
+                var kitchenGrain = GrainFactory.GetGrain<IKitchenGrain>(kitchen);
+                return kitchenGrain.InitializeEquipment();
+            });
+        
+        var initializeKitchenEquipmentResults = await Task.WhenAll(initializeKitchenEquipmentTasks);
+        var initializeKitchensResult = initializeKitchenEquipmentResults.Combine();
+        
+        if(!initializeKitchensResult.Succeeded)
+            return initializeKitchensResult.Error;
         
         state.State.Started = DateTimeOffset.UtcNow;
 
