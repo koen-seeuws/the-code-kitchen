@@ -2,18 +2,18 @@ namespace TheCodeKitchen.Application.Business.Helpers;
 
 public static class TemperatureHelper
 {
-    public static double CalculateNextMomentFoodTemperature(double currentFoodTemperature, double equipmentTemperature, double temperatureTransferRate)
+    public static double CalculateNextMomentFoodTemperature(double currentTemperature, double environmentTemperature, double temperatureTransferRate)
     {
         var seconds = TheCodeKitchenMomentDuration.Value.TotalSeconds;
 
         // Apply time-based temperature change
-        var temperatureDelta = (equipmentTemperature - currentFoodTemperature)
+        var temperatureDelta = (environmentTemperature - currentTemperature)
                                * temperatureTransferRate
                                * seconds;
 
-        currentFoodTemperature += temperatureDelta;
+        currentTemperature += temperatureDelta;
 
         // Clamp to realistic bounds
-        return Math.Clamp(currentFoodTemperature, -30, 400);
+        return Math.Clamp(currentTemperature, -30, 400);
     }
 }
