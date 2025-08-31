@@ -15,7 +15,7 @@ public sealed partial class CookBookGrain
 
         if (availableRecipes.Any(i => i.Equals(newRecipeName, StringComparison.OrdinalIgnoreCase)))
             return new AlreadyExistsError($"The recipe {newRecipeName} already exists");
-        
+
         // Check if name is already used for an ingredient in pantry
         var pantryGrain = GrainFactory.GetGrain<IPantryGrain>(state.State.Id);
         var pantryIngredientsResult = await pantryGrain.GetIngredients();
@@ -35,16 +35,17 @@ public sealed partial class CookBookGrain
             .Select(i => i.Name)
             .GetRecipeComboIdentifier();
 
-        foreach (var recipe in state.State.Recipes)
-        {
-            var ingredientCombo = recipe.Ingredients
-                .Select(i => i.Name)
-                .GetRecipeComboIdentifier();
+        var existingRecipe = state.State.Recipes
+            .FirstOrDefault(recipe =>
+                recipe.Ingredients
+                    .Select(i => i.Name)
+                    .GetRecipeComboIdentifier()
+                    .Equals(newIngredientCombo, StringComparison.OrdinalIgnoreCase)
+            );
 
-            if (ingredientCombo.Equals(newIngredientCombo, StringComparison.OrdinalIgnoreCase))
-                return new AlreadyExistsError(
-                    $"This combination of ingredients is already used for recipe {recipe.Name}");
-        }
+        if (existingRecipe is not null)
+            return new AlreadyExistsError(
+                $"This combination of ingredients is already used for recipe {existingRecipe.Name}");
 
         // Start crafting recipe
         var newRecipeIngredients = new List<RecipeIngredient>();
@@ -56,15 +57,17 @@ public sealed partial class CookBookGrain
             var isRecipe = availableRecipes.Contains(necessaryIngredientName);
             var isIngredient = availableIngredients.Contains(necessaryIngredientName);
 
-            // Check if necessary ingredient is available in pantry or as a recipe
-            if (!isRecipe && !isIngredient)
-                return new InvalidRecipeError(
-                    $"The ingredient {necessaryIngredientName} is not available in the pantry or as a recipe");
-            
+            switch (isRecipe)
+            {
+                // Check if necessary ingredient is available in pantry or as a recipe
+                case false when !isIngredient:
+                    return new InvalidRecipeError(
+                        $"The ingredient {necessaryIngredientName} is not available in the pantry or as a recipe");
+                case true when necessaryIngredient.Steps.Count != 0:
+                    return new InvalidRecipeError("The subrecipes in a new recipe should not contain any steps");
+            }
 
-            if (isRecipe && necessaryIngredient.Steps.Count != 0)
-                return new InvalidRecipeError("The subrecipes in a new recipe should not contain any steps");
-            
+
             var necessaryIngredientSteps = necessaryIngredient.Steps
                 .Select(i =>
                 {
@@ -89,7 +92,7 @@ public sealed partial class CookBookGrain
 
         state.State.Recipes.Add(newRecipe);
         await state.WriteStateAsync();
-        
+
         return mapper.Map<CreateRecipeResponse>(newRecipe);
     }
 }
