@@ -82,7 +82,7 @@ public sealed partial class KitchenOrderGrain
                 // Time match (within 10% margin)
                 var expectedSeconds = expectedStep.Time.TotalSeconds;
                 var actualSeconds = actual.Time.TotalSeconds;
-                var margin = expectedSeconds * StepTimeMargin.Value;
+                var margin = expectedSeconds * RatingMargin.StepTime;
 
                 if (Math.Abs(expectedSeconds - actualSeconds) > margin)
                     score *= 0.5;

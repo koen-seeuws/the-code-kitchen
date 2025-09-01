@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Application.Constants;
 
-public readonly record struct RoomTemperatureTransferRate
+public static class RoomTemperatureTransferRate
 {
     public const double Value  = 0.002;
 }

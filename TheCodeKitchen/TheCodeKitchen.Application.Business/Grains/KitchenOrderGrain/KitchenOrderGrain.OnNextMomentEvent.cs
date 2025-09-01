@@ -19,7 +19,7 @@ public sealed partial class KitchenOrderGrain
 
         foreach (var foodRating in nonDeliveredRequestedFoodRatings)
         {
-            var margin = foodRating.MinimumTimeToPrepareFood * WaitingTimeMargin.Value;
+            var margin = foodRating.MinimumTimeToPrepareFood * RatingMargin.WaitingTime;
             var graceTime = foodRating.MinimumTimeToPrepareFood + margin;
 
             if (time <= graceTime)
