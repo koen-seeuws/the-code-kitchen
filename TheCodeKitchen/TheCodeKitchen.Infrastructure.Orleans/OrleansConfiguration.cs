@@ -6,6 +6,7 @@ public class OrleansConfiguration
 {
     public string? ClusterId { get; set; }
     public string? ServiceId { get; set; }
+    public string? StateBlobContainer { get; set; }
     public StreamingEventHubConfiguration? Streaming { get; set; }
 }
 
@@ -15,6 +16,7 @@ public class OrleansConfigurationValidator : AbstractValidator<OrleansConfigurat
     {
         RuleFor(x => x.ClusterId).NotEmpty();
         RuleFor(x => x.ServiceId).NotEmpty();
+        RuleFor(x => x.StateBlobContainer).NotEmpty();
         RuleFor(x => x.Streaming).NotEmpty().SetValidator(new StreamingEventHubConfigurationValidator()!);
     }
 }

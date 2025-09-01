@@ -2,7 +2,8 @@ namespace TheCodeKitchen.Application.Constants;
 
 public static class TheCodeKitchenState
 {
-    public static readonly string[] Blobs =
+    // All Blobs
+    public static readonly string[] All =
     [
         //Grains
         CookBook,
@@ -16,27 +17,9 @@ public static class TheCodeKitchenState
         KitchenOrders,
         Orders,
         Pantry,
-        
-        // Reminders
-        Reminders,
-        
-        // Persistent Streaming
-        PubSubStore,
-        EventHubCheckpoints,
         StreamHandles
     ];
     
-    public static readonly string[] Tables =
-    [
-        // Reminders
-        Reminders,
-        
-        // Persistent Streaming
-        PubSubStore,
-        EventHubCheckpoints,
-        StreamHandles
-    ];
-
     // Grains
     public const string CookBook = "TheCodeKitchenCookBookState";
     public const string Cooks = "TheCodeKitchenCookState";
@@ -50,15 +33,5 @@ public static class TheCodeKitchenState
     public const string Orders = "TheCodeKitchenOrderState";
     public const string Pantry = "TheCodeKitchenPantryState";
     
-    // Clustering
-    public const string Clustering = "TheCodeKitchenClustering";
-
-    // Reminders
-    public const string Reminders = "TheCodeKitchenReminders";
-    
-    // Persistent Streaming
-    public const string PubSubStore = nameof(PubSubStore);
-    public const string EventHubCheckpoints = "TheCodeKitchenEventHubCheckpoints";
     public const string StreamHandles = "TheCodeKitchenStreamHandleState";
-    
 }
