@@ -8,6 +8,8 @@ public class CreateKitchenFormModelValidator : ValidatorBase<CreateKitchenFormMo
 {
     public CreateKitchenFormModelValidator()
     {
-        RuleFor(k => k.Name).NotEmpty().MaximumLength(50);
+        RuleFor(k => k.Name)
+            .NotEmpty()
+            .MaximumLength(50);
     }
 }
