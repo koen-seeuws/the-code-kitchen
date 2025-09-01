@@ -6,6 +6,7 @@ public record CreateGameResponse(
     string Name,
     TimeSpan TimePerMoment,
     double SpeedModifier,
+    TimeSpan MinimumTimeBetweenOrders,
     short MinimumItemsPerOrder,
     short MaximumItemsPerOrder,
     double OrderSpeedModifier,

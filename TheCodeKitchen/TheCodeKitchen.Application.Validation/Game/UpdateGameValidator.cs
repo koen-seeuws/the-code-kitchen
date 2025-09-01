@@ -9,10 +9,15 @@ public class UpdateGameValidator : AbstractValidator<UpdateGameRequest>
     public UpdateGameValidator()
     {
         RuleFor(g => g.TimePerMoment).InclusiveBetween(
-            TheCodeKitchenTimePerMoment.Minimum,
-            TheCodeKitchenTimePerMoment.Maximum
+            TimePerMoment.Minimum,
+            TimePerMoment.Maximum
         );
         RuleFor(g => g.SpeedModifier).InclusiveBetween(0.1, 10);
+        RuleFor(g => g.MinimumTimeBetweenOrders)
+            .InclusiveBetween(
+                MinimumTimeBetweenOrders.Minimum,
+                MinimumTimeBetweenOrders.Maximum
+            );
         RuleFor(g => g.MinimumItemsPerOrder)
             .InclusiveBetween((short)1, (short)250)
             .LessThanOrEqualTo(g => g.MaximumItemsPerOrder);

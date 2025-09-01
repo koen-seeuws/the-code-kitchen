@@ -20,6 +20,7 @@ public sealed partial class GameGrain
             id,
             name,
             request.TimePerMoment,
+            request.MinimumTimeBetweenOrders,
             request.SpeedModifier,
             request.MinimumItemsPerOrder,
             request.MaximumItemsPerOrder,

@@ -20,6 +20,11 @@
                           For="@(() => Model.SpeedModifier)"
                           Variant="Variant.Outlined"
                           Class="mb-1"/>
+            <MudTimePicker Label="Minimum Time Between Orders"
+                           @bind-Time="@Model.MinimumTimeBetweenOrders"
+                           For="@(() => Model.MinimumTimeBetweenOrders)"
+                           Variant="Variant.Outlined"
+                           Class="mb-1"/>
             <MudTextField Label="Minimum Items Per Order"
                           InputType="InputType.Number"
                           @bind-Value="Model.MinimumItemsPerOrder"

@@ -13,7 +13,7 @@ public sealed partial class CookGrain
                 nextMomentEvent.TimePerMoment,
                 state.State.Food.Temperature, 
                 nextMomentEvent.Temperature,
-                TheCodeKitchenRoomTemperatureTransferRate.Value
+                RoomTemperatureTransferRate.Value
             );
 
         var nonElapsedTimers = state.State.Timers

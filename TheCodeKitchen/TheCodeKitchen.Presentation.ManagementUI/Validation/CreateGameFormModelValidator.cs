@@ -13,10 +13,16 @@ public class CreateGameFormModelValidator : ValidatorBase<CreateGameFormModel>
         RuleFor(g => g.TimePerMoment)
             .NotNull()
             .InclusiveBetween(
-                TheCodeKitchenTimePerMoment.Minimum,
-                TheCodeKitchenTimePerMoment.Maximum
+                TimePerMoment.Minimum,
+                TimePerMoment.Maximum
             );
         RuleFor(g => g.SpeedModifier).InclusiveBetween(0.1, 10);
+        RuleFor(g => g.MinimumTimeBetweenOrders)
+            .NotNull()
+            .InclusiveBetween(
+                MinimumTimeBetweenOrders.Minimum,
+                MinimumTimeBetweenOrders.Maximum
+            );
         RuleFor(g => g.MinimumItemsPerOrder)
             .InclusiveBetween((short)1, (short)250)
             .LessThanOrEqualTo(g => g.MaximumItemsPerOrder);

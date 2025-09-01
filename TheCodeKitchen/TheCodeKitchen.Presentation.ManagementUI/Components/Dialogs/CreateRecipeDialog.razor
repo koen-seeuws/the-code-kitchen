@@ -32,7 +32,7 @@
                                        Required
                                        Variant="Variant.Outlined"
                                        Class="mb-1">
-                                @foreach (var equipmentType in TheCodeKitchenEquipmentTypeConstants.Steppable)
+                                @foreach (var equipmentType in EquipmentType.Steppable)
                                 {
                                     <MudSelectItem Value="@equipmentType">@equipmentType</MudSelectItem>
                                 }
@@ -96,7 +96,7 @@
                                                Required
                                                Variant="Variant.Outlined"
                                                Class="mb-1">
-                                        @foreach (var equipmentType in TheCodeKitchenEquipmentTypeConstants.Steppable)
+                                        @foreach (var equipmentType in EquipmentType.Steppable)
                                         {
                                             <MudSelectItem Value="@equipmentType">@equipmentType</MudSelectItem>
                                         }

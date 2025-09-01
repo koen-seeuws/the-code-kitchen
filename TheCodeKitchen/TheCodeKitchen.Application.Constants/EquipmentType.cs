@@ -14,4 +14,31 @@ public static class EquipmentType
     public const string Mixer = "Mixer";
     public const string Oven = "Oven";
     
+    public static readonly string[] All =
+    [
+        Bbq,
+        Blender,
+        Counter,
+        CuttingBoard,
+        Fridge,
+        Freezer,
+        Fryer,
+        HotPlate,
+        Mixer,
+        Oven,
+        Stove
+    ];
+    
+    public static readonly string[] Steppable =
+    [
+        Bbq,
+        Blender,
+        CuttingBoard,
+        Fridge,
+        Freezer,
+        Fryer,
+        Mixer,
+        Oven,
+        Stove
+    ];
 }

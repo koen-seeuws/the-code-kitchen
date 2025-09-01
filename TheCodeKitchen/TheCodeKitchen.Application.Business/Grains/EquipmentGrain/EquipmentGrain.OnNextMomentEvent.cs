@@ -16,7 +16,7 @@ public sealed partial class EquipmentGrain
                 nextMomentEvent.TimePerMoment,
                 food.Temperature,
                 state.State.Temperature ?? nextMomentEvent.Temperature,
-                state.State.TemperatureTransferRate ?? TheCodeKitchenRoomTemperatureTransferRate.Value
+                state.State.TemperatureTransferRate ?? RoomTemperatureTransferRate.Value
             );
         }
 

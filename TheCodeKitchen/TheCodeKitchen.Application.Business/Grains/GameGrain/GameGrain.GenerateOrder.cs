@@ -23,8 +23,8 @@ public sealed partial class GameGrain
 
         var timeBetweenOrders = generateOrderResult.Value.MinimumTimeToPrepare;
 
-        if (timeBetweenOrders < TheCodeKitchenMinimumTimeBetweenOrders.Value)
-            timeBetweenOrders = TheCodeKitchenMinimumTimeBetweenOrders.Value;
+        if (timeBetweenOrders < state.State.MinimumTimeBetweenOrders)
+            timeBetweenOrders = state.State.MinimumTimeBetweenOrders;
 
         _timeUntilNewOrder = timeBetweenOrders / state.State.OrderSpeedModifier;
 

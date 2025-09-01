@@ -5,6 +5,7 @@ public record GameTableRecordModel(
     string Name,
     TimeSpan TimePerMoment,
     double SpeedModifier,
+    TimeSpan MinimumTimeBetweenOrders,
     double Temperature,
     DateTimeOffset? Started,
     TimeSpan TimePassed,

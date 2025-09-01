@@ -4,6 +4,7 @@ namespace TheCodeKitchen.Application.Contracts.Requests.Game;
 public record UpdateGameRequest(
     TimeSpan TimePerMoment,
     double SpeedModifier,
+    TimeSpan MinimumTimeBetweenOrders,
     short MinimumItemsPerOrder,
     short MaximumItemsPerOrder,
     double OrderSpeedModifier,
