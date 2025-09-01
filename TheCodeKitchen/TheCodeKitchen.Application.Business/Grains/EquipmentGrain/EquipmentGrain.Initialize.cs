@@ -25,7 +25,7 @@ public sealed partial class EquipmentGrain
             EquipmentType.HotPlate => (0.01, 40), // HotPlate – gentle warming
             EquipmentType.Oven => (0.008, 225), // Oven – medium heating
             EquipmentType.Stove => (0.012, 225), // Stove – medium-high heating
-            _ => ((double?)null, (double?)null) // Fallback – room temperature
+            _ => ((double?)null, (double?)null) // Fallback (kitchen temperature)
         };
 
         var equipment = new Equipment(request.Game, kitchen, equipmentType, number, temperature,
