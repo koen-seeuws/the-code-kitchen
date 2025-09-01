@@ -19,6 +19,7 @@ public sealed partial class GameGrain
         var game = new Game(
             id,
             name,
+            request.TimePerMoment,
             request.SpeedModifier,
             request.MinimumItemsPerOrder,
             request.MaximumItemsPerOrder,

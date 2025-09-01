@@ -26,13 +26,17 @@ public class TemperatureHelperTests
     {
         // Arrange
         const double margin = 0.01;
-        TheCodeKitchenMomentDuration.Value = TimeSpan.FromSeconds(nextMomentDurationInSeconds);
+        var timePerMoment = TimeSpan.FromSeconds(nextMomentDurationInSeconds);
 
         // Act
         for (var i = 0; i < nextMomentsPassed; i++)
         {
-            currentTemperature = TemperatureHelper
-                .CalculateNextMomentFoodTemperature(currentTemperature, environmentTemperature, transferRate);
+            currentTemperature = TemperatureHelper.CalculateNextMomentFoodTemperature(
+                timePerMoment,
+                currentTemperature,
+                environmentTemperature,
+                transferRate
+            );
         }
 
         // Assert

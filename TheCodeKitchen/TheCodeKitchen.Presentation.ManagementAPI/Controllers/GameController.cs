@@ -10,8 +10,9 @@ namespace TheCodeKitchen.Presentation.ManagementAPI.Controllers;
 [Route("[controller]")]
 public class GameController(
     IClusterClient client,
-    CreateGameValidator createGameValidator
-    ) : ControllerBase
+    CreateGameValidator createGameValidator,
+    UpdateGameValidator updateGameValidator
+) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateGameRequest request)
@@ -29,7 +30,7 @@ public class GameController(
         var result = await gameManagementGrain.GetGames();
         return this.MatchActionResult(result);
     }
-    
+
     [HttpGet("{gameId}/[action]")]
     public async Task<IActionResult> Get(Guid gameId)
     {
@@ -53,15 +54,16 @@ public class GameController(
         var result = await gameGrain.PauseOrUnpauseGame();
         return this.MatchActionResult(result);
     }
-    
+
     [HttpPut("{gameId}/[action]")]
     public async Task<IActionResult> Update(Guid gameId, [FromBody] UpdateGameRequest request)
     {
+        if (!updateGameValidator.ValidateAndError(request, out var error)) return this.MatchActionResult(error);
         var gameGrain = client.GetGrain<IGameGrain>(gameId);
         var result = await gameGrain.UpdateGame(request);
         return this.MatchActionResult(result);
     }
-    
+
     [HttpPost("{gameId}/[action]")]
     public async Task<IActionResult> NextMoment(Guid gameId)
     {

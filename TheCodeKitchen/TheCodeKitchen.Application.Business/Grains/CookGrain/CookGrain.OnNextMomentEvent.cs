@@ -10,7 +10,9 @@ public sealed partial class CookGrain
     {
         if (state.State.Food is not null)
             state.State.Food.Temperature = TemperatureHelper.CalculateNextMomentFoodTemperature(
-                state.State.Food.Temperature, nextMomentEvent.Temperature,
+                nextMomentEvent.TimePerMoment,
+                state.State.Food.Temperature, 
+                nextMomentEvent.Temperature,
                 TheCodeKitchenRoomTemperatureTransferRate.Value
             );
 
@@ -20,7 +22,7 @@ public sealed partial class CookGrain
 
         foreach (var timer in nonElapsedTimers)
         {
-            timer.Time -= TheCodeKitchenMomentDuration.Value;
+            timer.Time -= nextMomentEvent.TimePerMoment;
         }
 
         var timerElapsedTasks = state.State.Timers

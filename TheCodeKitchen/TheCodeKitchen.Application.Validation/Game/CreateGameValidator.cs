@@ -1,21 +1,18 @@
 using FluentValidation;
 using TheCodeKitchen.Application.Constants;
-using TheCodeKitchen.Application.Validation;
-using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
+using TheCodeKitchen.Application.Contracts.Requests.Game;
 
-namespace TheCodeKitchen.Presentation.ManagementUI.Validation;
+namespace TheCodeKitchen.Application.Validation.Game;
 
-public class CreateGameFormModelValidator : ValidatorBase<CreateGameFormModel>
+public class CreateGameValidator : AbstractValidator<CreateGameRequest>
 {
-    public CreateGameFormModelValidator()
+    public CreateGameValidator()
     {
         RuleFor(g => g.Name).NotEmpty().MaximumLength(50);
-        RuleFor(g => g.TimePerMoment)
-            .NotNull()
-            .InclusiveBetween(
-                TheCodeKitchenTimePerMoment.Minimum,
-                TheCodeKitchenTimePerMoment.Maximum
-            );
+        RuleFor(g => g.TimePerMoment).InclusiveBetween(
+            TheCodeKitchenTimePerMoment.Minimum,
+            TheCodeKitchenTimePerMoment.Maximum
+        );
         RuleFor(g => g.SpeedModifier).InclusiveBetween(0.1, 10);
         RuleFor(g => g.MinimumItemsPerOrder)
             .InclusiveBetween((short)1, (short)250)

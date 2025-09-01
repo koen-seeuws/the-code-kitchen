@@ -4,6 +4,7 @@ namespace TheCodeKitchen.Application.Contracts.Response.Game;
 public record CreateGameResponse(
     Guid Id,
     string Name,
+    TimeSpan TimePerMoment,
     double SpeedModifier,
     short MinimumItemsPerOrder,
     short MaximumItemsPerOrder,

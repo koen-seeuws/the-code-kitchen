@@ -9,6 +9,11 @@
                           For="@(() => Model.Name)"
                           Variant="Variant.Outlined"
                           Class="mb-1"/>
+            <MudTimePicker Label="Time Per Moment"
+                           @bind-Time="@Model.TimePerMoment"
+                           For="@(() => Model.TimePerMoment)"
+                           Variant="Variant.Outlined"
+                           Class="mb-1"/>
             <MudTextField Label="Speed Modifier"
                           InputType="InputType.Number"
                           @bind-Value="Model.SpeedModifier"

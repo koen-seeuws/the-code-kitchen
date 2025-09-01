@@ -29,6 +29,7 @@ public partial class CreateGameDialog(
         {
             var request = new CreateGameRequest(
                 Model.Name,
+                Model.TimePerMoment!.Value,
                 Model.SpeedModifier,
                 Model.MinimumItemsPerOrder,
                 Model.MaximumItemsPerOrder,

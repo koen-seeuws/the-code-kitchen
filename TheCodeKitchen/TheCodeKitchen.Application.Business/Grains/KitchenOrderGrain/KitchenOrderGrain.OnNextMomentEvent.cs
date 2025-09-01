@@ -10,7 +10,7 @@ public sealed partial class KitchenOrderGrain
             return;
 
         // Time order has been active
-        var time = state.State.Time += TheCodeKitchenMomentDuration.Value;
+        var time = state.State.Time += nextMomentEvent.TimePerMoment;
 
         // Rating down order when it takes too long
         var nonDeliveredRequestedFoodRatings = state.State.RequestedFoods

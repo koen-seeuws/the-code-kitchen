@@ -14,6 +14,7 @@ public sealed partial class GameGrain
         if (running)
             await PauseOrUnpauseGame();
         
+        state.State.TimePerMoment = request.TimePerMoment;
         state.State.SpeedModifier = request.SpeedModifier;
         state.State.MinimumItemsPerOrder = request.MinimumItemsPerOrder;
         state.State.MaximumItemsPerOrder = request.MaximumItemsPerOrder;

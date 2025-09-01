@@ -47,7 +47,7 @@ public partial class Game(
             {
                 GetGameResponse = getGameResult.Value;
                 Paused = getGameResult.Value.Paused;
-                TimePassed = getGameResult.Value.Time;
+                TimePassed = getGameResult.Value.TimePassed;
             }
             else
                 GameErrorMessage = getGameResult.Error.Message;

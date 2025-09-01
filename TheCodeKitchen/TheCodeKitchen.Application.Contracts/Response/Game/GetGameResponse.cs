@@ -4,12 +4,13 @@ namespace TheCodeKitchen.Application.Contracts.Response.Game;
 public record GetGameResponse(
     Guid Id,
     string Name,
+    TimeSpan TimePerMoment,
     double SpeedModifier,
     short MinimumItemsPerOrder,
     short MaximumItemsPerOrder,
     double OrderSpeedModifier,
     double Temperature,
     DateTimeOffset? Started,
-    TimeSpan Time,
+    TimeSpan TimePassed,
     bool Paused
 );

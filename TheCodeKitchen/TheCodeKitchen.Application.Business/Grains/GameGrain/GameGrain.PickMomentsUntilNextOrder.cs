@@ -7,7 +7,7 @@ public sealed partial class GameGrain
     private Task PickRandomTimeUntilNextOrder()
     {
         var multiplier = Random.Shared.Next(1, 15);
-        _timeUntilNewOrder = multiplier * TheCodeKitchenMomentDuration.Value;
+        _timeUntilNewOrder = multiplier * state.State.TimePerMoment;
         return Task.CompletedTask;
     }
 }
