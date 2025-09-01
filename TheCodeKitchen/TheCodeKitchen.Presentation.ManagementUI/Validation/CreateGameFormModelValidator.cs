@@ -10,25 +10,35 @@ public class CreateGameFormModelValidator : ValidatorBase<CreateGameFormModel>
     public CreateGameFormModelValidator()
     {
         RuleFor(g => g.Name).NotEmpty().MaximumLength(50);
-        RuleFor(g => g.TimePerMoment)
-            .NotNull()
-            .InclusiveBetween(
-                TimePerMoment.Minimum,
-                TimePerMoment.Maximum
-            );
-        RuleFor(g => g.SpeedModifier).InclusiveBetween(0.1, 10);
+        RuleFor(g => g.TimePerMoment).InclusiveBetween(
+            TimePerMoment.Minimum,
+            TimePerMoment.Maximum
+        );
+        RuleFor(g => g.SpeedModifier).InclusiveBetween(
+            GameSpeedModifier.Minimum,
+            GameSpeedModifier.Maximum
+        );
         RuleFor(g => g.MinimumTimeBetweenOrders)
-            .NotNull()
             .InclusiveBetween(
                 MinimumTimeBetweenOrders.Minimum,
                 MinimumTimeBetweenOrders.Maximum
             );
         RuleFor(g => g.MinimumItemsPerOrder)
-            .InclusiveBetween((short)1, (short)250)
+            .InclusiveBetween(
+                ItemsPerOrder.Minimum,
+                ItemsPerOrder.Maximum
+            )
             .LessThanOrEqualTo(g => g.MaximumItemsPerOrder);
         RuleFor(g => g.MaximumItemsPerOrder)
-            .InclusiveBetween((short)1, (short)250)
+            .InclusiveBetween(
+                ItemsPerOrder.Minimum,
+                ItemsPerOrder.Maximum
+            )
             .GreaterThanOrEqualTo(g => g.MinimumItemsPerOrder);
-        RuleFor(g => g.OrderSpeedModifier).InclusiveBetween(0.1, 10);
+        RuleFor(g => g.OrderSpeedModifier)
+            .InclusiveBetween(
+                OrderSpeedModifier.Minimum,
+                OrderSpeedModifier.Maximum
+            );
     }
 }
