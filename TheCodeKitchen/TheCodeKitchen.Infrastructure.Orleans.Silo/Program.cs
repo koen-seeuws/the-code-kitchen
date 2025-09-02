@@ -37,7 +37,7 @@ var blobClient = new BlobServiceClient(azureStorageConnectionString);
 
 #if DEBUG
 // TODO: REMOVE, this is only for development purposes to ensure a clean state.
-foreach (var storage in TheCodeKitchenOrleansAzureTableConstants.All)
+foreach (var storage in TheCodeKitchenAzureTableConstants.All)
 {
     tableClient.DeleteTable(storage);
 }
@@ -60,7 +60,13 @@ builder.UseOrleans(silo =>
     silo.UseAzureStorageClustering(options =>
     {
         options.TableServiceClient = tableClient;
-        options.TableName = TheCodeKitchenOrleansAzureTableConstants.Clustering;
+        options.TableName = TheCodeKitchenAzureTableConstants.Clustering;
+    });
+    
+    silo.UseAzureTableReminderService(options =>
+    {
+        options.TableServiceClient = tableClient;
+        options.TableName = TheCodeKitchenAzureTableConstants.Reminders;
     });
 
     foreach (var storage in TheCodeKitchenState.All)
@@ -72,16 +78,18 @@ builder.UseOrleans(silo =>
         });
     }
 
-    silo.UseAzureTableReminderService(options =>
+    silo.AddAzureTableGrainStorage(TheCodeKitchenAzureTableConstants.PubSubStore, options =>
     {
         options.TableServiceClient = tableClient;
-        options.TableName = TheCodeKitchenOrleansAzureTableConstants.Reminders;
+        options.TableName = TheCodeKitchenAzureTableConstants.PubSubStore;
     });
 
     silo
         .AddStreaming()
         .AddEventHubStreams(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider, eventHubConfigurator =>
         {
+            
+            
             eventHubConfigurator.ConfigureEventHub(eventHubBuilder =>
             {
                 eventHubBuilder.Configure(options =>
@@ -98,7 +106,7 @@ builder.UseOrleans(silo =>
                 azureTableBuilder.Configure(options =>
                 {
                     options.TableServiceClient = tableClient;
-                    options.TableName = TheCodeKitchenOrleansAzureTableConstants.EventHubCheckpoints;
+                    options.TableName = TheCodeKitchenAzureTableConstants.EventHubCheckpoints;
                 })
             );
         });

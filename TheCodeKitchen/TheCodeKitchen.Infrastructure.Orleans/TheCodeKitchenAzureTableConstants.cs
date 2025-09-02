@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Infrastructure.Orleans;
 
-public static class TheCodeKitchenOrleansAzureTableConstants
+public static class TheCodeKitchenAzureTableConstants
 {
     public static readonly string[] All =
     [
