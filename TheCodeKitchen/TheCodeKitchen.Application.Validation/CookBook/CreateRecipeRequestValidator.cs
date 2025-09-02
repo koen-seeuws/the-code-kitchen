@@ -16,7 +16,7 @@ public class CreateRecipeValidator : AbstractValidator<CreateRecipeRequest>
             .NotEmpty()
             .Must(i => i.Count >= 2)
             .WithMessage("At least two ingredients are required.")
-            .Must(i => i.Count != i.DistinctBy(ri => ri.Name, StringComparer.OrdinalIgnoreCase).Count())
+            .Must(i => i.Count == i.DistinctBy(ri => ri.Name, StringComparer.OrdinalIgnoreCase).Count())
             .WithMessage("Duplicate ingredients are not allowed.");
         RuleForEach(r => r.Ingredients).SetValidator(recipeIngredientDtoValidator);
         RuleForEach(r => r.Steps).SetValidator(recipeStepDtoValidator);
