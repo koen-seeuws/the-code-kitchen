@@ -9,14 +9,16 @@ public class CreateGameValidator : AbstractValidator<CreateGameRequest>
     public CreateGameValidator()
     {
         RuleFor(g => g.Name).NotEmpty().MaximumLength(50);
-        RuleFor(g => g.TimePerMoment).InclusiveBetween(
-            TimePerMoment.Minimum,
-            TimePerMoment.Maximum
-        );
-        RuleFor(g => g.SpeedModifier).InclusiveBetween(
-            GameSpeedModifier.Minimum,
-            GameSpeedModifier.Maximum
-        );
+        RuleFor(g => g.TimePerMoment)
+            .InclusiveBetween(
+                TimePerMoment.Minimum,
+                TimePerMoment.Maximum
+            );
+        RuleFor(g => g.SpeedModifier)
+            .InclusiveBetween(
+                GameSpeedModifier.Minimum,
+                GameSpeedModifier.Maximum
+            );
         RuleFor(g => g.MinimumTimeBetweenOrders)
             .InclusiveBetween(
                 MinimumTimeBetweenOrders.Minimum,

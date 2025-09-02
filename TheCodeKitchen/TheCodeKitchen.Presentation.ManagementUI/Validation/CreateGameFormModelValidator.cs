@@ -9,15 +9,19 @@ public class CreateGameFormModelValidator : ValidatorBase<CreateGameFormModel>
 {
     public CreateGameFormModelValidator()
     {
-        RuleFor(g => g.Name).NotEmpty().MaximumLength(50);
-        RuleFor(g => g.TimePerMoment).InclusiveBetween(
-            TimePerMoment.Minimum,
-            TimePerMoment.Maximum
-        );
-        RuleFor(g => g.SpeedModifier).InclusiveBetween(
-            GameSpeedModifier.Minimum,
-            GameSpeedModifier.Maximum
-        );
+        RuleFor(g => g.Name)
+            .NotEmpty()
+            .MaximumLength(50);
+        RuleFor(g => g.TimePerMoment)
+            .InclusiveBetween(
+                TimePerMoment.Minimum,
+                TimePerMoment.Maximum
+            );
+        RuleFor(g => g.SpeedModifier)
+            .InclusiveBetween(
+                GameSpeedModifier.Minimum,
+                GameSpeedModifier.Maximum
+            );
         RuleFor(g => g.MinimumTimeBetweenOrders)
             .InclusiveBetween(
                 MinimumTimeBetweenOrders.Minimum,

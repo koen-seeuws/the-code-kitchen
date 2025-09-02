@@ -8,14 +8,16 @@ public class UpdateGameValidator : AbstractValidator<UpdateGameRequest>
 {
     public UpdateGameValidator()
     {
-        RuleFor(g => g.TimePerMoment).InclusiveBetween(
-            TimePerMoment.Minimum,
-            TimePerMoment.Maximum
-        );
-        RuleFor(g => g.SpeedModifier).InclusiveBetween(
-            GameSpeedModifier.Minimum,
-            GameSpeedModifier.Maximum
-        );
+        RuleFor(g => g.TimePerMoment)
+            .InclusiveBetween(
+                TimePerMoment.Minimum,
+                TimePerMoment.Maximum
+            );
+        RuleFor(g => g.SpeedModifier)
+            .InclusiveBetween(
+                GameSpeedModifier.Minimum,
+                GameSpeedModifier.Maximum
+            );
         RuleFor(g => g.MinimumTimeBetweenOrders)
             .InclusiveBetween(
                 MinimumTimeBetweenOrders.Minimum,
