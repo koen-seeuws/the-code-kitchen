@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Events.Cook;
 
 namespace TheCodeKitchen.Infrastructure.AzureSignalR.Services;
 
-public class RealTimeCookService(HubContextProvider hubContextProvider) : IRealTimeCookService
+public sealed class RealTimeCookService(HubContextProvider hubContextProvider) : IRealTimeCookService
 { 
     public async Task SendMessageReceivedEvent(MessageReceivedEvent @event)
     {

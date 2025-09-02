@@ -2,7 +2,7 @@ using Microsoft.JSInterop;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Services;
 
-public class ClientTimeService(IJSRuntime js)
+public sealed class ClientTimeService(IJSRuntime js)
 {
     private TimeSpan Offset { get; set; } = TimeSpan.Zero;
 

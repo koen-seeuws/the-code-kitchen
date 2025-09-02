@@ -5,7 +5,7 @@ using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Validation;
 
-public class CreateGameFormModelValidator : ValidatorBase<CreateGameFormModel>
+public sealed class CreateGameFormModelValidator : ValidatorBase<CreateGameFormModel>
 {
     public CreateGameFormModelValidator()
     {

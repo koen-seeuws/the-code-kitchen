@@ -4,7 +4,7 @@ using TheCodeKitchen.Application.Contracts.Requests.CookBook;
 
 namespace TheCodeKitchen.Application.Validation.CookBook;
 
-public class CreateRecipeValidator : AbstractValidator<CreateRecipeRequest>
+public sealed class CreateRecipeValidator : AbstractValidator<CreateRecipeRequest>
 {
     public CreateRecipeValidator(
         RecipeIngredientDtoValidator recipeIngredientDtoValidator,

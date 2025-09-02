@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Events.GameManagement;
 
 namespace TheCodeKitchen.Infrastructure.AzureSignalR.Services;
 
-public class RealTimeGameManagementService(HubContextProvider hubContextProvider) : IRealTimeGameManagementService
+public sealed class RealTimeGameManagementService(HubContextProvider hubContextProvider) : IRealTimeGameManagementService
 {
     public async Task SendGameCreatedEvent(GameCreatedEvent @event)
     {

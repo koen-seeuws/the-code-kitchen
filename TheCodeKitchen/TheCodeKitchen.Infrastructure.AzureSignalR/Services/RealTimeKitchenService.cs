@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Events.Kitchen;
 
 namespace TheCodeKitchen.Infrastructure.AzureSignalR.Services;
 
-public class RealTimeKitchenService(HubContextProvider hubContextProvider) : IRealTimeKitchenService
+public sealed class RealTimeKitchenService(HubContextProvider hubContextProvider) : IRealTimeKitchenService
 {
     public async Task SendKitchenRatingUpdatedEvent(Guid kitchenId, KitchenRatingUpdatedEvent @event)
     {

@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Response.Kitchen;
 
 namespace TheCodeKitchen.Application.Business.Mapping;
 
-public class KitchenMapping : Profile
+public sealed class KitchenMapping : Profile
 {
     public KitchenMapping()
     {

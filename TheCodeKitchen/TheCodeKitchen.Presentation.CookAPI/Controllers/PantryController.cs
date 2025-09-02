@@ -11,7 +11,7 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class PantryController(
+public sealed class PantryController(
     IClusterClient clusterClient,
     TakeFoodFromPantryValidator foodFromPantryValidator
 ) : ControllerBase

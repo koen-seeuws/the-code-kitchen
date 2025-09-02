@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
 
-public class CreateGameFormModel
+public sealed class CreateGameFormModel
 {
     public string Name { get; set; } = string.Empty;
     public TimeSpan? TimePerMoment { get; set; } = TimeSpan.FromMinutes(1);

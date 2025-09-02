@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public class PantryIngredient(string name)
+public sealed class PantryIngredient(string name)
 {
     public string Name { get; set; } = name;
 }

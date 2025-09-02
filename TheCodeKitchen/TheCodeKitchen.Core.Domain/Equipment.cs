@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public class Equipment(Guid game, Guid kitchen, string equipmentType, int number, double? temperature, double? temperatureTransferRate)
+public sealed class Equipment(Guid game, Guid kitchen, string equipmentType, int number, double? temperature, double? temperatureTransferRate)
 {
     public Guid Game { get; set; } = game;
     public Guid Kitchen { get; set; } = kitchen;

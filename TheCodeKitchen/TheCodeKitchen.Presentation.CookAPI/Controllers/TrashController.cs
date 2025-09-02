@@ -9,7 +9,7 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class TrashController(IClusterClient clusterClient) : ControllerBase
+public sealed class TrashController(IClusterClient clusterClient) : ControllerBase
 {
     [HttpPost("[action]")]
     public async Task<IActionResult> ThrowAway()

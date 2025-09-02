@@ -7,7 +7,7 @@ using TheCodeKitchen.Presentation.ManagementUI.Models.ViewModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Mapping;
 
-public class KitchenMapping : Profile
+public sealed class KitchenMapping : Profile
 {
     public KitchenMapping()
     {

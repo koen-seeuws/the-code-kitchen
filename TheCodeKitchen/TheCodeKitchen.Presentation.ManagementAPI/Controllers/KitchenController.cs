@@ -8,7 +8,7 @@ namespace TheCodeKitchen.Presentation.ManagementAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class KitchenController(
+public sealed class KitchenController(
     IClusterClient client,
     CreateKitchenValidator createKitchenValidator
 ) : ControllerBase

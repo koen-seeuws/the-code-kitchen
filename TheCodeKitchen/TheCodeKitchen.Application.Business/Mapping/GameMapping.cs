@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Response.Game;
 
 namespace TheCodeKitchen.Application.Business.Mapping;
 
-public class GameMapping : Profile
+public sealed class GameMapping : Profile
 {
     public GameMapping()
     {

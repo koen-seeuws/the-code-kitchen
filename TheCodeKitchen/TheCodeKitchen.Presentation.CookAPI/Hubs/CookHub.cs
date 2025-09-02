@@ -6,7 +6,7 @@ using TheCodeKitchen.Infrastructure.Security.Extensions;
 namespace TheCodeKitchen.Presentation.API.Cook.Hubs;
 
 [Authorize]
-public class CookHub : Hub
+public sealed class CookHub : Hub
 {
     public override async Task OnConnectedAsync()
     {

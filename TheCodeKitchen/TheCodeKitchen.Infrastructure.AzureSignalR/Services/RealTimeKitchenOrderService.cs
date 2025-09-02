@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
 
 namespace TheCodeKitchen.Infrastructure.AzureSignalR.Services;
 
-public class RealTimeKitchenOrderService(HubContextProvider hubContextProvider) : IRealTimeKitchenOrderService
+public sealed class RealTimeKitchenOrderService(HubContextProvider hubContextProvider) : IRealTimeKitchenOrderService
 {
     public async Task SendKitchenOrderCreatedEvent(Guid kitchenId, KitchenOrderCreatedEvent @event)
     {

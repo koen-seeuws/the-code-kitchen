@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Contracts.Response.CookBook;
 
 namespace TheCodeKitchen.Application.Business.Mapping;
 
-public class RecipeMapping : Profile
+public sealed class RecipeMapping : Profile
 {
     public RecipeMapping()
     {

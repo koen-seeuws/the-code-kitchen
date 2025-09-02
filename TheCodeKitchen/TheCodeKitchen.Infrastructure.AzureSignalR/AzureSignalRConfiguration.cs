@@ -2,12 +2,12 @@ using FluentValidation;
 
 namespace TheCodeKitchen.Infrastructure.AzureSignalR;
 
-public class AzureSignalRConfiguration
+public sealed class AzureSignalRConfiguration
 {
     public string? ApplicationName { get; set; } = null;
 }
 
-public class AzureSignalRConfigurationValidator : AbstractValidator<AzureSignalRConfiguration>
+public sealed class AzureSignalRConfigurationValidator : AbstractValidator<AzureSignalRConfiguration>
 {
     public AzureSignalRConfigurationValidator()
     {

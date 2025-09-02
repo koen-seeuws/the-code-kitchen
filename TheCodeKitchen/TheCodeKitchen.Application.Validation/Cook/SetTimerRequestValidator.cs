@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Contracts.Requests.Cook;
 
 namespace TheCodeKitchen.Application.Validation.Cook;
 
-public class SetTimerValidator : AbstractValidator<SetTimerRequest>
+public sealed class SetTimerValidator : AbstractValidator<SetTimerRequest>
 {
     public SetTimerValidator()
     {

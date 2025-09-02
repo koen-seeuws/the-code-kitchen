@@ -3,7 +3,7 @@ using Timer = TheCodeKitchen.Core.Domain.Timer;
 
 namespace TheCodeKitchen.Application.Business.Mapping;
 
-public class CookMapping : Profile
+public sealed class CookMapping : Profile
 {
     public CookMapping()
     {

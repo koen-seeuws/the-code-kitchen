@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Realtime;
 
 namespace TheCodeKitchen.Application.Business.Grains.GameManagementGrain;
 
-public class GameManagementState
+public sealed class GameManagementState
 {
     public ICollection<Guid> Games { get; set; } = new List<Guid>();
 }

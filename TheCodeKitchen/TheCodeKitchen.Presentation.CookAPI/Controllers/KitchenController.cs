@@ -11,7 +11,7 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class KitchenController(
+public sealed class KitchenController(
     IClusterClient client,
     IPasswordHashingService passwordHashingService,
     ISecurityTokenService securityTokenService,

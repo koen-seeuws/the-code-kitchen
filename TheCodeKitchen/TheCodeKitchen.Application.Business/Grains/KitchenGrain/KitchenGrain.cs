@@ -5,7 +5,7 @@ using TheCodeKitchen.Application.Contracts.Realtime;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
-public class KitchenGrainStreamSubscriptionHandles
+public sealed class KitchenGrainStreamSubscriptionHandles
 {
     public StreamSubscriptionHandle<NextMomentEvent>? NextMomentStreamSubscriptionHandle { get; set; } = null;
     public StreamSubscriptionHandle<OrderGeneratedEvent>? OrderGeneratedStreamSubscriptionHandle { get; set; }

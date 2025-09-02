@@ -9,7 +9,7 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class OrdersController(IClusterClient clusterClient) : ControllerBase
+public sealed class OrdersController(IClusterClient clusterClient) : ControllerBase
 {
     [HttpGet("[action]")]
     public async Task<IActionResult> ViewOpen()

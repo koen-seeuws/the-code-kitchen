@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public class Game(
+public sealed class Game(
     Guid id,
     string name,
     TimeSpan timePerMoment,

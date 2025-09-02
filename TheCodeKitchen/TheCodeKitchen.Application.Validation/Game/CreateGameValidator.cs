@@ -4,7 +4,7 @@ using TheCodeKitchen.Application.Contracts.Requests.Game;
 
 namespace TheCodeKitchen.Application.Validation.Game;
 
-public class CreateGameValidator : AbstractValidator<CreateGameRequest>
+public sealed class CreateGameValidator : AbstractValidator<CreateGameRequest>
 {
     public CreateGameValidator()
     {

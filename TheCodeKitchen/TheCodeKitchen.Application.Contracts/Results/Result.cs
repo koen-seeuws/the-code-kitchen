@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Contracts.Errors;
 namespace TheCodeKitchen.Application.Contracts.Results;
 
 [GenerateSerializer]
-public class Result<T>
+public sealed class Result<T>
 {
     [Id(0)] public bool Succeeded { get; set; }
     [Id(1)] public T Value { get; set; }

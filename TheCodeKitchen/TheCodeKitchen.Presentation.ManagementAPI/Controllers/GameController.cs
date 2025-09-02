@@ -8,7 +8,7 @@ namespace TheCodeKitchen.Presentation.ManagementAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class GameController(
+public sealed class GameController(
     IClusterClient client,
     CreateGameValidator createGameValidator,
     UpdateGameValidator updateGameValidator

@@ -12,7 +12,7 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class TimerController(
+public sealed class TimerController(
     IClusterClient clusterClient,
     SetTimerValidator setTimerValidator,
     StopTimerValidator stopTimerValidator

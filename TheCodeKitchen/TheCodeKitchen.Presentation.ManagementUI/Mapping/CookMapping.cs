@@ -5,7 +5,7 @@ using TheCodeKitchen.Presentation.ManagementUI.Models.TableRecordModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Mapping;
 
-public class CookMapping : Profile
+public sealed class CookMapping : Profile
 {
     public CookMapping()
     {

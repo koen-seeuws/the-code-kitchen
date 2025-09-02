@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public class Food(string name, double temperature, Guid game, Guid kitchen, List<Food>? ingredients = null)
+public sealed class Food(string name, double temperature, Guid game, Guid kitchen, List<Food>? ingredients = null)
 {
     public string Name { get; set; } = name;
     public double Temperature { get; set; } = temperature;

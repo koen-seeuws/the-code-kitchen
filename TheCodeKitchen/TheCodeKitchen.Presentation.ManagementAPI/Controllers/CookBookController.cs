@@ -8,7 +8,7 @@ namespace TheCodeKitchen.Presentation.ManagementAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class CookBookController(
+public sealed class CookBookController(
     IClusterClient clusterClient,
     CreateRecipeValidator createRecipeValidator
 ) : ControllerBase

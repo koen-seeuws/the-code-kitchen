@@ -4,7 +4,7 @@ using TheCodeKitchen.Infrastructure.Orleans.Scaler.Constants;
 
 namespace TheCodeKitchen.Infrastructure.Orleans.Scaler.Validation;
 
-public class ScaledObjectRefValidator : AbstractValidator<ScaledObjectRef>
+public sealed class ScaledObjectRefValidator : AbstractValidator<ScaledObjectRef>
 {
     public ScaledObjectRefValidator()
     {

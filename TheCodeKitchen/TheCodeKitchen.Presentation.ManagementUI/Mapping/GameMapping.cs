@@ -5,7 +5,7 @@ using TheCodeKitchen.Presentation.ManagementUI.Models.TableRecordModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Mapping;
 
-public class GameMapping : Profile
+public sealed class GameMapping : Profile
 {
     public GameMapping()
     {

@@ -7,7 +7,7 @@ using TheCodeKitchen.Infrastructure.Orleans.Scaler.Validation;
 
 namespace TheCodeKitchen.Infrastructure.Orleans.Scaler.Services;
 
-public class ExternalScalerService(
+public sealed class ExternalScalerService(
     IClusterClient clusterClient,
     ScaledObjectRefValidator scaledObjectRefValidator,
     ILogger<ExternalScalerService> logger

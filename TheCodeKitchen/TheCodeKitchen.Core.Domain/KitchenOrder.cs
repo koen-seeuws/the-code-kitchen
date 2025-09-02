@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public class KitchenOrder(long number, List<KitchenOrderFoodRequest> requestedFoods, Guid game, Guid kitchen)
+public sealed class KitchenOrder(long number, List<KitchenOrderFoodRequest> requestedFoods, Guid game, Guid kitchen)
 {
     public long Number { get; set; } = number;
     public TimeSpan Time { get; set; } = TimeSpan.Zero;

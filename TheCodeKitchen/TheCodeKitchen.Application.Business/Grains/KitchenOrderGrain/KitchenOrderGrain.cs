@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Contracts.Realtime;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
 
-public class KitchenOrderGrainStreamSubscriptionHandles
+public sealed class KitchenOrderGrainStreamSubscriptionHandles
 {
     public StreamSubscriptionHandle<NextMomentEvent>? NextMomentStreamSubscriptionHandle { get; set; }
 }

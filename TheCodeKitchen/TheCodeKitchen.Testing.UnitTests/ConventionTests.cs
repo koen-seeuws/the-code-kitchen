@@ -6,7 +6,7 @@ using TheCodeKitchen.Application.Contracts.Response.Game;
 
 namespace TheCodeKitchen.Testing.UnitTests;
 
-public class ConventionTests
+public sealed class ConventionTests
 {
     [Theory]
     [InlineData(typeof(CreateGameRequest), "TheCodeKitchen.Application.Contracts.Requests",

@@ -8,7 +8,7 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class CookBookController(IClusterClient clusterClient) : ControllerBase
+public sealed class CookBookController(IClusterClient clusterClient) : ControllerBase
 {
     [HttpGet("[action]")]
     public async Task<IActionResult> Read()

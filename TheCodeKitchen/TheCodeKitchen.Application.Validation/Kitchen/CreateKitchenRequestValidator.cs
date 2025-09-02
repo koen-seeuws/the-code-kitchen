@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 
 namespace TheCodeKitchen.Application.Validation.Kitchen;
 
-public class CreateKitchenValidator : AbstractValidator<CreateKitchenRequest>
+public sealed class CreateKitchenValidator : AbstractValidator<CreateKitchenRequest>
 {
     public CreateKitchenValidator()
     {

@@ -4,7 +4,7 @@ using Serilog.Events;
 
 namespace TheCodeKitchen.Infrastructure.Logging.Serilog;
 
-public class MaskPasswordPolicy : IDestructuringPolicy
+public sealed class MaskPasswordPolicy : IDestructuringPolicy
 {
     private const string DefaultMaskValue = "******";
 

@@ -5,7 +5,7 @@ using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Validation;
 
-public class CreateRecipeFormModelValidator : ValidatorBase<CreateRecipeFormModel>
+public sealed class CreateRecipeFormModelValidator : ValidatorBase<CreateRecipeFormModel>
 {
     public CreateRecipeFormModelValidator(
         IngredientFormModelValidator ingredientFormModelValidator,

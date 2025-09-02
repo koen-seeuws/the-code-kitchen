@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Contracts.Requests.Cook;
 
 namespace TheCodeKitchen.Application.Validation.Cook;
 
-public class ConfirmMessageValidator : AbstractValidator<ConfirmMessageRequest>
+public sealed class ConfirmMessageValidator : AbstractValidator<ConfirmMessageRequest>
 {
     public ConfirmMessageValidator()
     {

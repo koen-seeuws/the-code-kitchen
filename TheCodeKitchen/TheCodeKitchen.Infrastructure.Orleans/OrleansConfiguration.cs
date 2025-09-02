@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace TheCodeKitchen.Infrastructure.Orleans;
 
-public class OrleansConfiguration
+public sealed class OrleansConfiguration
 {
     public string? ClusterId { get; set; }
     public string? ServiceId { get; set; }
@@ -10,24 +10,26 @@ public class OrleansConfiguration
     public StreamingEventHubConfiguration? Streaming { get; set; }
 }
 
-public class OrleansConfigurationValidator : AbstractValidator<OrleansConfiguration>
+public sealed class OrleansConfigurationValidator : AbstractValidator<OrleansConfiguration>
 {
     public OrleansConfigurationValidator()
     {
         RuleFor(x => x.ClusterId).NotEmpty();
         RuleFor(x => x.ServiceId).NotEmpty();
         RuleFor(x => x.StateBlobContainer).NotEmpty();
-        RuleFor(x => x.Streaming).NotEmpty().SetValidator(new StreamingEventHubConfigurationValidator()!);
+        RuleFor(x => x.Streaming)
+            .NotEmpty()
+            .SetValidator(new StreamingEventHubConfigurationValidator()!);
     }
 }
 
-public class StreamingEventHubConfiguration
+public sealed class StreamingEventHubConfiguration
 {
     public string? EventHub { get; set; }
     public string? ConsumerGroup { get; set; }
 }
 
-public class StreamingEventHubConfigurationValidator : AbstractValidator<StreamingEventHubConfiguration>
+public sealed class StreamingEventHubConfigurationValidator : AbstractValidator<StreamingEventHubConfiguration>
 {
     public StreamingEventHubConfigurationValidator()
     {

@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Constants;
 
 namespace TheCodeKitchen.Testing.UnitTests;
 
-public class TemperatureHelperTests
+public sealed class TemperatureHelperTests
 {
     [Theory]
     [InlineData(1, 60, 20, 100, 0.01, 56.10)] // Slow heating, 1 minute

@@ -3,7 +3,7 @@ using TheCodeKitchen.Infrastructure.AzureSignalR.Constants;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Hubs;
 
-public class KitchenOrderHub : Hub
+public sealed class KitchenOrderHub : Hub
 {
     private const string KitchenIdQueryParameterKey = "kitchenId";
 

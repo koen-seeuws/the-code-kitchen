@@ -11,7 +11,7 @@ public interface ISecurityTokenService
     public string GeneratePlayerToken(Guid gameId, Guid kitchenId, string username);
 }
 
-public class JwtTokenService(JwtSecurityOptions jwtSecurityOptions) : ISecurityTokenService
+public sealed class JwtTokenService(JwtSecurityOptions jwtSecurityOptions) : ISecurityTokenService
 {
     private readonly SymmetricSecurityKey _signingKey = new(Encoding.UTF8.GetBytes(jwtSecurityOptions.Secret));
 

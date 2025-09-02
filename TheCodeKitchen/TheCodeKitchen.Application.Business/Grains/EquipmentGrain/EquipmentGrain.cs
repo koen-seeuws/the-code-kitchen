@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Events.Game;
 
 namespace TheCodeKitchen.Application.Business.Grains.EquipmentGrain;
 
-public class EquipmentGrainStreamSubscriptionHandles
+public sealed class EquipmentGrainStreamSubscriptionHandles
 {
     public StreamSubscriptionHandle<NextMomentEvent>? NextMomentStreamSubscriptionHandle { get; set; }
 }

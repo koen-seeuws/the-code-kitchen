@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public class Cook(string username, string passwordHash, Guid game, Guid kitchen)
+public sealed class Cook(string username, string passwordHash, Guid game, Guid kitchen)
 {
     public string Username { get; set; } = username;
     public string PasswordHash { get; set; } = passwordHash;

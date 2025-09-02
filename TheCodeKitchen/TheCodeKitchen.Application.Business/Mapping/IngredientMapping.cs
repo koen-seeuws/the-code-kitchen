@@ -2,7 +2,7 @@ using TheCodeKitchen.Application.Contracts.Response.Pantry;
 
 namespace TheCodeKitchen.Application.Business.Mapping;
 
-public class IngredientMapping : Profile
+public sealed class IngredientMapping : Profile
 {
     public IngredientMapping()
     {

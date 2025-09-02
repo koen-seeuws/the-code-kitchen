@@ -3,7 +3,7 @@ using TheCodeKitchen.Infrastructure.AzureSignalR.Constants;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Hubs;
 
-public class GameHub : Hub
+public sealed class GameHub : Hub
 {
     private const string GameIdQueryParameterKey = "gameId";
     

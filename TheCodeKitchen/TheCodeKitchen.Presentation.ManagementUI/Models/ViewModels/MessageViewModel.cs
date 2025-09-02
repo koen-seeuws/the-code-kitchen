@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Presentation.ManagementUI.Models.ViewModels;
 
-public class MessageViewModel
+public sealed class MessageViewModel
 {
     public string From { get; set; }
     public string? To { get; set; }

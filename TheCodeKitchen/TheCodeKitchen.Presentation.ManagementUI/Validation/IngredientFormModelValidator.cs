@@ -4,7 +4,7 @@ using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Validation;
 
-public class IngredientFormModelValidator : AbstractValidator<IngredientFormModel>
+public sealed class IngredientFormModelValidator : AbstractValidator<IngredientFormModel>
 {
     public IngredientFormModelValidator(StepFormModelValidator stepFormModelValidator)
     {

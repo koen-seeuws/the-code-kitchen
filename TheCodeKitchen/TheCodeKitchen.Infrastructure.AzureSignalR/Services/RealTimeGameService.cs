@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Contracts.Events.Kitchen;
 
 namespace TheCodeKitchen.Infrastructure.AzureSignalR.Services;
 
-public class RealTimeGameService(HubContextProvider hubContextProvider) : IRealTimeGameService
+public sealed class RealTimeGameService(HubContextProvider hubContextProvider) : IRealTimeGameService
 {
     public async Task SendKitchenCreatedEvent(Guid gameId, KitchenCreatedEvent @event)
     {

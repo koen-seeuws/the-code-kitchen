@@ -4,7 +4,7 @@ using TheCodeKitchen.Application.Contracts.Requests.Pantry;
 
 namespace TheCodeKitchen.Application.Validation.Pantry;
 
-public class CreateIngredientValidator : AbstractValidator<CreateIngredientRequest>
+public sealed class CreateIngredientValidator : AbstractValidator<CreateIngredientRequest>
 {
     public CreateIngredientValidator()
     {

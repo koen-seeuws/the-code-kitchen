@@ -3,7 +3,7 @@ using Microsoft.Azure.SignalR.Management;
 
 namespace TheCodeKitchen.Infrastructure.AzureSignalR;
 
-public class HubContextProvider(ServiceManager serviceManager) : IAsyncDisposable
+public sealed class HubContextProvider(ServiceManager serviceManager) : IAsyncDisposable
 {
     private readonly ServiceManager _serviceManager = serviceManager ?? throw new ArgumentNullException(nameof(serviceManager));
     

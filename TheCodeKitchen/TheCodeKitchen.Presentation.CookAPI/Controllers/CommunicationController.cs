@@ -13,7 +13,7 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 [ApiController]
 [Route("[controller]")]
 [Authorize]
-public class CommunicationController(
+public sealed class CommunicationController(
     IClusterClient clusterClient,
     SendMessageValidator sendMessageValidator,
     ConfirmMessageValidator confirmMessageValidator

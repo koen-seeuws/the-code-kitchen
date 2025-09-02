@@ -8,7 +8,7 @@ public interface IPasswordHashingService
     bool VerifyHashedPassword(string hashedPassword, string password);
 }
 
-public class PasswordHashingService : IPasswordHashingService
+public sealed class PasswordHashingService : IPasswordHashingService
 {
     private readonly PasswordHasher<string> _passwordHasher = new();
 

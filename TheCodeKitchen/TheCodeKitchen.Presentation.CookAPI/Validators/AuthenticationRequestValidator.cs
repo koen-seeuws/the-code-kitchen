@@ -3,7 +3,7 @@ using TheCodeKitchen.Presentation.API.Cook.Models;
 
 namespace TheCodeKitchen.Presentation.API.Cook.Validators;
 
-public class AuthenticationRequestValidator : AbstractValidator<AuthenticationRequest>
+public sealed class AuthenticationRequestValidator : AbstractValidator<AuthenticationRequest>
 {
     public AuthenticationRequestValidator()
     {

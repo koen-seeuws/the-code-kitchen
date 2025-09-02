@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
 
-public class CreateRecipeFormModel
+public sealed class CreateRecipeFormModel
 {
     public string Name { get; set; } = string.Empty;
     public ICollection<StepFormModel> Steps { get; set; } = new List<StepFormModel>();
@@ -11,13 +11,13 @@ public class CreateRecipeFormModel
     };
 }
 
-public class IngredientFormModel
+public sealed class IngredientFormModel
 {
     public string Name { get; set; } = string.Empty;
     public ICollection<StepFormModel> Steps { get; set; } = new List<StepFormModel>();
 }
 
-public class StepFormModel
+public sealed class StepFormModel
 {
     public string EquipmentType { get; set; } = string.Empty;
     public TimeSpan? Time { get; set; } = TimeSpan.Zero;

@@ -1,6 +1,6 @@
 namespace TheCodeKitchen.Core.Domain;
 
-public class Recipe(string name, List<RecipeIngredient>? ingredients, List<RecipeStep>? steps)
+public sealed class Recipe(string name, List<RecipeIngredient>? ingredients, List<RecipeStep>? steps)
 {
 
     public string Name { get; set; } = name;

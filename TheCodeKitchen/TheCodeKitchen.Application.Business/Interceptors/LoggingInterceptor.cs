@@ -2,7 +2,7 @@ using Microsoft.Extensions.Logging;
 
 namespace TheCodeKitchen.Application.Business.Interceptors;
 
-public class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IIncomingGrainCallFilter
+public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IIncomingGrainCallFilter
 {
     public async Task Invoke(IIncomingGrainCallContext context)
     {

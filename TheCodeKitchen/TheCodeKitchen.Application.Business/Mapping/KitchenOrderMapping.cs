@@ -3,7 +3,7 @@ using TheCodeKitchen.Application.Contracts.Response.KitchenOrder;
 
 namespace TheCodeKitchen.Application.Business.Mapping;
 
-public class KitchenOrderMapping : Profile
+public sealed class KitchenOrderMapping : Profile
 {
     public KitchenOrderMapping()
     {

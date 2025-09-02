@@ -5,7 +5,7 @@ using TheCodeKitchen.Presentation.ManagementUI.Models.FormModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Validation;
 
-public class StepFormModelValidator : AbstractValidator<StepFormModel>
+public sealed class StepFormModelValidator : AbstractValidator<StepFormModel>
 {
     public StepFormModelValidator()
     {

@@ -2,7 +2,7 @@ using Microsoft.JSInterop;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Services;
 
-public class ScrollService(IJSRuntime jsRuntime)
+public sealed class ScrollService(IJSRuntime jsRuntime)
 {
     public async Task ScrollToBottom(string containerId)
     {

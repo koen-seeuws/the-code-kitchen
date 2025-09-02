@@ -8,7 +8,7 @@ namespace TheCodeKitchen.Presentation.ManagementAPI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class PantryController(
+public sealed class PantryController(
     IClusterClient clusterClient,
     CreateIngredientValidator createIngredientValidator
 ) : ControllerBase
