@@ -47,6 +47,8 @@ public static class ControllerBaseExtensions
                 return controllerBase.StatusCode((int) HttpStatusCode.Unauthorized, error.Message);
             case NotImplementedError:
                 return controllerBase.StatusCode((int) HttpStatusCode.NotImplemented, "This operation has not been implemented yet.");
+            case ValidationError validationError:
+                return controllerBase.BadRequest(validationError);
             default:
                 return controllerBase.StatusCode((int) HttpStatusCode.InternalServerError, error.Message);
         }
