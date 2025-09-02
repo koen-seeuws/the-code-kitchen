@@ -22,10 +22,10 @@ public sealed partial class KitchenOrderGrain
 
         var newRating = state.State.TotalRating = ratings.Average();
 
-        if (Math.Abs(previousRating - newRating) <= 0.01)
+        if (Math.Abs(previousRating - newRating) <= RatingMargin.ToSendUpdate)
             return TheCodeKitchenUnit.Value;
 
-        // Only update kitchen rating if rating changed significantly (> 1%)
+        // Only update kitchen rating if rating changed significantly enough
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
         var stream = streamProvider.GetStream<KitchenOrderRatingUpdatedEvent>(
             nameof(KitchenOrderRatingUpdatedEvent), state.State.Kitchen);

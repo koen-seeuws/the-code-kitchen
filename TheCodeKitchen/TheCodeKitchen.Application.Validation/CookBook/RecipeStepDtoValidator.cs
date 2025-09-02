@@ -8,7 +8,8 @@ public sealed class RecipeStepDtoValidator : AbstractValidator<RecipeStepDto>
 {
     public RecipeStepDtoValidator()
     {
-        RuleFor(s => s.EquipmentType).IsInCollection(EquipmentType.Steppable);;
+        RuleFor(s => s.EquipmentType)
+            .IsInCollection(EquipmentType.Steppable, StringComparer.OrdinalIgnoreCase);
         RuleFor(s => s.Time).GreaterThan(TimeSpan.Zero);
     }
 }

@@ -62,7 +62,7 @@ public sealed partial class KitchenOrderGrain
 
         // In case of missing foods, we apply a penalty for wrong foods
         // In case of no missing food (and possibly extra food), we apply no penalty
-        var penaltyWeight = (double)missingFoods.Count / requestedFoods.Count;
+        var penaltyWeight = (double) missingFoods.Count / requestedFoods.Count;
 
         var adjustedCorrectCount = correctFoods.Count - wrongFoods.Count * penaltyWeight;
         adjustedCorrectCount = Math.Max(0, adjustedCorrectCount); // Avoid negative score
