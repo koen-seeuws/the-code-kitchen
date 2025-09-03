@@ -23,7 +23,7 @@ public class Chef : Cook
 
         OnKitchenOrderCreatedEvent = async kitchenOrderCreatedEvent =>
         {
-            Console.WriteLine($"{Username} - New Order Received - {JsonSerializer.Serialize(kitchenOrderCreatedEvent)}");
+      
         };
 
         OnTimerElapsedEvent = async timerElapsedEvent => { };

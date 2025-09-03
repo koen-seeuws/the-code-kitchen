@@ -12,7 +12,10 @@ public class HeadChef : Cook
     private ICollection<Message> _messages = new List<Message>();
     private ICollection<Order> _orders = new List<Order>();
 
-    public HeadChef(string[] chefs, string kitchenCode, string username, string password, TheCodeKitchenClient theCodeKitchenClient) : base(theCodeKitchenClient)
+    private int _chefLoadCounter;
+
+    public HeadChef(string[] chefs, string kitchenCode, string username, string password,
+        TheCodeKitchenClient theCodeKitchenClient) : base(theCodeKitchenClient)
     {
         _chefs = chefs;
         _theCodeKitchenClient = theCodeKitchenClient;
@@ -35,9 +38,8 @@ public class HeadChef : Cook
             var cookFoodTasks = order.RequestedFoods.Select(async (food, index) =>
             {
                 // Spreading cooking load evenly among chefs based on total requested food count
-                var requestedFoodCount = _orders.SelectMany(o => o.RequestedFoods).Count();
-                var to = _chefs[requestedFoodCount % _chefs.Length];
-                
+                var to = _chefs[_chefLoadCounter++ % _chefs.Length];
+
                 // Sending the cook the order to cook the food
                 var messageContent = new MessageContent(
                     "CookFood",
@@ -49,7 +51,7 @@ public class HeadChef : Cook
                 var sendMessage = new SendMessageRequest(to, JsonSerializer.Serialize(messageContent));
                 await _theCodeKitchenClient.SendMessage(sendMessage);
             });
-            
+
             await Task.WhenAll(cookFoodTasks);
         };
 
@@ -72,7 +74,7 @@ public class HeadChef : Cook
     public override async Task StartCooking(CancellationToken cancellationToken = default)
     {
         await base.StartCooking(cancellationToken);
-        
+
         var messages = await _theCodeKitchenClient.ReadMessages(cancellationToken);
         _messages = messages
             .Select(m => new Message(
