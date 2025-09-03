@@ -35,7 +35,7 @@ public sealed partial class EquipmentGrain
             );
 
         var food = new Food(
-            recipe?.Name ?? "UNKNOWN MIXTURE",
+            recipe?.Name ?? UnknownMixture.Value,
          state.State.Foods.Select(f => f.Temperature).Average(),
             state.State.Game,
             state.State.Kitchen,
