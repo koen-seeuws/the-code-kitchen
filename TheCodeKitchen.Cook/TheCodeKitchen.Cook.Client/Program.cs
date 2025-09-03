@@ -3,19 +3,23 @@ using TheCodeKitchen.Cook.Client.Cooks;
 
 const string apiUrl = "https://ca-tck-cook-api.proudbeach-fbb36fdd.westeurope.azurecontainerapps.io/";
 
-const string kitchenCode = "6SYE"; 
+const string kitchenCode = "NARV";
+const string password = "P@ssw0rd";
 
-var koen1Client = new TheCodeKitchenClient(apiUrl);
-var koen1 = new Koen1(kitchenCode, koen1Client);
+const string headChefUsername = "Head Chef Koen";
+string[] chefUsernames = ["Koen 1", "Koen 2", "Koen 3"];
 
-var koen2Client = new TheCodeKitchenClient(apiUrl);
-var koen2 = new Koen2(kitchenCode, koen2Client);
+var headChefClient = new TheCodeKitchenClient(apiUrl);
+var headChef = new HeadChef(chefUsernames, kitchenCode, headChefUsername, password, headChefClient);
 
-var koen3Client = new TheCodeKitchenClient(apiUrl);
-var koen3 = new Koen3(kitchenCode, koen3Client);
-
-var koen4Client = new TheCodeKitchenClient(apiUrl);
-var koen4 = new Koen4(kitchenCode, koen4Client);
+var chefs = chefUsernames
+    .Select(chefUsername =>
+    {
+        var chefClient = new TheCodeKitchenClient(apiUrl);
+        var chef = new Chef(headChefUsername, kitchenCode, chefUsername, password, chefClient);
+        return chef;
+    })
+    .ToArray();
 
 var cancellationTokenSource = new CancellationTokenSource();
 
@@ -30,10 +34,10 @@ try
 {
     Console.WriteLine("Starting cooking...");
 
-    await koen1.StartCooking();
-    await koen2.StartCooking();
-    await koen3.StartCooking();
-    await koen4.StartCooking();
+    await headChef.StartCooking();
+    await chefs[0].StartCooking();
+    await chefs[1].StartCooking();
+    await chefs[2].StartCooking();
     
     Console.WriteLine("\nStarted cooking. Press Ctrl+C to stop.");
     await Task.Delay(-1, cancellationTokenSource.Token); // Keep the app alive until Ctrl+C
