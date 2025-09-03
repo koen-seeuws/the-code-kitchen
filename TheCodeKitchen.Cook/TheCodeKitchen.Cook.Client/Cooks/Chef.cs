@@ -68,11 +68,6 @@ public class Chef : Cook
         var confirmMessageRequest = new ConfirmMessageRequest(message.Number);
         switch (message.Content.Code)
         {
-            case "Cook Food":
-            {
-                
-                break;
-            }
             case "Release Equipment":
             {
                 var lockMessage = await FindEquipmentLockMessage(
@@ -129,7 +124,7 @@ public class Chef : Cook
             .ToList();
 
         var lockMessage = messages.FirstOrDefault(m =>
-            m.Content.Code == "LockEquipment" &&
+            m.Content.Code == "Lock Equipment" &&
             m.Content.EquipmentType == equipmentType &&
             m.Content.EquipmentNumber == equipmentNumber
         );

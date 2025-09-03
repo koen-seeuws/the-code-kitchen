@@ -3,7 +3,8 @@ namespace TheCodeKitchen.Cook.Client.Custom;
 public record TimerNote(
     long Order,
     string Food,
-    string? IngredientOf,
+    string[] RecipeTree,
     string EquipmentType,
-    int EquipmentNumber
+    int EquipmentNumber,
+    int StepIndex
 );
