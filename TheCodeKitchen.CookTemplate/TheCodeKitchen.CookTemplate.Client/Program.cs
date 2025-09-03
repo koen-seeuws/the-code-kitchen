@@ -2,7 +2,9 @@
 
 const string apiUrl = "https://ca-tck-cook-api.proudbeach-fbb36fdd.westeurope.azurecontainerapps.io/";
 
-var cook = new Cook(apiUrl);// <- Implement your code in the Cook class
+
+var theCodeKitchenClient = new TheCodeKitchenClient(apiUrl);
+var cook = new Cook(theCodeKitchenClient);// <- Implement your code in the Cook class
 
 var cancellationTokenSource = new CancellationTokenSource();
 

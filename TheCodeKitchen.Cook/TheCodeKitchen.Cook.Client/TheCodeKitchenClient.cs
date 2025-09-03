@@ -19,21 +19,13 @@ namespace TheCodeKitchen.Cook.Client;
 
 public class TheCodeKitchenClient
 {
-    private readonly string _username;
-    private readonly string _password;
-    private readonly string _kitchenCode;
-
     private readonly Uri _baseUrl;
     private readonly HttpClient _httpClient;
     private string? _token;
     private HubConnection? _cookHubConnection;
 
-    public TheCodeKitchenClient(string username, string password, string kitchenCode, string baseUrl)
+    public TheCodeKitchenClient(string baseUrl)
     {
-        _username = username;
-        _password = password;
-        _kitchenCode = kitchenCode;
-
         if (!baseUrl.EndsWith('/'))
             baseUrl += '/';
 
@@ -42,13 +34,16 @@ public class TheCodeKitchenClient
     }
 
     public async Task Connect(
+        string username,
+        string password,
+        string kitchenCode,
         Action<KitchenOrderCreatedEvent> onKitchenOrderCreated,
         Action<TimerElapsedEvent> onTimerElapsed,
         Action<MessageReceivedEvent> onMessageReceived,
         CancellationToken cancellationToken = default
     )
     {
-        await Authenticate(cancellationToken);
+        await Authenticate(username, password, kitchenCode, cancellationToken);
         await ListenToCookHubEvents(onKitchenOrderCreated, onTimerElapsed, onMessageReceived, cancellationToken);
     }
 
@@ -56,7 +51,7 @@ public class TheCodeKitchenClient
     public async Task SendMessage(SendMessageRequest request, CancellationToken cancellationToken = default)
         => await _httpClient.PostAsJsonAsync("Communication/SendMessage", request,
             cancellationToken: cancellationToken);
-    
+
     public async Task<ReadMessageResponse[]> ReadMessages(CancellationToken cancellationToken = default)
         => await _httpClient.GetFromJsonAsync<ReadMessageResponse[]>("Communication/ReadMessages",
             cancellationToken: cancellationToken) ?? [];
@@ -113,16 +108,17 @@ public class TheCodeKitchenClient
 
     public async Task StopTimer(StopTimerRequest request, CancellationToken cancellationToken = default)
         => await _httpClient.PostAsJsonAsync("Timer/Stop", request, cancellationToken: cancellationToken);
-    
+
     // Trash
     public async Task ThrowFoodAway(CancellationToken cancellationToken = default)
         => await _httpClient.PostAsync("Trash/ThrowAway", null, cancellationToken);
 
     // Kitchen (/Authentication)
-    private async Task Authenticate(CancellationToken cancellationToken = default)
+    private async Task Authenticate(string username, string password, string kitchenCode,
+        CancellationToken cancellationToken = default)
     {
-        var authenticationRequest = new AuthenticationRequestDto(_username, _password);
-        var httpResponse = await _httpClient.PostAsJsonAsync($"kitchen/{_kitchenCode}/join", authenticationRequest,
+        var authenticationRequest = new AuthenticationRequestDto(username, password);
+        var httpResponse = await _httpClient.PostAsJsonAsync($"kitchen/{kitchenCode}/join", authenticationRequest,
             cancellationToken: cancellationToken);
         httpResponse.EnsureSuccessStatusCode();
         var authenticationResponse =
