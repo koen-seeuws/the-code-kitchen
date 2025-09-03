@@ -98,6 +98,13 @@ public partial class Game(
                 TimePassed = @event.TimePassed;
                 await InvokeAsync(StateHasChanged);
             });
+        
+        _gameHubConnection.On(nameof(GameResetEvent),
+            async (GameResetEvent _) =>
+            {
+                TimePassed = TimeSpan.Zero;
+                await InvokeAsync(StateHasChanged);
+            });
 
         try
         {
@@ -176,6 +183,29 @@ public partial class Game(
         catch
         {
             snackbar.Add("An error occurred while trying to generate an order.", Severity.Error);
+        }
+        finally
+        {
+            Busy = false;
+        }
+    }
+    
+    private async Task Reset()
+    {
+        try
+        {
+            Busy = true;
+            var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
+            var resetGameResult = await gameGrain.ResetGame();
+
+            if (!resetGameResult.Succeeded)
+            {
+                snackbar.Add(resetGameResult.Error.Message, Severity.Error);
+            }
+        }
+        catch
+        {
+            snackbar.Add("An error occurred while trying to reset the game.", Severity.Error);
         }
         finally
         {

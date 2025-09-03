@@ -9,4 +9,5 @@ public interface IRealTimeGameService
     Task SendCookJoinedEvent(Guid gameId, CookJoinedEvent @event);
     Task SendGamePausedOrResumedEvent(Guid gameId, GamePausedOrResumedEvent @event);
     Task SendMomentPassedEvent(Guid gameId, MomentPassedEvent @event);
+    Task SendGameResetEvent(Guid gameId, GameResetEvent @event);
 }

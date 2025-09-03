@@ -9,6 +9,6 @@ public sealed class Kitchen(Guid id, string name, string code, Guid game, Dictio
     public Guid Game { get; set; } = game;
     public List<string> Cooks { get; set; } = [];
     public Dictionary<string, int> Equipment { get; set; } = equipment;
-
+    public List<long> Orders { get; set; } = [];
     public List<long> OpenOrders { get; set; } = [];
 }

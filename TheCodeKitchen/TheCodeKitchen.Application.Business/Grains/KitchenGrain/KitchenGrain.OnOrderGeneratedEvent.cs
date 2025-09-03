@@ -17,6 +17,7 @@ public sealed partial class KitchenGrain
         if (!createKitchenOrderResult.Succeeded)
             return;
 
+        state.State.Orders.Add(orderGeneratedEvent.Number);
         state.State.OpenOrders.Add(orderGeneratedEvent.Number);
         await state.WriteStateAsync();
     }

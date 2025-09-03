@@ -10,4 +10,5 @@ public interface IKitchenOrderGrain : IGrainWithIntegerCompoundKey
     Task<Result<GetKitchenOrderResponse>> GetKitchenOrder();
     Task<Result<TheCodeKitchenUnit>> DeliverFood(DeliverFoodRequest request);
     Task<Result<TheCodeKitchenUnit>> Complete();
+    Task<Result<TheCodeKitchenUnit>> Cancel();
 }

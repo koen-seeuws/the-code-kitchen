@@ -16,6 +16,7 @@ public interface IGameGrain : IGrainWithGuidKey
     Task<Result<TheCodeKitchenUnit>> PauseGame();
     Task<Result<PauseOrResumeGameResponse>> PauseOrUnpauseGame();
     Task<Result<TheCodeKitchenUnit>> ResumeGame();
+    Task<Result<TheCodeKitchenUnit>> ResetGame();
     Task<Result<TheCodeKitchenUnit>> StartGame();
     Task<Result<TheCodeKitchenUnit>> UpdateGame(UpdateGameRequest request);
 }

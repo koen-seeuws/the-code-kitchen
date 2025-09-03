@@ -19,4 +19,5 @@ public interface ICookGrain : IGrainWithGuidCompoundKey
     Task<Result<IEnumerable<GetTimerResponse>>> GetTimers();
     
     Task<Result<TheCodeKitchenUnit>> StopTimer(StopTimerRequest request);
+    Task<Result<TheCodeKitchenUnit>> Reset();
 }

@@ -86,6 +86,12 @@ public partial class KitchenComponent(
                 await scrollService.ScrollToBottomIfPreviouslyNearBottom($"kitchen-{Kitchen.Id}-messages");
             });
         });
+        
+        _kitchenHubConnection.On(nameof(KitchenResetEvent), async (KitchenResetEvent @event) =>
+        {
+            KitchenOrders?.Clear();
+            await InvokeAsync(StateHasChanged);
+        });
 
         try
         {

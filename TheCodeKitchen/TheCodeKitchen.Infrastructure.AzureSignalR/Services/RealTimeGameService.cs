@@ -32,4 +32,11 @@ public sealed class RealTimeGameService(HubContextProvider hubContextProvider) :
         var gameGroup = GroupConstants.GetGameGroup(gameId);
         await gameHubContext.Clients.Group(gameGroup).SendAsync(nameof(MomentPassedEvent), @event);
     }
+
+    public async Task SendGameResetEvent(Guid gameId, GameResetEvent @event)
+    {
+        var gameHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.GameHub);
+        var gameGroup = GroupConstants.GetGameGroup(gameId);
+        await gameHubContext.Clients.Group(gameGroup).SendAsync(nameof(GameResetEvent), @event);
+    }
 }

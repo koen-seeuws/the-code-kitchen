@@ -18,5 +18,5 @@ public interface IKitchenGrain : IGrainWithGuidKey
     Task<Result<TheCodeKitchenUnit>> CloseOrder(CloseOrderRequest request);
     Task<Result<IEnumerable<GetOpenOrderResponse>>> GetOpenOrders();
     Task<Result<TheCodeKitchenUnit>> DeliverMessage(DeliverMessageRequest request);
-
+    Task<Result<TheCodeKitchenUnit>> ResetKitchen();
 }

@@ -8,4 +8,5 @@ public interface IOrderGrain : IGrainWithIntegerCompoundKey
 {
     Task<Result<GenerateOrderResponse>> GenerateOrder(GenerateOrderRequest request);
     Task<Result<GetOrderResponse>> GetOrder();
+    Task<Result<TheCodeKitchenUnit>> Cancel();
 }

@@ -14,7 +14,7 @@ public sealed partial class EquipmentGrain
             var equipmentType = primaryKeyExtensions[1];
             var number = int.Parse(primaryKeyExtensions[2]);
 
-            return new AlreadyExistsError(
+            return new NotFoundError(
                 $"The equipment {equipmentType} {number} does not exist in kitchen {kitchen}");
         }
 

@@ -8,4 +8,5 @@ public interface IEquipmentGrain : IGrainWithGuidCompoundKey
     Task<Result<TheCodeKitchenUnit>> Initialize(CreateEquipmentRequest request);
     Task<Result<TheCodeKitchenUnit>> AddFood(AddFoodRequest request);
     Task<Result<TakeFoodResponse>> TakeFood(TakeFoodFromEquipmentRequest request);
+    Task<Result<TheCodeKitchenUnit>> Clean();
 }
