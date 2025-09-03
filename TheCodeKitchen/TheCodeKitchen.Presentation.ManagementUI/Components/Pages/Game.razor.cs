@@ -202,6 +202,10 @@ public partial class Game(
             {
                 snackbar.Add(resetGameResult.Error.Message, Severity.Error);
             }
+            else
+            {
+                snackbar.Add("Successfully reset the game.", Severity.Success);
+            }
         }
         catch
         {

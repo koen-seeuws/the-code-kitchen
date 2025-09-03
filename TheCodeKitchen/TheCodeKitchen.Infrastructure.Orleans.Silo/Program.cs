@@ -42,7 +42,8 @@ foreach (var storage in TheCodeKitchenAzureTableConstants.All)
     tableClient.DeleteTable(storage);
 }
 
-await blobClient.DeleteBlobContainerAsync(siloConfiguration.StateBlobContainer);
+//await blobClient.DeleteBlobContainerAsync(siloConfiguration.StateBlobContainer);
+//await blobClient.CreateBlobContainerAsync(siloConfiguration.StateBlobContainer);
 #endif
 
 builder.Services.AddSignalRManagementServices(builder.Configuration);

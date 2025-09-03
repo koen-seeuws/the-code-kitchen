@@ -1,4 +1,5 @@
 using TheCodeKitchen.Application.Business.Extensions;
+using TheCodeKitchen.Application.Contracts.Events.Kitchen;
 
 namespace TheCodeKitchen.Application.Business.Grains.KitchenGrain;
 
@@ -52,6 +53,9 @@ public sealed partial class KitchenGrain
         state.State.Orders.Clear();
         state.State.OpenOrders.Clear();
         await state.WriteStateAsync();
+        
+        var @event = new KitchenResetEvent();
+        await realTimeKitchenService.SendKitchenResetEvent(state.State.Id, @event);
         
         return TheCodeKitchenUnit.Value;
     }
