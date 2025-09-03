@@ -35,6 +35,7 @@ public class Chef : Cook
                 JsonSerializer.Deserialize<MessageContent>(messageReceivedEvent.Content)!
             );
             Console.WriteLine($"{Username} - Message Received - {JsonSerializer.Serialize(message)}");
+            await ProcessMessage(message);
         };
     }
 
@@ -64,27 +65,21 @@ public class Chef : Cook
         var confirmMessageRequest = new ConfirmMessageRequest(message.Number);
         switch (message.Content.Code)
         {
-            case "EquipmentReleased":
+            case "Cook Food":
             {
-                var messageResponses = await _theCodeKitchenClient.ReadMessages();
-                var messages = messageResponses
-                    .Select(m => new Message(
-                            m.Number,
-                            m.From,
-                            m.To,
-                            JsonSerializer.Deserialize<MessageContent>(m.Content)!
-                        )
-                    )
-                    .ToList();
-
-                var lockMessage = messages.FirstOrDefault(m =>
-                    m.Content.Code == "EquipmentLocked" &&
-                    m.Content.EquipmentType == message.Content.EquipmentType &&
-                    m.Content.EquipmentNumber == message.Content.EquipmentNumber
+                
+                break;
+            }
+            case "Release Equipment":
+            {
+                var lockMessage = await FindEquipmentLockMessage(
+                    message.Content.EquipmentType!,
+                    message.Content.EquipmentNumber!.Value
                 );
 
                 if (lockMessage != null)
                 {
+                    // Lock message is used to indicate whether equipment is in use
                     var confirmLockMessageRequest = new ConfirmMessageRequest(lockMessage.Number);
                     await _theCodeKitchenClient.ConfirmMessage(confirmLockMessageRequest);
                 }
@@ -98,5 +93,46 @@ public class Chef : Cook
                 break;
             }
         }
+    }
+
+    private async Task<bool> EquipmentIsLocked(string equipmentType, int equipmentNumber)
+    {
+        var lockMessage = await FindEquipmentLockMessage(equipmentType, equipmentNumber);
+
+        if (lockMessage != null) return true;
+
+        var timers = await _theCodeKitchenClient.GetTimers();
+        var timer = timers.FirstOrDefault(t =>
+        {
+            var timerNote = JsonSerializer.Deserialize<TimerNote>(t.Note);
+            return timerNote?.EquipmentType == equipmentType && timerNote.EquipmentNumber == equipmentNumber;
+        });
+
+        return timer != null;
+    }
+
+
+    private async Task<Message?> FindEquipmentLockMessage(string equipmentType, int equipmentNumber)
+    {
+        var messageResponses = await _theCodeKitchenClient.ReadMessages();
+        var messages = messageResponses
+            .Select(m => new Message(
+                    m.Number,
+                    m.From,
+                    m.To,
+                    JsonSerializer.Deserialize<MessageContent>(m.Content)!
+                )
+            )
+            .ToList();
+
+        var lockMessage = messages.FirstOrDefault(m =>
+            m.Content.Code == "LockEquipment" &&
+            m.Content.EquipmentType == equipmentType &&
+            m.Content.EquipmentNumber == equipmentNumber
+        );
+
+        return lockMessage == null
+            ? null
+            : new Message(lockMessage.Number, lockMessage.From, lockMessage.To, lockMessage.Content);
     }
 }

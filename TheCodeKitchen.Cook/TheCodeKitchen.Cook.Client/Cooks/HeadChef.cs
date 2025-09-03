@@ -38,7 +38,7 @@ public class HeadChef : Cook
 
                 // Sending the cook the order to cook the food
                 var messageContent = new MessageContent(
-                    "CookFood",
+                    "Cook Food",
                     order.Number,
                     food,
                     null,
@@ -92,7 +92,7 @@ public class HeadChef : Cook
         var confirmMessageRequest = new ConfirmMessageRequest(message.Number);
         switch (message.Content.Code)
         {
-            case "FoodReady":
+            case "Food Ready":
             {
                 var orders = await _theCodeKitchenClient.ViewOpenOrders();
                 var order = orders.FirstOrDefault(o => o.Number == message.Content.Order!.Value);
@@ -123,7 +123,7 @@ public class HeadChef : Cook
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
                 break;
             }
-            case "EquipmentReleased" or "EquipmentLocked":
+            case "Equipment Released" or "Equipment Locked":
             {
                 // Equipment released messages can be ignored by the head chef
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
