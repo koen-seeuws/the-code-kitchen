@@ -63,8 +63,7 @@ public class HeadChef : Cook
                 messageReceivedEvent.Number,
                 messageReceivedEvent.From,
                 messageReceivedEvent.To,
-                JsonSerializer.Deserialize<MessageContent>(messageReceivedEvent.Content)!,
-                messageReceivedEvent.Timestamp
+                JsonSerializer.Deserialize<MessageContent>(messageReceivedEvent.Content)!
             );
             Console.WriteLine($"{Username} - Message Received - {JsonSerializer.Serialize(message)}");
             _messages.Add(message);
@@ -78,11 +77,11 @@ public class HeadChef : Cook
         var messages = await _theCodeKitchenClient.ReadMessages(cancellationToken);
         _messages = messages
             .Select(m => new Message(
-                m.Number,
-                m.From,
-                m.To,
-                JsonSerializer.Deserialize<MessageContent>(m.Content)!,
-                m.Timestamp)
+                    m.Number,
+                    m.From,
+                    m.To,
+                    JsonSerializer.Deserialize<MessageContent>(m.Content)!
+                )
             )
             .ToList();
 

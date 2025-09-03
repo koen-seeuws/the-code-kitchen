@@ -13,7 +13,8 @@ public class Chef : Cook
     private ICollection<GetRecipeResponse> _recipes = new List<GetRecipeResponse>();
     private readonly string _headChef;
 
-    public Chef(string headChef, string kitchenCode, string username, string password, TheCodeKitchenClient theCodeKitchenClient) : base(theCodeKitchenClient)
+    public Chef(string headChef, string kitchenCode, string username, string password,
+        TheCodeKitchenClient theCodeKitchenClient) : base(theCodeKitchenClient)
     {
         _headChef = headChef;
         _theCodeKitchenClient = theCodeKitchenClient;
@@ -21,10 +22,7 @@ public class Chef : Cook
         Password = password;
         KitchenCode = kitchenCode;
 
-        OnKitchenOrderCreatedEvent = async kitchenOrderCreatedEvent =>
-        {
-      
-        };
+        OnKitchenOrderCreatedEvent = async kitchenOrderCreatedEvent => { };
 
         OnTimerElapsedEvent = async timerElapsedEvent => { };
 
@@ -34,29 +32,28 @@ public class Chef : Cook
                 messageReceivedEvent.Number,
                 messageReceivedEvent.From,
                 messageReceivedEvent.To,
-                JsonSerializer.Deserialize<MessageContent>(messageReceivedEvent.Content)!,
-                messageReceivedEvent.Timestamp
+                JsonSerializer.Deserialize<MessageContent>(messageReceivedEvent.Content)!
             );
             Console.WriteLine($"{Username} - Message Received - {JsonSerializer.Serialize(message)}");
             _messages.Add(message);
         };
     }
-    
+
     public override async Task StartCooking(CancellationToken cancellationToken = default)
     {
         await base.StartCooking(cancellationToken);
 
         _ingredients = await _theCodeKitchenClient.PantryInventory(cancellationToken);
         _recipes = await _theCodeKitchenClient.ReadRecipes(cancellationToken);
-        
+
         var messages = await _theCodeKitchenClient.ReadMessages(cancellationToken);
         _messages = messages
             .Select(m => new Message(
-                m.Number,
-                m.From,
-                m.To,
-                JsonSerializer.Deserialize<MessageContent>(m.Content)!,
-                m.Timestamp)
+                    m.Number,
+                    m.From,
+                    m.To,
+                    JsonSerializer.Deserialize<MessageContent>(m.Content)!
+                )
             )
             .ToList();
     }

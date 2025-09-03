@@ -36,9 +36,7 @@ public sealed partial class GameGrain
 
         var resetResults = await Task.WhenAll(allResetTasks);
 
-        var resetResult = resetResults
-            .Where(r => r.Error.GetType() != typeof(NotFoundError))
-            .Combine();
+        var resetResult = resetResults.Combine();
 
         if (!resetResult.Succeeded)
             return resetResult.Error;

@@ -43,9 +43,7 @@ public sealed partial class KitchenGrain
             .Concat(cancelOrdersTasks);
         
         var resetResults = await Task.WhenAll(resetTasks);
-        var resetResult = resetResults
-            .Where(r => r.Error.GetType() != typeof(NotFoundError))
-            .Combine();
+        var resetResult = resetResults.Combine();
         
         if (!resetResult.Succeeded)
             return resetResult.Error;
