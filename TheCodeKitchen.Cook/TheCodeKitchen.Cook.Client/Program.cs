@@ -34,10 +34,10 @@ try
 {
     Console.WriteLine("Starting cooking...");
 
-    await headChef.StartCooking();
-    await chefs[0].StartCooking();
-    await chefs[1].StartCooking();
-    await chefs[2].StartCooking();
+    var headChefTask = headChef.StartCooking(cancellationTokenSource.Token);
+    var chefTasks = chefs.Select(chef => chef.StartCooking(cancellationTokenSource.Token)).ToArray();
+    
+    await Task.WhenAll(chefTasks.Append(headChefTask));
     
     Console.WriteLine("\nStarted cooking. Press Ctrl+C to stop.");
     await Task.Delay(-1, cancellationTokenSource.Token); // Keep the app alive until Ctrl+C

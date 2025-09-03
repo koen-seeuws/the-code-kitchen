@@ -18,7 +18,7 @@ public sealed partial class KitchenGrain
             cooks = [cook];
         }
 
-        var timestamp = DateTime.UtcNow;
+
 
         var tasks = cooks
             .Where(cook => !cook.Equals(request.From, StringComparison.OrdinalIgnoreCase))
@@ -26,13 +26,13 @@ public sealed partial class KitchenGrain
             {
                 var cookGrain = GrainFactory.GetGrain<ICookGrain>(state.State.Id, cook);
                 var deliverMessageRequest =
-                    new ReceiveMessageRequest(request.From, cook, request.Content, timestamp);
+                    new ReceiveMessageRequest(request.From, cook, request.Content);
                 return cookGrain.ReceiveMessage(deliverMessageRequest);
             });
 
         await Task.WhenAll(tasks);
         
-        var @event = new MessageDeliveredEvent(request.From, request.To, request.Content, timestamp);
+        var @event = new MessageDeliveredEvent(request.From, request.To, request.Content);
         await realTimeKitchenService.SendMessageDeliveredEvent(state.State.Id, @event);
 
         return TheCodeKitchenUnit.Value;
