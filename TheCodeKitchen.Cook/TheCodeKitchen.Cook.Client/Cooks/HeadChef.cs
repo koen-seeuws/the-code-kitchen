@@ -9,8 +9,6 @@ public class HeadChef : Cook
     private readonly TheCodeKitchenClient _theCodeKitchenClient;
     private readonly string[] _chefs;
 
-    private ICollection<Message> _messages = new List<Message>();
-    private ICollection<Order> _orders = new List<Order>();
 
     private int _chefLoadCounter;
 
@@ -32,8 +30,6 @@ public class HeadChef : Cook
             );
 
             Console.WriteLine($"{Username} - New Order Received - {JsonSerializer.Serialize(order)}");
-
-            _orders.Add(order);
 
             var cookFoodTasks = order.RequestedFoods.Select(async (food, index) =>
             {
@@ -66,7 +62,7 @@ public class HeadChef : Cook
                 JsonSerializer.Deserialize<MessageContent>(messageReceivedEvent.Content)!
             );
             Console.WriteLine($"{Username} - Message Received - {JsonSerializer.Serialize(message)}");
-            _messages.Add(message);
+            await ProcessMessage(message);
         };
     }
 
@@ -74,8 +70,8 @@ public class HeadChef : Cook
     {
         await base.StartCooking(cancellationToken);
 
-        var messages = await _theCodeKitchenClient.ReadMessages(cancellationToken);
-        _messages = messages
+        var messageResponses = await _theCodeKitchenClient.ReadMessages(cancellationToken);
+        var messages = messageResponses
             .Select(m => new Message(
                     m.Number,
                     m.From,
@@ -85,14 +81,54 @@ public class HeadChef : Cook
             )
             .ToList();
 
-        var orders = await _theCodeKitchenClient.ViewOpenOrders(cancellationToken);
-        _orders = orders
-            .Select(o => new Order(
-                    o.Number,
-                    o.RequestedFoods,
-                    o.DeliveredFoods
-                )
-            )
-            .ToList();
+        foreach (var message in messages)
+        {
+            await ProcessMessage(message);
+        }
+    }
+
+    private async Task ProcessMessage(Message message)
+    {
+        var confirmMessageRequest = new ConfirmMessageRequest(message.Number);
+        switch (message.Content.Code)
+        {
+            case "FoodReady":
+            {
+                var orders = await _theCodeKitchenClient.ViewOpenOrders();
+                var order = orders.FirstOrDefault(o => o.Number == message.Content.Order!.Value);
+
+                if (order == null)
+                {
+                    //Order was closed by someone else
+                    await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
+                    return;
+                }
+
+                await _theCodeKitchenClient.TakeFoodFromEquipment(message.Content.EquipmentType!,
+                    message.Content.EquipmentNumber!.Value);
+                await _theCodeKitchenClient.DeliverFoodToOrder(message.Content.Order!.Value);
+
+                var allDelivered = order.DeliveredFoods
+                    .GroupBy(delivered => delivered)
+                    .All(deliveredCount =>
+                        order.RequestedFoods.Count(requested => requested == deliveredCount.Key) >=
+                        deliveredCount.Count()
+                    );
+
+                if (allDelivered)
+                {
+                    await _theCodeKitchenClient.CompleteOrder(order.Number);
+                }
+
+                await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
+                break;
+            }
+            case "EquipmentReleased" or "EquipmentLocked":
+            {
+                // Equipment released messages can be ignored by the head chef
+                await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
+                break;
+            }
+        }
     }
 }
