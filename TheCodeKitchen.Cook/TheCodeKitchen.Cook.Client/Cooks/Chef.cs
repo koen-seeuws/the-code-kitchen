@@ -12,6 +12,20 @@ public class Chef : Cook
     private ICollection<GetIngredientResponse> _ingredients = new List<GetIngredientResponse>();
     private ICollection<GetRecipeResponse> _recipes = new List<GetRecipeResponse>();
     private readonly string _headChef;
+    private readonly Dictionary<string, int> _equipments = new Dictionary<string, int>
+    {
+        { EquipmentType.Bbq, 6 },
+        { EquipmentType.Blender, 4 },
+        { EquipmentType.Counter, 30 },
+        { EquipmentType.CuttingBoard, 10 },
+        { EquipmentType.Freezer, 20 },
+        { EquipmentType.Fridge, 20 },
+        { EquipmentType.Fryer, 6 },
+        { EquipmentType.HotPlate, 15 },
+        { EquipmentType.Mixer, 6 },
+        { EquipmentType.Oven, 4 },
+        { EquipmentType.Stove, 6 },
+    };
 
     public Chef(string headChef, string kitchenCode, string username, string password,
         TheCodeKitchenClient theCodeKitchenClient) : base(theCodeKitchenClient)
