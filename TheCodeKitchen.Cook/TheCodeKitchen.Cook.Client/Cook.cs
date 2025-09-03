@@ -25,7 +25,7 @@ public class Cook(TheCodeKitchenClient theCodeKitchenClient)
         // TODO: Implement logic here
     };
 
-    public async Task StartCooking(CancellationToken cancellationToken = default)
+    public virtual async Task StartCooking(CancellationToken cancellationToken = default)
     {
         await theCodeKitchenClient.Connect(
             Username,
