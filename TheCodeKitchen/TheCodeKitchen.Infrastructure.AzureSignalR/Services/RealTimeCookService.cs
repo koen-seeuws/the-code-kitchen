@@ -6,13 +6,13 @@ public sealed class RealTimeCookService(HubContextProvider hubContextProvider) :
 { 
     public async Task SendMessageReceivedEvent(MessageReceivedEvent @event)
     {
-        var cookHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.KitchenOrderHub);
+        var cookHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.CookHub);
         await cookHubContext.Clients.User(@event.To).SendAsync(nameof(MessageReceivedEvent), @event);
     }
 
     public async Task SendTimerElapsedEvent(string username, TimerElapsedEvent @event)
     {
-        var cookHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.KitchenOrderHub);
+        var cookHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.CookHub);
         await cookHubContext.Clients.User(username).SendAsync(nameof(TimerElapsedEvent), @event);
     }
 }

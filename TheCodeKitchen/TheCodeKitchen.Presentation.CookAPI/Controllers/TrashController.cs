@@ -5,7 +5,7 @@ using TheCodeKitchen.Infrastructure.Security.Extensions;
 
 namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 
-[Tags("Timers")]
+[Tags("Trash")]
 [ApiController]
 [Route("[controller]")]
 [Authorize]
