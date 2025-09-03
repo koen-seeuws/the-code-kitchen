@@ -51,7 +51,10 @@ public class HeadChef : Cook
             await Task.WhenAll(cookFoodTasks);
         };
 
-        OnTimerElapsedEvent = async timerElapsedEvent => { };
+        OnTimerElapsedEvent = async timerElapsedEvent =>
+        {
+            // Head chef does not process timer events, since chefs handle cooking
+        };
 
         OnMessageReceivedEvent = async messageReceivedEvent =>
         {
@@ -108,12 +111,14 @@ public class HeadChef : Cook
                     message.Content.EquipmentNumber!.Value);
                 await _theCodeKitchenClient.DeliverFoodToOrder(message.Content.Order!.Value);
 
-                var allDelivered = order.DeliveredFoods
-                    .GroupBy(delivered => delivered)
-                    .All(deliveredCount =>
-                        order.RequestedFoods.Count(requested => requested == deliveredCount.Key) >=
-                        deliveredCount.Count()
-                    );
+                var deliveredGroups = order.DeliveredFoods
+                    .GroupBy(f => f)
+                    .ToDictionary(g => g.Key, g => g.Count());
+
+                var allDelivered = order.RequestedFoods
+                    .GroupBy(f => f)
+                    .All(req => deliveredGroups.TryGetValue(req.Key, out var deliveredCount) &&
+                                deliveredCount >= req.Count());
 
                 if (allDelivered)
                 {

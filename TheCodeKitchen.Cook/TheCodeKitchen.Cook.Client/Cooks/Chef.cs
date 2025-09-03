@@ -22,7 +22,10 @@ public class Chef : Cook
         Password = password;
         KitchenCode = kitchenCode;
 
-        OnKitchenOrderCreatedEvent = async kitchenOrderCreatedEvent => { };
+        OnKitchenOrderCreatedEvent = async kitchenOrderCreatedEvent =>
+        {
+            // Chefs do not process new orders, only the head chef does
+        };
 
         OnTimerElapsedEvent = async timerElapsedEvent => { };
 
