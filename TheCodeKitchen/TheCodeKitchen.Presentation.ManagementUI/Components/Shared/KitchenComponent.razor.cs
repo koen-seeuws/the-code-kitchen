@@ -87,9 +87,10 @@ public partial class KitchenComponent(
             });
         });
         
-        _kitchenHubConnection.On(nameof(KitchenResetEvent), async (KitchenResetEvent @event) =>
+        _kitchenHubConnection.On(nameof(KitchenResetEvent), async (KitchenResetEvent _) =>
         {
             KitchenOrders?.Clear();
+            Messages.Clear();
             await InvokeAsync(StateHasChanged);
         });
 
