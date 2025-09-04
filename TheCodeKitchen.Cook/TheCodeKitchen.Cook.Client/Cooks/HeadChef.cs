@@ -109,7 +109,7 @@ public class HeadChef : Cook
 
                 await _theCodeKitchenClient.TakeFoodFromEquipment(message.Content.EquipmentType!,
                     message.Content.EquipmentNumber!.Value);
-                await ReleaseEquipment(message.Content.EquipmentType!, message.Content.EquipmentNumber!.Value);
+                await UnlockEquipment(message.Content.EquipmentType!, message.Content.EquipmentNumber!.Value);
                 await _theCodeKitchenClient.DeliverFoodToOrder(message.Content.Order!.Value);
 
                 var deliveredGroups = order.DeliveredFoods
@@ -138,7 +138,7 @@ public class HeadChef : Cook
         }
     }
 
-    private async Task ReleaseEquipment(string equipmentType, int equipmentNumber)
+    private async Task UnlockEquipment(string equipmentType, int equipmentNumber)
     {
         var releaseEquipmentMessageContent = new MessageContent(
             MessageCodes.UnlockEquipment,

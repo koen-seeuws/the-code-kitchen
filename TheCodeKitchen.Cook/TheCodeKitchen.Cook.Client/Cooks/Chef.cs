@@ -2,6 +2,7 @@ using System.Text.Json;
 using TheCodeKitchen.Cook.Client.Custom;
 using TheCodeKitchen.Cook.Contracts.Constants;
 using TheCodeKitchen.Cook.Contracts.Reponses.CookBook;
+using TheCodeKitchen.Cook.Contracts.Reponses.Food;
 using TheCodeKitchen.Cook.Contracts.Reponses.Pantry;
 using TheCodeKitchen.Cook.Contracts.Requests.Communication;
 using TheCodeKitchen.Cook.Contracts.Requests.Timer;
@@ -14,6 +15,10 @@ public class Chef : Cook
     private ICollection<GetIngredientResponse> _ingredients = new List<GetIngredientResponse>();
     private ICollection<GetRecipeResponse> _recipes = new List<GetRecipeResponse>();
     private readonly string _headChef;
+
+    private TakeFoodResponse? _currentFoodInHands = null;
+    private Dictionary<string, bool> _equipmentLocks = new();
+
     private readonly Dictionary<string, int> _equipments = new Dictionary<string, int>
     {
         { EquipmentType.Bbq, 6 },
@@ -43,7 +48,92 @@ public class Chef : Cook
             // Chefs do not process new orders, only the head chef does
         };
 
-        OnTimerElapsedEvent = async timerElapsedEvent => { };
+        OnTimerElapsedEvent = async timerElapsedEvent =>
+        {
+            var stopTimerRequest = new StopTimerRequest(timerElapsedEvent.Number);
+            await _theCodeKitchenClient.StopTimer(stopTimerRequest);
+
+            if (timerElapsedEvent.Note == null) return;
+            var timerNote = JsonSerializer.Deserialize<TimerNote>(timerElapsedEvent.Note);
+            if (timerNote == null) return;
+
+            var sourceEquipmentType = timerNote.EquipmentType;
+            var sourceEquipmentNumber = timerNote.EquipmentNumber;
+
+            if (_currentFoodInHands != null)
+            {
+                // If already holding food -> Ongoing action and try again 2 minutes later
+                await RetryLater(timerElapsedEvent.Note);
+                return;
+            }
+
+            var allStepsDone = !timerNote.StepsToDo.Any();
+
+            // Not all steps done -> Simply put it in the next equipment
+            if (!allStepsDone)
+            {
+                var stepToDo = timerNote.StepsToDo.First();
+                var destinationEquipmentType = stepToDo.EquipmentType;
+                var destinationEquipmentNumber = FindUnlockedEquipment(destinationEquipmentType);
+                if (destinationEquipmentNumber <= 0)
+                {
+                    // No equipment available -> Try again in 2 minutes
+                    await RetryLater(timerElapsedEvent.Note);
+                    return;
+                }
+
+                // Lock destination equipment, take food, unlock source equipment
+                await LockOrUnlockEquipment(destinationEquipmentType, destinationEquipmentNumber, true);
+
+                if (sourceEquipmentType != null && sourceEquipmentNumber.HasValue)
+                {
+                    // Food is in equipment -> Take from there
+                    _currentFoodInHands = await _theCodeKitchenClient.TakeFoodFromEquipment(
+                        sourceEquipmentType, sourceEquipmentNumber.Value);
+                    await LockOrUnlockEquipment(sourceEquipmentType, sourceEquipmentNumber.Value, false);
+                }
+                else
+                {
+                    // Food is in pantry -> Take from there
+                    _currentFoodInHands = await _theCodeKitchenClient.TakeFoodFromPantry(timerNote.Food);
+                }
+
+                // Add food to destination equipment, set timer for next step, update note for next step
+                await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
+                _currentFoodInHands = null;
+                
+                var timerNoteForNextStep = timerNote with
+                {
+                    EquipmentType = destinationEquipmentType,
+                    EquipmentNumber = destinationEquipmentNumber,
+                    StepsToDo = timerNote.StepsToDo.Skip(1).ToList()
+                };
+                var timerNoteForNextStepJson = JsonSerializer.Serialize(timerNoteForNextStep);
+                
+                var setTimerRequest = new SetTimerRequest(stepToDo.Time, timerNoteForNextStepJson);
+                await _theCodeKitchenClient.SetTimer(setTimerRequest);
+                return;
+            }
+
+            // Notify head chef that food is ready -> he will take it straight from the equipment
+            var isRequestedByHeadChef = timerNote.RecipeTree.Length == 0;
+            if (isRequestedByHeadChef)
+            {
+                var messageContent = new MessageContent(
+                    MessageCodes.FoodReady,
+                    timerNote.Order,
+                    timerNote.Food,
+                    sourceEquipmentType,
+                    sourceEquipmentNumber
+                );
+                var sendMessage = new SendMessageRequest(_headChef, JsonSerializer.Serialize(messageContent));
+                await _theCodeKitchenClient.SendMessage(sendMessage);
+                return;
+            }
+
+            // TODO: Is part of recipe -> Merge with other ingredients in 1 equipment
+            
+        };
 
         OnMessageReceivedEvent = async messageReceivedEvent =>
         {
@@ -89,24 +179,22 @@ public class Chef : Cook
         {
             case MessageCodes.CookFood:
             {
-               break;
+                await StartCookFood(message.Content.Order!.Value, message.Content.Food!);
+                await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
+                break;
             }
             case MessageCodes.UnlockEquipment:
             {
-                var lockMessage = await FindEquipmentLockMessage(
-                    message.Content.EquipmentType!,
-                    message.Content.EquipmentNumber!.Value
-                );
-
-                if (lockMessage != null)
-                {
-                    // Lock message is used to indicate whether equipment is in use
-                    var confirmLockMessageRequest = new ConfirmMessageRequest(lockMessage.Number);
-                    await _theCodeKitchenClient.ConfirmMessage(confirmLockMessageRequest);
-                }
-
+                var key = $"{message.Content.EquipmentType}-{message.Content.EquipmentNumber}".ToLower();
+                _equipmentLocks[key] = false;
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
-
+                break;
+            }
+            case MessageCodes.LockEquipment:
+            {
+                var key = $"{message.Content.EquipmentType}-{message.Content.EquipmentNumber}".ToLower();
+                _equipmentLocks[key] = true;
+                await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
                 break;
             }
             default:
@@ -116,44 +204,43 @@ public class Chef : Cook
         }
     }
 
-    private async Task<bool> EquipmentIsLocked(string equipmentType, int equipmentNumber)
+    private async Task StartCookFood(long orderNumber, string food)
     {
-        var lockMessage = await FindEquipmentLockMessage(equipmentType, equipmentNumber);
-
-        if (lockMessage != null) return true;
-
-        var timers = await _theCodeKitchenClient.GetTimers();
-        var timer = timers.FirstOrDefault(t =>
-        {
-            var timerNote = JsonSerializer.Deserialize<TimerNote>(t.Note);
-            return timerNote?.EquipmentType == equipmentType && timerNote.EquipmentNumber == equipmentNumber;
-        });
-
-        return timer != null;
+        //TODO -> Put ingredients in equipment and set timers
     }
 
-
-    private async Task<Message?> FindEquipmentLockMessage(string equipmentType, int equipmentNumber)
+    private async Task LockOrUnlockEquipment(string equipmentType, int equipmentNumber, bool isLocked)
     {
-        var messageResponses = await _theCodeKitchenClient.ReadMessages();
-        var messages = messageResponses
-            .Select(m => new Message(
-                    m.Number,
-                    m.From,
-                    m.To,
-                    JsonSerializer.Deserialize<MessageContent>(m.Content)!
-                )
-            )
-            .ToList();
+        var code = isLocked ? MessageCodes.LockEquipment : MessageCodes.UnlockEquipment;
+        var messageContent = new MessageContent(
+            MessageCodes.LockEquipment, null, null, equipmentType, equipmentNumber);
+        var sendMessageRequest = new SendMessageRequest(null, JsonSerializer.Serialize(messageContent));
+        await _theCodeKitchenClient.SendMessage(sendMessageRequest);
+        var key = $"{equipmentType}-{equipmentNumber}".ToLower();
+        _equipmentLocks[key] = isLocked;
+    }
 
-        var lockMessage = messages.FirstOrDefault(m =>
-            m.Content.Code == MessageCodes.LockEquipment &&
-            m.Content.EquipmentType == equipmentType &&
-            m.Content.EquipmentNumber == equipmentNumber
-        );
+    private int FindUnlockedEquipment(string equipmentType)
+    {
+        var equipmentCount = _equipments.GetValueOrDefault(equipmentType, 0);
+        for (var equipmentNumber = 1; equipmentNumber <= equipmentCount; equipmentNumber++)
+        {
+            if (!EquipmentIsLocked(equipmentType, equipmentNumber))
+                return equipmentNumber;
+        }
 
-        return lockMessage == null
-            ? null
-            : new Message(lockMessage.Number, lockMessage.From, lockMessage.To, lockMessage.Content);
+        return -1;
+    }
+
+    private bool EquipmentIsLocked(string equipmentType, int equipmentNumber)
+    {
+        var key = $"{equipmentType}-{equipmentNumber}".ToLower();
+        return _equipmentLocks.GetValueOrDefault(key, false);
+    }
+
+    private async Task RetryLater(string note, int minutes = 2)
+    {
+        var setTimerRequest = new SetTimerRequest(TimeSpan.FromMinutes(minutes), note);
+        await _theCodeKitchenClient.SetTimer(setTimerRequest);
     }
 }
