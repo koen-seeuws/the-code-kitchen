@@ -14,7 +14,6 @@ public class Chef : Cook
     private readonly TheCodeKitchenClient _theCodeKitchenClient;
     private ICollection<GetIngredientResponse> _ingredients = new List<GetIngredientResponse>();
     private ICollection<GetRecipeResponse> _recipes = new List<GetRecipeResponse>();
-    private readonly string _headChef;
 
     private TakeFoodResponse? _currentFoodInHands = null;
     private Dictionary<string, bool> _equipmentLocks = new();
@@ -37,7 +36,6 @@ public class Chef : Cook
     public Chef(string headChef, string kitchenCode, string username, string password,
         TheCodeKitchenClient theCodeKitchenClient) : base(theCodeKitchenClient)
     {
-        _headChef = headChef;
         _theCodeKitchenClient = theCodeKitchenClient;
         Username = username;
         Password = password;
@@ -63,7 +61,7 @@ public class Chef : Cook
             if (_currentFoodInHands != null)
             {
                 // If already holding food -> Ongoing action and try again 2 minutes later
-                await RetryLater(timerElapsedEvent.Note);
+                await RetryLater(timerNote);
                 return;
             }
 
@@ -78,7 +76,7 @@ public class Chef : Cook
                 if (destinationEquipmentNumber <= 0)
                 {
                     // No equipment available -> Try again in 2 minutes
-                    await RetryLater(timerElapsedEvent.Note);
+                    await RetryLater(timerNote);
                     return;
                 }
 
@@ -126,12 +124,12 @@ public class Chef : Cook
                     sourceEquipmentType,
                     sourceEquipmentNumber
                 );
-                var sendMessage = new SendMessageRequest(_headChef, JsonSerializer.Serialize(messageContent));
+                var sendMessage = new SendMessageRequest(headChef, JsonSerializer.Serialize(messageContent));
                 await _theCodeKitchenClient.SendMessage(sendMessage);
                 return;
             }
 
-            // TODO: Is part of recipe -> Merge with other ingredients in 1 equipment
+            // TODO: All steps are done and is part of recipe -> Merge with other ingredients in 1 equipment
         };
 
         OnMessageReceivedEvent = async messageReceivedEvent =>
@@ -178,7 +176,7 @@ public class Chef : Cook
         {
             case MessageCodes.CookFood:
             {
-                await StartCookFood(message.Content.Order!.Value, message.Content.Food!);
+                await StartCookingFood(message.Content.Order!.Value, message.Content.Food!, []);
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
                 break;
             }
@@ -203,9 +201,10 @@ public class Chef : Cook
         }
     }
 
-    private async Task StartCookFood(long orderNumber, string food)
+    private async Task StartCookingFood(long orderNumber, string food, string[] ingredientOfTree)
     {
         //TODO -> Put ingredients in equipment and set timers
+        //TODO -> If orrect equipment not available -> Retry later
     }
 
     private async Task LockOrUnlockEquipment(string equipmentType, int equipmentNumber, bool isLocked)
@@ -236,9 +235,10 @@ public class Chef : Cook
         return _equipmentLocks.GetValueOrDefault(key, false);
     }
 
-    private async Task RetryLater(string note, int minutes = 2)
+    private async Task RetryLater(TimerNote note, int minutes = 2)
     {
-        var setTimerRequest = new SetTimerRequest(TimeSpan.FromMinutes(minutes), note);
+        var jsonNote = JsonSerializer.Serialize(note);
+        var setTimerRequest = new SetTimerRequest(TimeSpan.FromMinutes(minutes), jsonNote);
         await _theCodeKitchenClient.SetTimer(setTimerRequest);
     }
 
