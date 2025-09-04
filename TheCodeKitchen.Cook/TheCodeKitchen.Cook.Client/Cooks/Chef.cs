@@ -74,7 +74,7 @@ public class Chef : Cook
             {
                 var stepToDo = timerNote.StepsToDo.First();
                 var destinationEquipmentType = stepToDo.EquipmentType;
-                var destinationEquipmentNumber = FindUnlockedEquipment(destinationEquipmentType);
+                var destinationEquipmentNumber = FindAvailableEquipment(destinationEquipmentType);
                 if (destinationEquipmentNumber <= 0)
                 {
                     // No equipment available -> Try again in 2 minutes
@@ -101,7 +101,7 @@ public class Chef : Cook
                 // Add food to destination equipment, set timer for next step, update note for next step
                 await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
                 _currentFoodInHands = null;
-                
+
                 var timerNoteForNextStep = timerNote with
                 {
                     EquipmentType = destinationEquipmentType,
@@ -109,7 +109,7 @@ public class Chef : Cook
                     StepsToDo = timerNote.StepsToDo.Skip(1).ToList()
                 };
                 var timerNoteForNextStepJson = JsonSerializer.Serialize(timerNoteForNextStep);
-                
+
                 var setTimerRequest = new SetTimerRequest(stepToDo.Time, timerNoteForNextStepJson);
                 await _theCodeKitchenClient.SetTimer(setTimerRequest);
                 return;
@@ -132,7 +132,6 @@ public class Chef : Cook
             }
 
             // TODO: Is part of recipe -> Merge with other ingredients in 1 equipment
-            
         };
 
         OnMessageReceivedEvent = async messageReceivedEvent =>
@@ -185,14 +184,14 @@ public class Chef : Cook
             }
             case MessageCodes.UnlockEquipment:
             {
-                var key = $"{message.Content.EquipmentType}-{message.Content.EquipmentNumber}".ToLower();
+                var key = GetEquipmentLockKey(message.Content.EquipmentType!, message.Content.EquipmentNumber!.Value);
                 _equipmentLocks[key] = false;
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
                 break;
             }
             case MessageCodes.LockEquipment:
             {
-                var key = $"{message.Content.EquipmentType}-{message.Content.EquipmentNumber}".ToLower();
+                var key = GetEquipmentLockKey(message.Content.EquipmentType!, message.Content.EquipmentNumber!.Value);
                 _equipmentLocks[key] = true;
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
                 break;
@@ -212,15 +211,14 @@ public class Chef : Cook
     private async Task LockOrUnlockEquipment(string equipmentType, int equipmentNumber, bool isLocked)
     {
         var code = isLocked ? MessageCodes.LockEquipment : MessageCodes.UnlockEquipment;
-        var messageContent = new MessageContent(
-            MessageCodes.LockEquipment, null, null, equipmentType, equipmentNumber);
+        var messageContent = new MessageContent(code, null, null, equipmentType, equipmentNumber);
         var sendMessageRequest = new SendMessageRequest(null, JsonSerializer.Serialize(messageContent));
         await _theCodeKitchenClient.SendMessage(sendMessageRequest);
-        var key = $"{equipmentType}-{equipmentNumber}".ToLower();
+        var key = GetEquipmentLockKey(equipmentType, equipmentNumber);
         _equipmentLocks[key] = isLocked;
     }
 
-    private int FindUnlockedEquipment(string equipmentType)
+    private int FindAvailableEquipment(string equipmentType)
     {
         var equipmentCount = _equipments.GetValueOrDefault(equipmentType, 0);
         for (var equipmentNumber = 1; equipmentNumber <= equipmentCount; equipmentNumber++)
@@ -234,7 +232,7 @@ public class Chef : Cook
 
     private bool EquipmentIsLocked(string equipmentType, int equipmentNumber)
     {
-        var key = $"{equipmentType}-{equipmentNumber}".ToLower();
+        var key = GetEquipmentLockKey(equipmentType, equipmentNumber);
         return _equipmentLocks.GetValueOrDefault(key, false);
     }
 
@@ -243,4 +241,7 @@ public class Chef : Cook
         var setTimerRequest = new SetTimerRequest(TimeSpan.FromMinutes(minutes), note);
         await _theCodeKitchenClient.SetTimer(setTimerRequest);
     }
+
+    private string GetEquipmentLockKey(string equipmentType, int equipmentNumber)
+        => $"{equipmentType}-{equipmentNumber}".ToUpper();
 }

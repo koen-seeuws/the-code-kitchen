@@ -131,7 +131,7 @@ public class HeadChef : Cook
             }
             case MessageCodes.LockEquipment or MessageCodes.UnlockEquipment:
             {
-                // Equipment lock/release messages can be ignored by the head chef
+                // Equipment lock/unlock messages can be ignored by the head chef
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
                 break;
             }
@@ -140,14 +140,10 @@ public class HeadChef : Cook
 
     private async Task UnlockEquipment(string equipmentType, int equipmentNumber)
     {
-        var releaseEquipmentMessageContent = new MessageContent(
-            MessageCodes.UnlockEquipment,
-            null,
-            null,
-            equipmentType,
-            equipmentNumber
-        );
-        var sendMessageRequest = new SendMessageRequest(null, JsonSerializer.Serialize(releaseEquipmentMessageContent));
+        var messageContent =
+            new MessageContent(MessageCodes.UnlockEquipment, null, null, equipmentType, equipmentNumber);
+        var messageContentJson = JsonSerializer.Serialize(messageContent);
+        var sendMessageRequest = new SendMessageRequest(null, messageContentJson);
         await _theCodeKitchenClient.SendMessage(sendMessageRequest);
     }
 }
