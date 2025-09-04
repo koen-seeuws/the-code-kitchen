@@ -68,6 +68,30 @@ public class Chef : Cook
         };
     }
 
+    public override async Task StartCooking(CancellationToken cancellationToken = default)
+    {
+        await base.StartCooking(cancellationToken);
+
+        _recipes = await _theCodeKitchenClient.ReadRecipes(cancellationToken);
+        _ingredients = await _theCodeKitchenClient.PantryInventory(cancellationToken);
+
+        var messageResponses = await _theCodeKitchenClient.ReadMessages(cancellationToken);
+        var messages = messageResponses
+            .Select(m => new Message(
+                    m.Number,
+                    m.From,
+                    m.To,
+                    JsonSerializer.Deserialize<MessageContent>(m.Content)!
+                )
+            )
+            .ToList();
+
+        foreach (var message in messages)
+        {
+            await ProcessMessage(message);
+        }
+    }
+
     private async Task ProcessMessage(Message message)
     {
         var confirmMessageRequest = new ConfirmMessageRequest(message.Number);
