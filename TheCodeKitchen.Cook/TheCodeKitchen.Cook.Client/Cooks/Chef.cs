@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Text.Json;
 using TheCodeKitchen.Cook.Client.Custom;
 using TheCodeKitchen.Cook.Contracts.Constants;
@@ -18,9 +19,10 @@ public class Chef : Cook
     private ICollection<GetRecipeResponse> _recipes = new List<GetRecipeResponse>();
 
     private TakeFoodResponse? _currentFoodInHands = null;
-    private Dictionary<string, bool> _equipmentLocks = new();
+    private ConcurrentDictionary<string, bool> _equipmentLocks = new();
 
-    private readonly Dictionary<string, int> _equipments = new Dictionary<string, int>
+
+    private readonly Dictionary<string, int> _equipments = new()
     {
         { EquipmentType.Bbq, 6 },
         { EquipmentType.Blender, 4 },
@@ -113,7 +115,7 @@ public class Chef : Cook
             }
             case MessageCodes.CookFood:
             {
-                await StartCookingFood(message.Content.Order!.Value, message.Content.Food!, []);
+                await StartCookingIngredients(message.Content.Order!.Value, message.Content.Food!, []);
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
                 break;
             }
@@ -162,10 +164,34 @@ public class Chef : Cook
         await _theCodeKitchenClient.SetTimer(setTimerRequest);
     }
 
-    private async Task StartCookingFood(long orderNumber, string food, string[] ingredientOfTree)
+    private async Task StartCookingIngredients(long orderNumber, string food, string[] ingredientOfTree)
     {
-        //TODO Put ingredients in equipment and set timers their timers
-        //If correct equipment not available -> Retry later
+        var recipe = _recipes.First(r => r.Name.Equals(food, StringComparison.OrdinalIgnoreCase));
+
+        foreach (var ingredient in recipe.Ingredients)
+        {
+            var isRecipe = _recipes.Any(r => r.Name.Equals(ingredient.Name, StringComparison.OrdinalIgnoreCase));
+            if (isRecipe)
+            {
+                // Ingredient is a recipe -> Recursively process it
+                await StartCookingIngredients(orderNumber, ingredient.Name, ingredientOfTree.Append(food).ToArray());
+            }
+            else
+            {
+                // Ingredient is a base ingredient -> ProcessTimerElapsedEvent will handle the rest
+                var timerNote = new TimerNote(
+                    orderNumber,
+                    ingredient.Name,
+                    ingredientOfTree.Append(food).ToArray(),
+                    null,
+                    null,
+                    ingredient.Steps.ToList()
+                );
+                var timerNoteJson = JsonSerializer.Serialize(timerNote);
+                var setTimerRequest = new SetTimerRequest(TimeSpan.FromMinutes(0), timerNoteJson);
+                await _theCodeKitchenClient.SetTimer(setTimerRequest);
+            }
+        }
     }
 
     private async Task ProcessTimerElapsedEvent(TimerElapsedEvent timerElapsedEvent)
@@ -251,9 +277,9 @@ public class Chef : Cook
             await _theCodeKitchenClient.SendMessage(sendMessage);
             return;
         }
+        
+        // All steps are done but is part of recipe
 
-        // TODO: All steps are done and is part of recipe -> Add all ingredients in 1 equipment and take food from there
-        // If the recipe has steps -> The all the necessary ingredients in this equipment and take food from there after the necessary step time
-        // If the recipe has no steps -> Put all the necessary ingredients in 1 EquipmentType.Counter and take from there (or maybe send HeadChef directly?)
+        // TODO: 
     }
 }
