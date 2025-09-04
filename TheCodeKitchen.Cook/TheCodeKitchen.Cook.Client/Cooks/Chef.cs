@@ -1,8 +1,10 @@
 using System.Text.Json;
 using TheCodeKitchen.Cook.Client.Custom;
+using TheCodeKitchen.Cook.Contracts.Constants;
 using TheCodeKitchen.Cook.Contracts.Reponses.CookBook;
 using TheCodeKitchen.Cook.Contracts.Reponses.Pantry;
 using TheCodeKitchen.Cook.Contracts.Requests.Communication;
+using TheCodeKitchen.Cook.Contracts.Requests.Timer;
 
 namespace TheCodeKitchen.Cook.Client.Cooks;
 
@@ -60,6 +62,9 @@ public class Chef : Cook
     {
         await base.StartCooking(cancellationToken);
 
+        _recipes = await _theCodeKitchenClient.ReadRecipes(cancellationToken);
+        _ingredients = await _theCodeKitchenClient.PantryInventory(cancellationToken);
+
         var messageResponses = await _theCodeKitchenClient.ReadMessages(cancellationToken);
         var messages = messageResponses
             .Select(m => new Message(
@@ -82,7 +87,11 @@ public class Chef : Cook
         var confirmMessageRequest = new ConfirmMessageRequest(message.Number);
         switch (message.Content.Code)
         {
-            case "Release Equipment":
+            case MessageCodes.CookFood:
+            {
+               break;
+            }
+            case MessageCodes.UnlockEquipment:
             {
                 var lockMessage = await FindEquipmentLockMessage(
                     message.Content.EquipmentType!,
@@ -138,7 +147,7 @@ public class Chef : Cook
             .ToList();
 
         var lockMessage = messages.FirstOrDefault(m =>
-            m.Content.Code == "Lock Equipment" &&
+            m.Content.Code == MessageCodes.LockEquipment &&
             m.Content.EquipmentType == equipmentType &&
             m.Content.EquipmentNumber == equipmentNumber
         );

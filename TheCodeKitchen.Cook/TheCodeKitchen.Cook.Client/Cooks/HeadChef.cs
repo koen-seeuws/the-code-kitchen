@@ -38,7 +38,7 @@ public class HeadChef : Cook
 
                 // Sending the cook the order to cook the food
                 var messageContent = new MessageContent(
-                    "Cook Food",
+                    MessageCodes.CookFood,
                     order.Number,
                     food,
                     null,
@@ -95,7 +95,7 @@ public class HeadChef : Cook
         var confirmMessageRequest = new ConfirmMessageRequest(message.Number);
         switch (message.Content.Code)
         {
-            case "Food Ready":
+            case MessageCodes.FoodReady:
             {
                 var orders = await _theCodeKitchenClient.ViewOpenOrders();
                 var order = orders.FirstOrDefault(o => o.Number == message.Content.Order!.Value);
@@ -109,6 +109,7 @@ public class HeadChef : Cook
 
                 await _theCodeKitchenClient.TakeFoodFromEquipment(message.Content.EquipmentType!,
                     message.Content.EquipmentNumber!.Value);
+                await ReleaseEquipment(message.Content.EquipmentType!, message.Content.EquipmentNumber!.Value);
                 await _theCodeKitchenClient.DeliverFoodToOrder(message.Content.Order!.Value);
 
                 var deliveredGroups = order.DeliveredFoods
@@ -128,12 +129,25 @@ public class HeadChef : Cook
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
                 break;
             }
-            case "Equipment Released" or "Equipment Locked":
+            case MessageCodes.LockEquipment or MessageCodes.UnlockEquipment:
             {
-                // Equipment released messages can be ignored by the head chef
+                // Equipment lock/release messages can be ignored by the head chef
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
                 break;
             }
         }
+    }
+
+    private async Task ReleaseEquipment(string equipmentType, int equipmentNumber)
+    {
+        var releaseEquipmentMessageContent = new MessageContent(
+            MessageCodes.UnlockEquipment,
+            null,
+            null,
+            equipmentType,
+            equipmentNumber
+        );
+        var sendMessageRequest = new SendMessageRequest(null, JsonSerializer.Serialize(releaseEquipmentMessageContent));
+        await _theCodeKitchenClient.SendMessage(sendMessageRequest);
     }
 }
