@@ -11,28 +11,25 @@ public sealed partial class CookGrain
         if (state.State.Food is not null)
             state.State.Food.Temperature = TemperatureHelper.CalculateNextMomentFoodTemperature(
                 nextMomentEvent.TimePerMoment,
-                state.State.Food.Temperature, 
+                state.State.Food.Temperature,
                 nextMomentEvent.Temperature,
                 RoomTemperatureTransferRate.Value
             );
 
-        var nonElapsedTimers = state.State.Timers
-            .Where(timer => timer.Time > TimeSpan.Zero)
-            .ToArray();
-
-        foreach (var timer in nonElapsedTimers)
+        var timerElapsedTasks = new List<Task>();
+        
+        foreach (var timer in state.State.Timers)
         {
             timer.Time -= nextMomentEvent.TimePerMoment;
-        }
+            
+            if (timer.Time > TimeSpan.Zero) continue;
+            
+            timer.Time = TimeSpan.Zero;
+            var @event = new TimerElapsedEvent(timer.Number, timer.Note);
+            var timerElapsedTask = realTimeCookService.SendTimerElapsedEvent(state.State.Username, @event);
+            timerElapsedTasks.Add(timerElapsedTask);
 
-        var timerElapsedTasks = state.State.Timers
-            .Except(nonElapsedTimers)
-            .Select(t =>
-            {
-                var @event = new TimerElapsedEvent(t.Number, t.Note);
-                return realTimeCookService.SendTimerElapsedEvent(state.State.Username, @event);
-            })
-            .ToArray();
+        }
 
         await Task.WhenAll(timerElapsedTasks);
     }
