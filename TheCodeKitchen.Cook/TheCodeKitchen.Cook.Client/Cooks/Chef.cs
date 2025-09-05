@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Text.Json;
 using TheCodeKitchen.Cook.Client.Custom;
 using TheCodeKitchen.Cook.Contracts.Constants;
@@ -18,9 +19,10 @@ public class Chef : Cook
     private ICollection<GetRecipeResponse> _recipes = new List<GetRecipeResponse>();
 
     private TakeFoodResponse? _currentFoodInHands = null;
-    private Dictionary<string, bool> _equipmentLocks = new();
+    private ConcurrentDictionary<string, bool> _equipmentLocks = new();
+    private ConcurrentDictionary<string, Tuple<string, int>> _preparedIngredientLocations = new();
 
-    private readonly Dictionary<string, int> _equipments = new Dictionary<string, int>
+    private readonly Dictionary<string, int> _equipments = new()
     {
         { EquipmentType.Bbq, 6 },
         { EquipmentType.Blender, 4 },
@@ -113,7 +115,7 @@ public class Chef : Cook
             }
             case MessageCodes.CookFood:
             {
-                await StartCookingFood(message.Content.Order!.Value, message.Content.Food!, []);
+                await StartCookingIngredients(message.Content.Order!.Value, message.Content.Food!, []);
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
                 break;
             }
@@ -162,10 +164,34 @@ public class Chef : Cook
         await _theCodeKitchenClient.SetTimer(setTimerRequest);
     }
 
-    private async Task StartCookingFood(long orderNumber, string food, string[] ingredientOfTree)
+    private async Task StartCookingIngredients(long orderNumber, string food, string[] ingredientOfTree)
     {
-        //TODO Put ingredients in equipment and set timers their timers
-        //If correct equipment not available -> Retry later
+        var recipe = _recipes.First(r => r.Name.Equals(food, StringComparison.OrdinalIgnoreCase));
+
+        foreach (var ingredient in recipe.Ingredients)
+        {
+            var isRecipe = _recipes.Any(r => r.Name.Equals(ingredient.Name, StringComparison.OrdinalIgnoreCase));
+            if (isRecipe)
+            {
+                // Ingredient is a recipe -> Recursively process it
+                await StartCookingIngredients(orderNumber, ingredient.Name, ingredientOfTree.Append(food).ToArray());
+            }
+            else
+            {
+                // Ingredient is a base ingredient -> ProcessTimerElapsedEvent will handle the rest
+                var timerNote = new TimerNote(
+                    orderNumber,
+                    ingredient.Name,
+                    ingredientOfTree.Append(food).ToArray(),
+                    null,
+                    null,
+                    ingredient.Steps.ToList()
+                );
+                var timerNoteJson = JsonSerializer.Serialize(timerNote);
+                var setTimerRequest = new SetTimerRequest(TimeSpan.FromMinutes(0), timerNoteJson);
+                await _theCodeKitchenClient.SetTimer(setTimerRequest);
+            }
+        }
     }
 
     private async Task ProcessTimerElapsedEvent(TimerElapsedEvent timerElapsedEvent)
@@ -236,7 +262,7 @@ public class Chef : Cook
             return;
         }
 
-        // Notify head chef that food is ready -> he will take it straight from the equipment
+        // All steps are done and the food is not part of a recipe -> Notify head chef that food is ready
         var isRequestedByHeadChef = timerNote.RecipeTree.Length <= 0;
         if (isRequestedByHeadChef)
         {
@@ -252,8 +278,113 @@ public class Chef : Cook
             return;
         }
 
-        // TODO: All steps are done and is part of recipe -> Add all ingredients in 1 equipment and take food from there
-        // If the recipe has steps -> The all the necessary ingredients in this equipment and take food from there after the necessary step time
-        // If the recipe has no steps -> Put all the necessary ingredients in 1 EquipmentType.Counter and take from there (or maybe send HeadChef directly?)
+        // All steps are done, but is part of recipe -> Find the recipe and merge it if all ingredients are ready
+        var recipeName = timerNote.RecipeTree.Last();
+        var recipe = _recipes.First(r => r.Name.Equals(recipeName, StringComparison.OrdinalIgnoreCase));
+
+        var orderRecipeKey = $"{timerNote.Order}_{string.Join('_', timerNote.RecipeTree)}".ToUpper();
+
+        var ingredientsToBePrepared = recipe.Ingredients.Where(i => i.Steps.Count > 0).ToList();
+        var ingredientsToBeTakenFromPantry = recipe.Ingredients.Where(i => i.Steps.Count <= 0).ToList();
+
+        var preparedIngredients = _preparedIngredientLocations
+            .Where(kv => kv.Key.StartsWith(orderRecipeKey))
+            .ToDictionary();
+
+        var isToBePrepared = ingredientsToBePrepared.Select(i => i.Name)
+            .Contains(timerNote.Food, StringComparer.OrdinalIgnoreCase);
+
+        if ((!isToBePrepared && ingredientsToBePrepared.Count == preparedIngredients.Count) ||
+            (isToBePrepared && ingredientsToBePrepared.Count == preparedIngredients.Count + 1))
+        {
+            // All ingredients with steps are ready, take the prepared ingredients, take the ingredients without steps from pantry and merge into recipe
+            var firstRecipeStep = recipe.Steps.FirstOrDefault();
+            var destinationEquipmentType = firstRecipeStep?.EquipmentType ?? EquipmentType.Counter;
+            var destinationEquipmentNumber = FindAvailableEquipment(destinationEquipmentType);
+
+            if (destinationEquipmentType == EquipmentType.Counter && destinationEquipmentNumber <= 0)
+            {
+                destinationEquipmentType = EquipmentType.HotPlate;
+                destinationEquipmentNumber = FindAvailableEquipment(destinationEquipmentType);
+            }
+
+            if (destinationEquipmentNumber <= 0)
+            {
+                // No Counter or Hot Plate available -> Try again in 2 minutes
+                await RetryLater(timerNote);
+                return;
+            }
+
+            // Lock destination equipment
+            await LockOrUnlockEquipment(destinationEquipmentType, destinationEquipmentNumber, true);
+
+            if (isToBePrepared)
+            {
+                _currentFoodInHands = await _theCodeKitchenClient.TakeFoodFromEquipment(sourceEquipmentType!, sourceEquipmentNumber!.Value);
+                await LockOrUnlockEquipment(sourceEquipmentType!, sourceEquipmentNumber.Value, false);
+                await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
+                _currentFoodInHands = null;
+            }
+
+            foreach (var location in preparedIngredients.Values)
+            {
+                _currentFoodInHands = await _theCodeKitchenClient.TakeFoodFromEquipment(location.Item1, location.Item2);
+                await LockOrUnlockEquipment(location.Item1, location.Item2, false);
+                await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
+                _currentFoodInHands = null;
+            }
+
+            foreach (var ingredient in ingredientsToBeTakenFromPantry)
+            {
+                _currentFoodInHands = await _theCodeKitchenClient.TakeFoodFromPantry(ingredient.Name);
+                await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
+                _currentFoodInHands = null;
+            }
+
+            var timerNoteForNextStep = new TimerNote(
+                timerNote.Order,
+                recipe.Name,
+                timerNote.RecipeTree.Take(timerNote.RecipeTree.Length - 1).ToArray(),
+                destinationEquipmentType,
+                destinationEquipmentNumber,
+                recipe.Steps.ToList()
+            );
+            var timerNoteForNextStepJson = JsonSerializer.Serialize(timerNoteForNextStep);
+            var time = firstRecipeStep?.Time ?? TimeSpan.FromMinutes(0);
+            var setTimerRequest = new SetTimerRequest(time, timerNoteForNextStepJson);
+            await _theCodeKitchenClient.SetTimer(setTimerRequest);
+        }
+        else if (ingredientsToBePrepared.Select(i => i.Name).Contains(timerNote.Food, StringComparer.OrdinalIgnoreCase))
+        {
+            // Current ingredient is one of the ingredients with steps, move it onto counter or hot plate and track the prepared ingredient
+            var destinationEquipmentType = EquipmentType.Counter;
+            var destinationEquipmentNumber = FindAvailableEquipment(destinationEquipmentType);
+
+            if (destinationEquipmentNumber <= 0)
+            {
+                destinationEquipmentType = EquipmentType.HotPlate;
+                destinationEquipmentNumber = FindAvailableEquipment(destinationEquipmentType);
+            }
+
+            if (destinationEquipmentNumber <= 0)
+            {
+                // No Counter or Hot Plate available -> Try again in 2 minutes
+                await RetryLater(timerNote);
+                return;
+            }
+
+            // Lock destination equipment, take food, unlock source equipment, add food to destination equipment
+            await LockOrUnlockEquipment(destinationEquipmentType, destinationEquipmentNumber, true);
+            _currentFoodInHands = await _theCodeKitchenClient.TakeFoodFromEquipment(
+                sourceEquipmentType!, sourceEquipmentNumber!.Value);
+            await LockOrUnlockEquipment(sourceEquipmentType!, sourceEquipmentNumber.Value, false);
+            await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
+            _currentFoodInHands = null;
+
+            // Track the prepared ingredient
+            var location = new Tuple<string, int>(destinationEquipmentType, destinationEquipmentNumber);
+            var orderRecipeIngredientKey = $"{orderRecipeKey}_{timerNote.Food}".ToUpper();
+            _preparedIngredientLocations[orderRecipeIngredientKey] = location;
+        }
     }
 }
