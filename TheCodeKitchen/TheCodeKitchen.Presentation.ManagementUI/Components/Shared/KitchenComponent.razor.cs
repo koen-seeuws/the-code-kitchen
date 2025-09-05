@@ -76,10 +76,7 @@ public partial class KitchenComponent(
         _kitchenHubConnection.On(nameof(MessageDeliveredEvent), async (MessageDeliveredEvent @event) =>
         {
             var messageViewModel = mapper.Map<MessageViewModel>(@event);
-            Messages = Messages
-                .Append(messageViewModel)
-                .OrderBy(m => m.Timestamp)
-                .ToList();
+            Messages.Add(messageViewModel);
             await InvokeAsync(async () =>
             {
                 StateHasChanged();

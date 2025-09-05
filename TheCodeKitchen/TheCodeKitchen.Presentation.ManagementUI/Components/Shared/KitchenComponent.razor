@@ -31,7 +31,6 @@
                     <MudCard>
                         <MudCardContent>
                             <MudText Typo="Typo.h6">@message.From to @(message.To ?? "everyone")</MudText>
-                            <MudText Typo="Typo.caption">@clientTimeService.GetLocalDateTime(message.Timestamp)</MudText>
                             <MudText Typo="Typo.body1">@message.Content</MudText>
                         </MudCardContent>
                     </MudCard>
