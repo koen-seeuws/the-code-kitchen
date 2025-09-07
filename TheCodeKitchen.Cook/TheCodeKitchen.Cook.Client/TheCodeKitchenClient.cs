@@ -84,6 +84,7 @@ public class TheCodeKitchenClient
     // Equipment
     public async Task AddFoodToEquipment(string equipment, int number, CancellationToken cancellationToken = default)
     {
+        equipment = equipment.Replace(" ", string.Empty);
         var response = await _httpClient.PostAsync($"Equipment/{equipment}/{number}/AddFood", null, cancellationToken);
         response.EnsureSuccessStatusCode();
     }
@@ -91,6 +92,7 @@ public class TheCodeKitchenClient
     public async Task<TakeFoodResponse?> TakeFoodFromEquipment(string equipment, int number,
         CancellationToken cancellationToken = default)
     {
+        equipment = equipment.Replace(" ", string.Empty);
         var response = await _httpClient.PostAsync($"Equipment/{equipment}/{number}/TakeFood", null, cancellationToken);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<TakeFoodResponse>(cancellationToken: cancellationToken) ?? null;
