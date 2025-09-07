@@ -1,6 +1,6 @@
 using System.Text.Json;
+using System.Threading.Channels;
 using TheCodeKitchen.Cook.Client.Custom;
-using TheCodeKitchen.Cook.Contracts.Reponses.Food;
 using TheCodeKitchen.Cook.Contracts.Requests.Communication;
 
 namespace TheCodeKitchen.Cook.Client.Cooks;
@@ -9,8 +9,8 @@ public class HeadChef : Cook
 {
     private readonly TheCodeKitchenClient _theCodeKitchenClient;
     private readonly string[] _chefs;
-    private TakeFoodResponse? _currentFoodInHands = null;
     private int _chefLoadCounter;
+    private readonly Channel<Message> _messages = Channel.CreateUnbounded<Message>();
 
     public HeadChef(string[] chefs, string kitchenCode, string username, string password,
         TheCodeKitchenClient theCodeKitchenClient) : base(theCodeKitchenClient)
@@ -23,7 +23,8 @@ public class HeadChef : Cook
 
         OnKitchenOrderCreatedEvent = async kitchenOrderCreatedEvent =>
         {
-            Console.WriteLine($"{Username} - New Order Received - {JsonSerializer.Serialize(kitchenOrderCreatedEvent)}");
+            Console.WriteLine(
+                $"{Username} - New Order Received - {JsonSerializer.Serialize(kitchenOrderCreatedEvent)}");
 
             var cookFoodTasks = kitchenOrderCreatedEvent.RequestedFoods.Select(async (food, index) =>
             {
@@ -59,7 +60,8 @@ public class HeadChef : Cook
                 JsonSerializer.Deserialize<MessageContent>(messageReceivedEvent.Content)!
             );
             Console.WriteLine($"{Username} - Message Received - {JsonSerializer.Serialize(message)}");
-            await ProcessMessage(message);
+
+            await _messages.Writer.WriteAsync(message);
         };
     }
 
@@ -67,21 +69,13 @@ public class HeadChef : Cook
     {
         await base.StartCooking(cancellationToken);
 
-        var messageResponses = await _theCodeKitchenClient.ReadMessages(cancellationToken);
-        var messages = messageResponses
-            .Select(m => new Message(
-                    m.Number,
-                    m.From,
-                    m.To,
-                    JsonSerializer.Deserialize<MessageContent>(m.Content)!
-                )
-            )
-            .ToList();
-
-        foreach (var message in messages)
+        _ = Task.Run(async () =>
         {
-            await ProcessMessage(message);
-        }
+            await foreach (var message in _messages.Reader.ReadAllAsync(cancellationToken))
+            {
+                await ProcessMessage(message);
+            }
+        }, cancellationToken);
     }
 
     private async Task ProcessMessage(Message message)
@@ -101,14 +95,14 @@ public class HeadChef : Cook
                     return;
                 }
 
-                Console.WriteLine($"{Username} - ProcessMessage - Delivering {message.Content.Food} to order {message.Content.Order!.Value}");
-                
-                _currentFoodInHands = await _theCodeKitchenClient.TakeFoodFromEquipment(message.Content.EquipmentType!,
+                Console.WriteLine(
+                    $"{Username} - ProcessMessage - Delivering {message.Content.Food} to order {message.Content.Order!.Value}");
+
+                await _theCodeKitchenClient.TakeFoodFromEquipment(message.Content.EquipmentType!,
                     message.Content.EquipmentNumber!.Value);
                 await UnlockEquipment(message.Content.EquipmentType!, message.Content.EquipmentNumber!.Value);
                 await _theCodeKitchenClient.DeliverFoodToOrder(message.Content.Order!.Value);
-                _currentFoodInHands = null;
-                
+
                 var deliveredGroups = order.DeliveredFoods
                     .GroupBy(f => f)
                     .ToDictionary(g => g.Key, g => g.Count());
