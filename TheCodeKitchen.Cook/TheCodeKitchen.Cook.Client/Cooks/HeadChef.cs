@@ -1,5 +1,6 @@
 using System.Text.Json;
 using TheCodeKitchen.Cook.Client.Custom;
+using TheCodeKitchen.Cook.Contracts.Reponses.Food;
 using TheCodeKitchen.Cook.Contracts.Requests.Communication;
 
 namespace TheCodeKitchen.Cook.Client.Cooks;
@@ -8,8 +9,7 @@ public class HeadChef : Cook
 {
     private readonly TheCodeKitchenClient _theCodeKitchenClient;
     private readonly string[] _chefs;
-
-
+    private TakeFoodResponse? _currentFoodInHands = null;
     private int _chefLoadCounter;
 
     public HeadChef(string[] chefs, string kitchenCode, string username, string password,
@@ -101,11 +101,14 @@ public class HeadChef : Cook
                     return;
                 }
 
-                await _theCodeKitchenClient.TakeFoodFromEquipment(message.Content.EquipmentType!,
+                Console.WriteLine($"{Username} - ProcessMessage - Delivering {message.Content.Food} to order {message.Content.Order!.Value}");
+                
+                _currentFoodInHands = await _theCodeKitchenClient.TakeFoodFromEquipment(message.Content.EquipmentType!,
                     message.Content.EquipmentNumber!.Value);
                 await UnlockEquipment(message.Content.EquipmentType!, message.Content.EquipmentNumber!.Value);
                 await _theCodeKitchenClient.DeliverFoodToOrder(message.Content.Order!.Value);
-
+                _currentFoodInHands = null;
+                
                 var deliveredGroups = order.DeliveredFoods
                     .GroupBy(f => f)
                     .ToDictionary(g => g.Key, g => g.Count());
@@ -117,6 +120,7 @@ public class HeadChef : Cook
 
                 if (allDelivered)
                 {
+                    Console.WriteLine($"{Username} - ProcessMessage - Completing order {message.Content.Order!.Value}");
                     await _theCodeKitchenClient.CompleteOrder(order.Number);
                 }
 

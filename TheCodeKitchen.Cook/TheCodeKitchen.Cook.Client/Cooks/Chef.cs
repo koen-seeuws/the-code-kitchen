@@ -329,7 +329,6 @@ public class Chef : Cook
                         sourceEquipmentNumber!.Value);
                 await LockOrUnlockEquipment(sourceEquipmentType!, sourceEquipmentNumber.Value, false);
                 await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
-                _currentFoodInHands = null;
             }
 
             foreach (var location in preparedIngredients.Values)
@@ -337,15 +336,15 @@ public class Chef : Cook
                 _currentFoodInHands = await _theCodeKitchenClient.TakeFoodFromEquipment(location.Item1, location.Item2);
                 await LockOrUnlockEquipment(location.Item1, location.Item2, false);
                 await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
-                _currentFoodInHands = null;
             }
 
             foreach (var ingredient in ingredientsToBeTakenFromPantry)
             {
                 _currentFoodInHands = await _theCodeKitchenClient.TakeFoodFromPantry(ingredient.Name);
                 await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
-                _currentFoodInHands = null;
             }
+            
+            _currentFoodInHands = null;
 
             var timerNoteForNextStep = new TimerNote(
                 timerNote.Order,
