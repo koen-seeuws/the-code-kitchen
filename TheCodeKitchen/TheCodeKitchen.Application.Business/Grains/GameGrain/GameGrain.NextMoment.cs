@@ -14,9 +14,9 @@ public sealed partial class GameGrain
 
         state.State.TimePassed += state.State.TimePerMoment;
         
-        if (_timeUntilNewOrder >= TimeSpan.Zero)
+        if (_timeUntilNewOrder > TimeSpan.Zero)
             _timeUntilNewOrder -= state.State.TimePerMoment;
-
+        
         // Sending out event
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
         var stream = streamProvider.GetStream<NextMomentEvent>(nameof(NextMomentEvent), gameId);
@@ -34,20 +34,13 @@ public sealed partial class GameGrain
         // Order generation
         if (_timeUntilNewOrder <= TimeSpan.Zero)
         {
+            _timeUntilNewOrder = TimeSpan.Zero;
             await GenerateOrder();
         }
 
         // Keep grain active while game is playing
-        await CheckAndDelayDeactivation();
+        DelayDeactivation(state.State.TimePerMoment * 2);
 
         return TheCodeKitchenUnit.Value;
-    }
-
-    private Task CheckAndDelayDeactivation()
-    {
-        if (!_nextMomentDelay.HasValue) return Task.CompletedTask;
-        var delay = _nextMomentDelay.Value.Add(TimeSpan.FromSeconds(30));
-        DelayDeactivation(delay);
-        return Task.CompletedTask;
     }
 }
