@@ -43,7 +43,7 @@ public sealed class CommunicationController(
     }
 
     [HttpPost("[action]")]
-    public async Task<IActionResult> Confirm(ConfirmMessageRequest request)
+    public async Task<IActionResult> ConfirmMessage(ConfirmMessageRequest request)
     {
         if (!confirmMessageValidator.ValidateAndError(request, out var error)) return this.MatchActionResult(error);
         var kitchen = HttpContext.User.GetKitchenId();
