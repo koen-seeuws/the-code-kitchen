@@ -134,6 +134,7 @@ public class TheCodeKitchenClient
     public async Task<TakeFoodResponse?> TakeFoodFromPantry(string ingredient,
         CancellationToken cancellationToken = default)
     {
+        ingredient = Uri.EscapeDataString(ingredient);
         var response = await _httpClient.PostAsync($"Pantry/{ingredient}/TakeFood", null, cancellationToken);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<TakeFoodResponse>(cancellationToken: cancellationToken) ?? null;
