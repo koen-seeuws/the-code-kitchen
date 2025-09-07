@@ -49,69 +49,120 @@ public class TheCodeKitchenClient
 
     // Communication
     public async Task SendMessage(SendMessageRequest request, CancellationToken cancellationToken = default)
-        => await _httpClient.PostAsJsonAsync("Communication/SendMessage", request,
+    {
+        var response = await _httpClient.PostAsJsonAsync("Communication/SendMessage", request,
             cancellationToken: cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
 
     public async Task<ReadMessageResponse[]> ReadMessages(CancellationToken cancellationToken = default)
-        => await _httpClient.GetFromJsonAsync<ReadMessageResponse[]>("Communication/ReadMessages",
-            cancellationToken: cancellationToken) ?? [];
+    {
+        var response = await _httpClient.GetAsync("Communication/ReadMessages", cancellationToken: cancellationToken);
+        response.EnsureSuccessStatusCode();
+        return
+            await response.Content.ReadFromJsonAsync<ReadMessageResponse[]>(cancellationToken: cancellationToken) ??
+            [];
+    }
 
     public async Task ConfirmMessage(ConfirmMessageRequest request, CancellationToken cancellationToken = default)
-        => await _httpClient.PostAsJsonAsync("Communication/ConfirmMessage", request,
+    {
+        var response = await _httpClient.PostAsJsonAsync("Communication/ConfirmMessage", request,
             cancellationToken: cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
 
     // CookBook
     public async Task<GetRecipeResponse[]> ReadRecipes(CancellationToken cancellationToken = default)
-        => await _httpClient.GetFromJsonAsync<GetRecipeResponse[]>("CookBook/Read",
-            cancellationToken: cancellationToken) ?? [];
+    {
+        var response = await _httpClient.GetAsync("CookBook/Read", cancellationToken: cancellationToken);
+        response.EnsureSuccessStatusCode();
+        return
+            await response.Content.ReadFromJsonAsync<GetRecipeResponse[]>(cancellationToken: cancellationToken) ??
+            [];
+    }
 
     // Equipment
     public async Task AddFoodToEquipment(string equipment, int number, CancellationToken cancellationToken = default)
-        => await _httpClient.PostAsync($"Equipment/{equipment}/{number}/AddFood", null, cancellationToken);
+    {
+        var response = await _httpClient.PostAsync($"Equipment/{equipment}/{number}/AddFood", null, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
 
     public async Task<TakeFoodResponse?> TakeFoodFromEquipment(string equipment, int number,
         CancellationToken cancellationToken = default)
     {
         var response = await _httpClient.PostAsync($"Equipment/{equipment}/{number}/TakeFood", null, cancellationToken);
+        response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<TakeFoodResponse>(cancellationToken: cancellationToken) ?? null;
     }
 
     // Orders
     public async Task<GetOpenOrderResponse[]> ViewOpenOrders(CancellationToken cancellationToken = default)
-        => await _httpClient.GetFromJsonAsync<GetOpenOrderResponse[]>("Orders/ViewOpen",
-            cancellationToken: cancellationToken) ?? [];
+    {
+        var response = await _httpClient.GetAsync("Orders/ViewOpen", cancellationToken: cancellationToken);
+        response.EnsureSuccessStatusCode();
+        return
+            await response.Content.ReadFromJsonAsync<GetOpenOrderResponse[]>(cancellationToken: cancellationToken) ??
+            [];
+    }
 
     public async Task DeliverFoodToOrder(long orderNumber, CancellationToken cancellationToken = default)
-        => await _httpClient.PostAsync($"Orders/{orderNumber}/Deliver", null, cancellationToken);
+    {
+        var response = await _httpClient.PostAsync($"Orders/{orderNumber}/Deliver", null, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
 
     public async Task CompleteOrder(long orderNumber, CancellationToken cancellationToken = default)
-        => await _httpClient.PostAsync($"Orders/{orderNumber}/Complete", null, cancellationToken);
+    {
+        var response = await _httpClient.PostAsync($"Orders/{orderNumber}/Complete", null, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
 
     // Pantry
     public async Task<GetIngredientResponse[]> PantryInventory(CancellationToken cancellationToken = default)
-        => await _httpClient.GetFromJsonAsync<GetIngredientResponse[]>("Pantry/Inventory",
-            cancellationToken: cancellationToken) ?? [];
+    {
+        var response = await _httpClient.GetAsync("Pantry/Inventory",
+            cancellationToken: cancellationToken);
+        response.EnsureSuccessStatusCode();
+        return
+            await response.Content.ReadFromJsonAsync<GetIngredientResponse[]>(cancellationToken: cancellationToken) ??
+            [];
+    }
 
     public async Task<TakeFoodResponse?> TakeFoodFromPantry(string ingredient,
         CancellationToken cancellationToken = default)
     {
         var response = await _httpClient.PostAsync($"Pantry/{ingredient}/TakeFood", null, cancellationToken);
+        response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<TakeFoodResponse>(cancellationToken: cancellationToken) ?? null;
     }
 
     // Timer
     public async Task SetTimer(SetTimerRequest request, CancellationToken cancellationToken = default)
-        => await _httpClient.PostAsJsonAsync("Timer/Set", request, cancellationToken: cancellationToken);
+    {
+        var response = await _httpClient.PostAsJsonAsync("Timer/Set", request, cancellationToken: cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
 
     public async Task<GetTimerResponse[]> GetTimers(CancellationToken cancellationToken = default)
-        => await _httpClient.GetFromJsonAsync<GetTimerResponse[]>("Timer/Get", cancellationToken) ?? [];
+    {
+        var response = await _httpClient.GetAsync("Timer/Get", cancellationToken);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<GetTimerResponse[]>(cancellationToken: cancellationToken) ?? [];
+    }
 
     public async Task StopTimer(StopTimerRequest request, CancellationToken cancellationToken = default)
-        => await _httpClient.PostAsJsonAsync("Timer/Stop", request, cancellationToken: cancellationToken);
+    {
+        var response = await _httpClient.PostAsJsonAsync("Timer/Stop", request, cancellationToken: cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
 
     // Trash
     public async Task ThrowFoodAway(CancellationToken cancellationToken = default)
-        => await _httpClient.PostAsync("Trash/ThrowAway", null, cancellationToken);
+    {
+        var response = await _httpClient.PostAsync("Trash/ThrowAway", null, cancellationToken);
+        response.EnsureSuccessStatusCode();
+    }
 
     // Kitchen (/Authentication)
     private async Task Authenticate(string username, string password, string kitchenCode,
