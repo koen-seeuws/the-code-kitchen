@@ -23,23 +23,17 @@ public class HeadChef : Cook
 
         OnKitchenOrderCreatedEvent = async kitchenOrderCreatedEvent =>
         {
-            var order = new Order(
-                kitchenOrderCreatedEvent.Number,
-                kitchenOrderCreatedEvent.RequestedFoods,
-                []
-            );
+            Console.WriteLine($"{Username} - New Order Received - {JsonSerializer.Serialize(kitchenOrderCreatedEvent)}");
 
-            Console.WriteLine($"{Username} - New Order Received - {JsonSerializer.Serialize(order)}");
-
-            var cookFoodTasks = order.RequestedFoods.Select(async (food, index) =>
+            var cookFoodTasks = kitchenOrderCreatedEvent.RequestedFoods.Select(async (food, index) =>
             {
-                // Spreading cooking load evenly among chefs based on total requested food count
+                // Spreading cooking load evenly among chefs
                 var to = _chefs[_chefLoadCounter++ % _chefs.Length];
 
                 // Sending the cook the order to cook the food
                 var messageContent = new MessageContent(
                     MessageCodes.CookFood,
-                    order.Number,
+                    kitchenOrderCreatedEvent.Number,
                     food,
                     null,
                     null

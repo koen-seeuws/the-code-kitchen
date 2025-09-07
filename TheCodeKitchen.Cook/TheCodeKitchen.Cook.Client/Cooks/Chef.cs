@@ -101,6 +101,8 @@ public class Chef : Cook
         {
             case MessageCodes.UnlockEquipment:
             {
+                Console.WriteLine(
+                    $"{Username} - Process Message - Unlocking Equipment - {message.Content.EquipmentType!} {message.Content.EquipmentNumber!.Value}");
                 var key = GetEquipmentLockKey(message.Content.EquipmentType!, message.Content.EquipmentNumber!.Value);
                 _equipmentLocks[key] = false;
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
@@ -108,6 +110,8 @@ public class Chef : Cook
             }
             case MessageCodes.LockEquipment:
             {
+                Console.WriteLine(
+                    $"{Username} - Process Message - Locking Equipment - {message.Content.EquipmentType!} {message.Content.EquipmentNumber!.Value}");
                 var key = GetEquipmentLockKey(message.Content.EquipmentType!, message.Content.EquipmentNumber!.Value);
                 _equipmentLocks[key] = true;
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
@@ -115,12 +119,10 @@ public class Chef : Cook
             }
             case MessageCodes.CookFood:
             {
+                Console.WriteLine(
+                    $"{Username} - Process Message - Cooking Food - Order: {message.Content.Order!.Value}, Food: {message.Content.Food!}");
                 await StartCookingIngredients(message.Content.Order!.Value, message.Content.Food!, []);
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
-                break;
-            }
-            default:
-            {
                 break;
             }
         }
@@ -128,6 +130,8 @@ public class Chef : Cook
 
     private async Task LockOrUnlockEquipment(string equipmentType, int equipmentNumber, bool isLocked)
     {
+        Console.WriteLine(
+            $"{Username} - LockOrUnlockEquipment - {(isLocked ? "Locking" : "Unlocking")} Equipment - {equipmentType} {equipmentNumber}");
         var code = isLocked ? MessageCodes.LockEquipment : MessageCodes.UnlockEquipment;
         var messageContent = new MessageContent(code, null, null, equipmentType, equipmentNumber);
         var sendMessageRequest = new SendMessageRequest(null, JsonSerializer.Serialize(messageContent));
@@ -320,7 +324,9 @@ public class Chef : Cook
 
             if (isToBePrepared)
             {
-                _currentFoodInHands = await _theCodeKitchenClient.TakeFoodFromEquipment(sourceEquipmentType!, sourceEquipmentNumber!.Value);
+                _currentFoodInHands =
+                    await _theCodeKitchenClient.TakeFoodFromEquipment(sourceEquipmentType!,
+                        sourceEquipmentNumber!.Value);
                 await LockOrUnlockEquipment(sourceEquipmentType!, sourceEquipmentNumber.Value, false);
                 await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
                 _currentFoodInHands = null;

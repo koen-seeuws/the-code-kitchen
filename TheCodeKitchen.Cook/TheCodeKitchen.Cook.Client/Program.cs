@@ -3,7 +3,7 @@ using TheCodeKitchen.Cook.Client.Cooks;
 
 const string apiUrl = "https://ca-tck-cook-api.proudbeach-fbb36fdd.westeurope.azurecontainerapps.io/";
 
-const string kitchenCode = "YI4N";
+const string kitchenCode = "J2DQ";
 const string password = "P@ssw0rd";
 
 const string headChefUsername = "Head Chef Koen";
