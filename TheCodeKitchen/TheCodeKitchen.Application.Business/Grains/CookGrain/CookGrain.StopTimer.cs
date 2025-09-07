@@ -12,13 +12,15 @@ public sealed partial class CookGrain
 
         var timer = state.State.Timers.FirstOrDefault(t => t.Number == request.Number);
 
-        if (timer is null)
-            return new NotFoundError($"You no longer have a timer with number {request.Number} addressed to you");
+        if (timer is not null)
+        {
+            state.State.Timers.Remove(timer);
+            await state.WriteStateAsync();
+        }
 
-        state.State.Timers.Remove(timer);
+        if (request.Number > state.State.TimerCounter)
+            return new NotFoundError($"The timer with number {request.Number} does not exist.");
 
-        await state.WriteStateAsync();
-
-        return new TheCodeKitchenUnit();
+        return TheCodeKitchenUnit.Value; // The timer once existed
     }
 }

@@ -12,13 +12,15 @@ public sealed partial class CookGrain
 
         var message = state.State.Messages.FirstOrDefault(m => m.Number == request.Number);
 
-        if (message is null)
+        if (message is not null)
+        {
+            state.State.Messages.Remove(message);
+            await state.WriteStateAsync();
+        }
+
+        if (request.Number > state.State.MessageCounter)
             return new NotFoundError($"You don't have a message with number {request.Number} addressed to you");
         
-        state.State.Messages.Remove(message);
-
-        await state.WriteStateAsync();
-
-        return new TheCodeKitchenUnit();
+        return TheCodeKitchenUnit.Value; // The message once existed
     }
 }
