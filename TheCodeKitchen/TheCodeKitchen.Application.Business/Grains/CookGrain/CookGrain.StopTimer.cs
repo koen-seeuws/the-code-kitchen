@@ -15,7 +15,6 @@ public sealed partial class CookGrain
         if (timer is null)
             return new NotFoundError($"You no longer have a timer with number {request.Number} addressed to you");
 
-
         state.State.Timers.Remove(timer);
 
         await state.WriteStateAsync();

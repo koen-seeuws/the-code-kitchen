@@ -10,14 +10,13 @@ public sealed partial class CookGrain
         if (!state.RecordExists)
             return new NotFoundError(
                 $"The cook with username {this.GetPrimaryKeyString()} does not exist in kitchen {this.GetPrimaryKey()}");
-
-        var number = state.State.Messages.Count + 1;
-        var message = new Message(number, request.From, request.To, request.Content);
+        
+        var message = new Message(++state.State.MessageCounter, request.From, request.To, request.Content);
         state.State.Messages.Add(message);
 
         await state.WriteStateAsync();
 
-        var @event = new MessageReceivedEvent(number, request.From, request.To, request.Content);
+        var @event = new MessageReceivedEvent(message.Number, message.From, message.To, message.Content);
         await realTimeCookService.SendMessageReceivedEvent(@event);
 
         return TheCodeKitchenUnit.Value;

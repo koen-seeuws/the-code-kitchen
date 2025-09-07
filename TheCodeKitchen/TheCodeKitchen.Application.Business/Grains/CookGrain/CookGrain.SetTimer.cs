@@ -10,9 +10,8 @@ public sealed partial class CookGrain
         if (!state.RecordExists)
             return new NotFoundError(
                 $"The cook with username {this.GetPrimaryKeyString()} does not exist in kitchen {this.GetPrimaryKey()}");
-
-        var number = state.State.Timers.Count + 1;
-        var timer = new Timer(number, request.Time, request.Note);
+        
+        var timer = new Timer(++state.State.TimerCounter, request.Time, request.Note);
         state.State.Timers.Add(timer);
         
         await state.WriteStateAsync();
