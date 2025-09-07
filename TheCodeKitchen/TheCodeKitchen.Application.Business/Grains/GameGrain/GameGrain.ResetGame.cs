@@ -42,6 +42,7 @@ public sealed partial class GameGrain
             return resetResult.Error;
 
         state.State.OrderNumbers.Clear();
+        state.State.TimePassed = TimeSpan.Zero;
         await state.WriteStateAsync();
         
         var gameResetEvent = new GameResetEvent();
