@@ -73,7 +73,14 @@ public class HeadChef : Cook
         {
             await foreach (var message in _messages.Reader.ReadAllAsync(cancellationToken))
             {
-                await ProcessMessage(message);
+                try
+                {
+                    await ProcessMessage(message);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
         }, cancellationToken);
     }
@@ -104,11 +111,13 @@ public class HeadChef : Cook
                 await _theCodeKitchenClient.DeliverFoodToOrder(message.Content.Order!.Value);
 
                 var deliveredGroups = order.DeliveredFoods
-                    .GroupBy(f => f)
+                    .Where(f => !string.IsNullOrWhiteSpace(f))
+                    .GroupBy(f => f.Trim().ToLowerInvariant())
                     .ToDictionary(g => g.Key, g => g.Count());
 
                 var allDelivered = order.RequestedFoods
-                    .GroupBy(f => f)
+                    .Where(f => !string.IsNullOrWhiteSpace(f))
+                    .GroupBy(f => f.Trim().ToLowerInvariant())
                     .All(req => deliveredGroups.TryGetValue(req.Key, out var deliveredCount) &&
                                 deliveredCount >= req.Count());
 

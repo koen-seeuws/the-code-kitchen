@@ -17,10 +17,11 @@ public class Chef : Cook
     private readonly TheCodeKitchenClient _theCodeKitchenClient;
     private ICollection<GetIngredientResponse> _ingredients = new List<GetIngredientResponse>();
     private ICollection<GetRecipeResponse> _recipes = new List<GetRecipeResponse>();
-    
+
     private ConcurrentDictionary<string, bool> _equipmentLocks = new();
     private ConcurrentDictionary<string, Tuple<string, int>> _preparedIngredientLocations = new();
 
+    private readonly ConcurrentBag<int> _timersProcessed = new();
     private readonly Channel<TimerElapsedEvent> _timerChannel = Channel.CreateUnbounded<TimerElapsedEvent>();
 
     private readonly Dictionary<string, int> _equipments = new()
@@ -54,14 +55,20 @@ public class Chef : Cook
 
         OnTimerElapsedEvent = async timerElapsedEvent =>
         {
-            Console.WriteLine($"{Username} - Timer Elapsed - {JsonSerializer.Serialize(timerElapsedEvent)}");
-            
+            Console.WriteLine($"{Username} - Received Timer Elapsed - {JsonSerializer.Serialize(timerElapsedEvent)}");
+
             // Immediately stop the timer, it keeps firing each moment until stopped, we will set new timer if needed
             var stopTimerRequest = new StopTimerRequest(timerElapsedEvent.Number);
             await _theCodeKitchenClient.StopTimer(stopTimerRequest);
-            
-            await _timerChannel.Writer.WriteAsync(timerElapsedEvent);
 
+            if (_timersProcessed.Contains(timerElapsedEvent.Number))
+            {
+                Console.WriteLine($"{Username} - Timer Elapsed already processed - {timerElapsedEvent.Number}");
+                return;
+            }
+
+            _timersProcessed.Add(timerElapsedEvent.Number);
+            await _timerChannel.Writer.WriteAsync(timerElapsedEvent);
         };
 
         OnMessageReceivedEvent = async messageReceivedEvent =>
@@ -88,10 +95,16 @@ public class Chef : Cook
         {
             await foreach (var @event in _timerChannel.Reader.ReadAllAsync(cancellationToken))
             {
-                await ProcessTimerElapsedEvent(@event);
+                try
+                {
+                    await ProcessTimerElapsedEvent(@event);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
         }, cancellationToken);
-
     }
 
     private async Task ProcessMessage(Message message)
@@ -143,7 +156,7 @@ public class Chef : Cook
     private int FindAvailableEquipment(string equipmentType)
     {
         var equipmentCount = _equipments.GetValueOrDefault(equipmentType, 0);
-        for (var equipmentNumber = 1; equipmentNumber <= equipmentCount; equipmentNumber++)
+        for (var equipmentNumber = 1; equipmentNumber < equipmentCount; equipmentNumber++)
         {
             if (!EquipmentIsLocked(equipmentType, equipmentNumber))
                 return equipmentNumber;
@@ -200,6 +213,8 @@ public class Chef : Cook
 
     private async Task ProcessTimerElapsedEvent(TimerElapsedEvent timerElapsedEvent)
     {
+        Console.WriteLine($"{Username} - Process Timer Elapsed Event - {JsonSerializer.Serialize(timerElapsedEvent)}");
+
         if (timerElapsedEvent.Note == null) return;
         var timerNote = JsonSerializer.Deserialize<TimerNote>(timerElapsedEvent.Note);
         if (timerNote == null) return;
@@ -277,7 +292,10 @@ public class Chef : Cook
         var orderRecipeKey = $"{timerNote.Order}_{string.Join('_', timerNote.RecipeTree)}".ToUpper();
 
         var ingredientsToBePrepared = recipe.Ingredients.Where(i => i.Steps.Count > 0).ToList();
-        var ingredientsToBeTakenFromPantry = recipe.Ingredients.Where(i => i.Steps.Count <= 0).ToList();
+        var ingredientsToBeTakenFromPantry = recipe.Ingredients.Where(i =>
+                i.Steps.Count <= 0 && _ingredients.Select(pi => pi.Name)
+                    .Contains(i.Name, StringComparer.OrdinalIgnoreCase))
+            .ToList();
 
         var preparedIngredients = _preparedIngredientLocations
             .Where(kv => kv.Key.StartsWith(orderRecipeKey))
@@ -312,7 +330,7 @@ public class Chef : Cook
 
             if (isToBePrepared)
             {
-               await _theCodeKitchenClient.TakeFoodFromEquipment(sourceEquipmentType!, sourceEquipmentNumber!.Value);
+                await _theCodeKitchenClient.TakeFoodFromEquipment(sourceEquipmentType!, sourceEquipmentNumber!.Value);
                 await LockOrUnlockEquipment(sourceEquipmentType!, sourceEquipmentNumber.Value, false);
                 await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
             }
@@ -366,7 +384,7 @@ public class Chef : Cook
             await LockOrUnlockEquipment(destinationEquipmentType, destinationEquipmentNumber, true);
             await _theCodeKitchenClient.TakeFoodFromEquipment(sourceEquipmentType!, sourceEquipmentNumber!.Value);
             await LockOrUnlockEquipment(sourceEquipmentType!, sourceEquipmentNumber.Value, false);
-            await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber); 
+            await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
 
             // Track the prepared ingredient
             var location = new Tuple<string, int>(destinationEquipmentType, destinationEquipmentNumber);
