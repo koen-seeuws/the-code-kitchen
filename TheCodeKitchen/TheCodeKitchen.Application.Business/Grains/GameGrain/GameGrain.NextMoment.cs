@@ -6,12 +6,16 @@ public sealed partial class GameGrain
 {
     private IGrainTimer? _nextMomentTimer;
     private TimeSpan? _nextMomentDelay;
+    private TimeSpan _timeUntilNewOrder = TimeSpan.Zero;
 
     public async Task<Result<TheCodeKitchenUnit>> NextMoment()
     {
         var gameId = this.GetPrimaryKey();
 
         state.State.TimePassed += state.State.TimePerMoment;
+        
+        if (_timeUntilNewOrder >= TimeSpan.Zero)
+            _timeUntilNewOrder -= state.State.TimePerMoment;
 
         // Sending out event
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
@@ -28,14 +32,6 @@ public sealed partial class GameGrain
         await realTimeGameService.SendMomentPassedEvent(state.State.Id, momentPassedEvent);
 
         // Order generation
-        if (_timeUntilNewOrder is null)
-        {
-            await PickRandomTimeUntilNextOrder();
-        }
-
-        if (_timeUntilNewOrder >= TimeSpan.Zero)
-            _timeUntilNewOrder -= state.State.TimePerMoment;
-
         if (_timeUntilNewOrder <= TimeSpan.Zero)
         {
             await GenerateOrder();

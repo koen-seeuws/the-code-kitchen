@@ -43,6 +43,7 @@ public sealed partial class GameGrain
 
         state.State.OrderNumbers.Clear();
         state.State.TimePassed = TimeSpan.Zero;
+        _timeUntilNewOrder = TimeSpan.Zero;
         await state.WriteStateAsync();
         
         var gameResetEvent = new GameResetEvent();
