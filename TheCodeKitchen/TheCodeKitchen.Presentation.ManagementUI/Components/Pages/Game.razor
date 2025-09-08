@@ -52,6 +52,14 @@ else
         <MudIcon Icon="@Icons.Material.Filled.Checklist"/>
         Generate Order
     </MudButton>
+    <MudButton OnClick="@Update"
+               Variant="Variant.Filled"
+               Color="Color.Primary"
+               Disabled="@(Paused == false || GetGameResponse.Started is null || Busy)"
+               Class="mb-3">
+        <MudIcon Icon="@Icons.Material.Filled.Edit"/>
+        Edit
+    </MudButton>
     <MudButton OnClick="@Reset"
                Variant="Variant.Filled"
                Color="Color.Primary"

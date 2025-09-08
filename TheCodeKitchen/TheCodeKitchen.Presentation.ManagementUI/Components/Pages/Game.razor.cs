@@ -5,6 +5,7 @@ using MudBlazor;
 using TheCodeKitchen.Application.Contracts.Events.Game;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Response.Game;
+using TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 using TheCodeKitchen.Presentation.ManagementUI.Models.ViewModels;
 
 namespace TheCodeKitchen.Presentation.ManagementUI.Components.Pages;
@@ -98,7 +99,7 @@ public partial class Game(
                 TimePassed = @event.TimePassed;
                 await InvokeAsync(StateHasChanged);
             });
-        
+
         _gameHubConnection.On(nameof(GameResetEvent),
             async (GameResetEvent _) =>
             {
@@ -189,7 +190,13 @@ public partial class Game(
             Busy = false;
         }
     }
-    
+
+    private async Task Update()
+    {
+        var dialogParameters = new DialogParameters { { "GameId", GameId } };
+        var dialog = await dialogService.ShowAsync<UpdateGameDialog>("Edit Game", dialogParameters);
+    }
+
     private async Task Reset()
     {
         try
