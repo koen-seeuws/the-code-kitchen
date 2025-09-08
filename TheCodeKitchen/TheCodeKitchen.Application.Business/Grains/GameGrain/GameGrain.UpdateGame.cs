@@ -16,6 +16,8 @@ public sealed partial class GameGrain
         
         state.State.TimePerMoment = request.TimePerMoment;
         state.State.SpeedModifier = request.SpeedModifier;
+        state.State.MinimumTimeBetweenOrders = request.MinimumTimeBetweenOrders;
+        state.State.MaximumTimeBetweenOrders = request.MaximumTimeBetweenOrders;
         state.State.MinimumItemsPerOrder = request.MinimumItemsPerOrder;
         state.State.MaximumItemsPerOrder = request.MaximumItemsPerOrder;
         state.State.OrderSpeedModifier = request.OrderSpeedModifier;

@@ -25,6 +25,11 @@
                            For="@(() => Model.MinimumTimeBetweenOrders)"
                            Variant="Variant.Outlined"
                            Class="mb-1"/>
+            <MudTimePicker Label="Maximum Time Between Orders"
+                           @bind-Time="@Model.MaximumTimeBetweenOrders"
+                           For="@(() => Model.MaximumTimeBetweenOrders)"
+                           Variant="Variant.Outlined"
+                           Class="mb-1"/>
             <MudTextField Label="Minimum Items Per Order"
                           InputType="InputType.Number"
                           @bind-Value="Model.MinimumItemsPerOrder"

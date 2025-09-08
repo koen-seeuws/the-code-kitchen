@@ -5,6 +5,7 @@ public sealed class Game(
     string name,
     TimeSpan timePerMoment,
     TimeSpan minimumTimeBetweenOrders,
+    TimeSpan maximumTimeBetweenOrders,
     double speedModifier = 1.0,
     short minimumItemsPerOrder = 1,
     short maximumItemsPerOrder = 4,
@@ -17,6 +18,7 @@ public sealed class Game(
     public TimeSpan TimePerMoment { get; set; } = timePerMoment;
     public double SpeedModifier { get; set; } = speedModifier;
     public TimeSpan MinimumTimeBetweenOrders { get; set; } = minimumTimeBetweenOrders;
+    public TimeSpan MaximumTimeBetweenOrders { get; set; } = maximumTimeBetweenOrders;
     public short MinimumItemsPerOrder { get; set; } = minimumItemsPerOrder;
     public short MaximumItemsPerOrder { get; set; } = maximumItemsPerOrder;
     public double OrderSpeedModifier { get; set; } = orderSpeedModifier;

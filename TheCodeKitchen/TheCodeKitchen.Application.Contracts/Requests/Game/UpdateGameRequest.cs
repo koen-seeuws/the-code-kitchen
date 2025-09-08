@@ -5,6 +5,7 @@ public record UpdateGameRequest(
     TimeSpan TimePerMoment,
     double SpeedModifier,
     TimeSpan MinimumTimeBetweenOrders,
+    TimeSpan MaximumTimeBetweenOrders,
     short MinimumItemsPerOrder,
     short MaximumItemsPerOrder,
     double OrderSpeedModifier,

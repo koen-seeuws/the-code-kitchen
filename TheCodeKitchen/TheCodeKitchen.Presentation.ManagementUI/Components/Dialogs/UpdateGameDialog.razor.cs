@@ -30,6 +30,7 @@ public partial class UpdateGameDialog(
                 TimePerMoment = getGameResult.Value.TimePerMoment,
                 SpeedModifier = getGameResult.Value.SpeedModifier,
                 MinimumTimeBetweenOrders = getGameResult.Value.MinimumTimeBetweenOrders,
+                MaximumTimeBetweenOrders = getGameResult.Value.MaximumTimeBetweenOrders,
                 MinimumItemsPerOrder = getGameResult.Value.MinimumItemsPerOrder,
                 MaximumItemsPerOrder = getGameResult.Value.MaximumItemsPerOrder,
                 OrderSpeedModifier = getGameResult.Value.OrderSpeedModifier,
@@ -45,6 +46,9 @@ public partial class UpdateGameDialog(
 
     private async Task Submit()
     {
+        if(Model == null)
+            return;
+        
         await Form.Validate();
         if (!Form.IsValid)
             return;
@@ -56,6 +60,7 @@ public partial class UpdateGameDialog(
                 Model.TimePerMoment!.Value,
                 Model.SpeedModifier,
                 Model.MinimumTimeBetweenOrders!.Value,
+                Model.MaximumTimeBetweenOrders!.Value,
                 Model.MinimumItemsPerOrder,
                 Model.MaximumItemsPerOrder,
                 Model.OrderSpeedModifier,

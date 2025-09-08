@@ -32,6 +32,7 @@ public partial class CreateGameDialog(
                 Model.TimePerMoment!.Value,
                 Model.SpeedModifier,
                 Model.MinimumTimeBetweenOrders!.Value,
+                Model.MaximumTimeBetweenOrders!.Value,
                 Model.MinimumItemsPerOrder,
                 Model.MaximumItemsPerOrder,
                 Model.OrderSpeedModifier,

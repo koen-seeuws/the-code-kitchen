@@ -25,6 +25,9 @@ public sealed partial class GameGrain
 
         if (timeBetweenOrders < state.State.MinimumTimeBetweenOrders)
             timeBetweenOrders = state.State.MinimumTimeBetweenOrders;
+        
+        if (timeBetweenOrders > state.State.MaximumTimeBetweenOrders)
+            timeBetweenOrders = state.State.MaximumTimeBetweenOrders;
 
         _timeUntilNewOrder = timeBetweenOrders / state.State.OrderSpeedModifier;
 

@@ -24,6 +24,11 @@ public sealed class CreateGameValidator : AbstractValidator<CreateGameRequest>
                 MinimumTimeBetweenOrders.Minimum,
                 MinimumTimeBetweenOrders.Maximum
             );
+        RuleFor(g => g.MaximumTimeBetweenOrders)
+            .InclusiveBetween(
+                MaximumTimeBetweenOrders.Minimum,
+                MaximumTimeBetweenOrders.Maximum
+            );
         RuleFor(g => g.MinimumItemsPerOrder)
             .InclusiveBetween(
                 ItemsPerOrder.Minimum,
