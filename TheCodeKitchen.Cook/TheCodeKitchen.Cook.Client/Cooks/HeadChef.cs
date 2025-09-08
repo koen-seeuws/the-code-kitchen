@@ -111,12 +111,11 @@ public class HeadChef : Cook
                 await _theCodeKitchenClient.DeliverFoodToOrder(message.Content.Order!.Value);
 
                 var deliveredGroups = order.DeliveredFoods
-                    .Where(f => !string.IsNullOrWhiteSpace(f))
+                    .Append(message.Content.Food)
                     .GroupBy(f => f.Trim().ToLowerInvariant())
                     .ToDictionary(g => g.Key, g => g.Count());
 
                 var allDelivered = order.RequestedFoods
-                    .Where(f => !string.IsNullOrWhiteSpace(f))
                     .GroupBy(f => f.Trim().ToLowerInvariant())
                     .All(req => deliveredGroups.TryGetValue(req.Key, out var deliveredCount) &&
                                 deliveredCount >= req.Count());
@@ -124,7 +123,7 @@ public class HeadChef : Cook
                 if (allDelivered)
                 {
                     Console.WriteLine($"{Username} - ProcessMessage - Completing order {message.Content.Order!.Value}");
-                    await _theCodeKitchenClient.CompleteOrder(order.Number);
+                    await _theCodeKitchenClient.CompleteOrder(message.Content.Order!.Value);
                 }
 
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
