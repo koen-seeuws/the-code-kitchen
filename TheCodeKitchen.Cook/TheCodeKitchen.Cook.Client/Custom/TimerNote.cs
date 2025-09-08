@@ -8,5 +8,6 @@ public record TimerNote(
     string[] RecipeTree,
     string? EquipmentType,
     int? EquipmentNumber,
-    ICollection<RecipeStepDto> StepsToDo
+    ICollection<RecipeStepDto> StepsToDo,
+    int Id
 );

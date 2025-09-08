@@ -18,13 +18,16 @@ public class Chef : Cook
     private ICollection<GetIngredientResponse> _ingredients = new List<GetIngredientResponse>();
     private ICollection<GetRecipeResponse> _recipes = new List<GetRecipeResponse>();
 
-    private ConcurrentDictionary<string, bool> _equipmentLocks = new();
-    private ConcurrentDictionary<string, Tuple<string, int>> _preparedIngredientLocations = new();
+    private ConcurrentDictionary<string, bool> _equipmentLocks = new(StringComparer.OrdinalIgnoreCase);
+
+    private int _foodId = 1;
 
     private readonly ConcurrentBag<int> _timersProcessed = new();
     private readonly Channel<TimerElapsedEvent> _timerChannel = Channel.CreateUnbounded<TimerElapsedEvent>();
+    
+    private ConcurrentDictionary<string, Tuple<string, int>> _preparedIngredientLocations = new(StringComparer.OrdinalIgnoreCase);
 
-    private readonly Dictionary<string, int> _equipments = new()
+    private readonly Dictionary<string, int> _equipments = new(StringComparer.OrdinalIgnoreCase)
     {
         { EquipmentType.Bbq, 6 },
         { EquipmentType.Blender, 4 },
@@ -134,7 +137,7 @@ public class Chef : Cook
             {
                 Console.WriteLine(
                     $"{Username} - Process Message - Cooking Food - Order: {message.Content.Order!.Value}, Food: {message.Content.Food!}");
-                await StartCookingIngredients(message.Content.Order!.Value, message.Content.Food!, []);
+                await StartCookingIngredients(message.Content.Order!.Value, message.Content.Food!, [], _foodId++);
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
                 break;
             }
@@ -181,7 +184,7 @@ public class Chef : Cook
         await _theCodeKitchenClient.SetTimer(setTimerRequest);
     }
 
-    private async Task StartCookingIngredients(long orderNumber, string food, string[] ingredientOfTree)
+    private async Task StartCookingIngredients(long orderNumber, string food, string[] ingredientOfTree, int id)
     {
         var recipe = _recipes.First(r => r.Name.Equals(food, StringComparison.OrdinalIgnoreCase));
 
@@ -191,7 +194,7 @@ public class Chef : Cook
             if (isRecipe)
             {
                 // Ingredient is a recipe -> Recursively process it
-                await StartCookingIngredients(orderNumber, ingredient.Name, ingredientOfTree.Append(food).ToArray());
+                await StartCookingIngredients(orderNumber, ingredient.Name, ingredientOfTree.Append(food).ToArray(), id);
             }
             else
             {
@@ -202,7 +205,8 @@ public class Chef : Cook
                     ingredientOfTree.Append(food).ToArray(),
                     null,
                     null,
-                    ingredient.Steps.ToList()
+                    ingredient.Steps.ToList(),
+                    _foodId
                 );
                 var timerNoteJson = JsonSerializer.Serialize(timerNote);
                 var setTimerRequest = new SetTimerRequest(TimeSpan.FromMinutes(0), timerNoteJson);
@@ -289,7 +293,7 @@ public class Chef : Cook
         var recipeName = timerNote.RecipeTree.Last();
         var recipe = _recipes.First(r => r.Name.Equals(recipeName, StringComparison.OrdinalIgnoreCase));
 
-        var orderRecipeKey = $"{timerNote.Order}_{string.Join('_', timerNote.RecipeTree)}".ToUpper();
+        var orderRecipeKey = $"{timerNote.Id}_{string.Join('_', timerNote.RecipeTree)}".ToUpper();
 
         var ingredientsToBePrepared = recipe.Ingredients.Where(i => i.Steps.Count > 0).ToList();
         var ingredientsToBeTakenFromPantry = recipe.Ingredients.Where(i =>
@@ -354,7 +358,8 @@ public class Chef : Cook
                 timerNote.RecipeTree.Take(timerNote.RecipeTree.Length - 1).ToArray(),
                 destinationEquipmentType,
                 destinationEquipmentNumber,
-                recipe.Steps.ToList()
+                recipe.Steps.ToList(),
+                timerNote.Id
             );
             var timerNoteForNextStepJson = JsonSerializer.Serialize(timerNoteForNextStep);
             var time = firstRecipeStep?.Time ?? TimeSpan.FromMinutes(0);
