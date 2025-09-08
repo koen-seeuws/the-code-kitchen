@@ -10,7 +10,7 @@ namespace TheCodeKitchen.Presentation.ManagementUI.Components.Dialogs;
 public partial class UpdateGameDialog(
     ISnackbar snackbar,
     IClusterClient clusterClient,
-    CreateGameFormModelValidator validator
+    UpdateGameFormModelValidator validator
 ) : ComponentBase
 {
     [CascadingParameter] private IMudDialogInstance MudDialog { get; set; } = null!;
