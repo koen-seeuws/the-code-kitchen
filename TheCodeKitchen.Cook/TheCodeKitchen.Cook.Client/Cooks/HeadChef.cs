@@ -112,7 +112,7 @@ public class HeadChef : Cook
 
                 var deliveredGroups = order.DeliveredFoods
                     .Append(message.Content.Food)
-                    .GroupBy(f => f.Trim().ToLowerInvariant())
+                    .GroupBy(f => f!.Trim().ToLowerInvariant())
                     .ToDictionary(g => g.Key, g => g.Count());
 
                 var allDelivered = order.RequestedFoods

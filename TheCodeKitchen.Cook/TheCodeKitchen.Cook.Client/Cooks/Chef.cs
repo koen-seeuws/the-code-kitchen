@@ -17,15 +17,12 @@ public class Chef : Cook
     private readonly TheCodeKitchenClient _theCodeKitchenClient;
     private ICollection<GetIngredientResponse> _ingredients = new List<GetIngredientResponse>();
     private ICollection<GetRecipeResponse> _recipes = new List<GetRecipeResponse>();
-
-    private ConcurrentDictionary<string, bool> _equipmentLocks = new(StringComparer.OrdinalIgnoreCase);
-
-    private int _foodId = 1;
-
-    private readonly ConcurrentBag<int> _timersProcessed = new();
-    private readonly Channel<TimerElapsedEvent> _timerChannel = Channel.CreateUnbounded<TimerElapsedEvent>();
     
-    private ConcurrentDictionary<string, Tuple<string, int>> _preparedIngredientLocations = new(StringComparer.OrdinalIgnoreCase);
+    private int _foodId = 1;
+    private readonly ConcurrentDictionary<string, bool> _equipmentLocks = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentBag<int> _timersProcessed = new();
+    private readonly PriorityQueue<TimerNote, int> _timerEventQueue = new();
+    private readonly ConcurrentDictionary<string, Tuple<string, int>> _preparedIngredientLocations = new(StringComparer.OrdinalIgnoreCase);
 
     private readonly Dictionary<string, int> _equipments = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -58,8 +55,6 @@ public class Chef : Cook
 
         OnTimerElapsedEvent = async timerElapsedEvent =>
         {
-            Console.WriteLine($"{Username} - Received Timer Elapsed - {JsonSerializer.Serialize(timerElapsedEvent)}");
-
             // Immediately stop the timer, it keeps firing each moment until stopped, we will set new timer if needed
             var stopTimerRequest = new StopTimerRequest(timerElapsedEvent.Number);
             await _theCodeKitchenClient.StopTimer(stopTimerRequest);
@@ -71,7 +66,11 @@ public class Chef : Cook
             }
 
             _timersProcessed.Add(timerElapsedEvent.Number);
-            await _timerChannel.Writer.WriteAsync(timerElapsedEvent);
+            var note = JsonSerializer.Deserialize<TimerNote>(timerElapsedEvent.Note!);
+            lock (_timerEventQueue)
+            {
+                _timerEventQueue.Enqueue(note!, note!.Id);
+            }
         };
 
         OnMessageReceivedEvent = async messageReceivedEvent =>
@@ -96,17 +95,28 @@ public class Chef : Cook
 
         _ = Task.Run(async () =>
         {
-            await foreach (var @event in _timerChannel.Reader.ReadAllAsync(cancellationToken))
+            while (!cancellationToken.IsCancellationRequested)
             {
+                TimerNote note = null;
+                lock (_timerEventQueue)
+                {
+                    if (_timerEventQueue.Count == 0)
+                        continue; 
+                    note = _timerEventQueue.Dequeue();
+                }
                 try
                 {
-                    await ProcessTimerElapsedEvent(@event);
+                    await ProcessTimerElapsedEvent(@note);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
             }
+            
+            
+            
+            
         }, cancellationToken);
     }
 
@@ -215,14 +225,10 @@ public class Chef : Cook
         }
     }
 
-    private async Task ProcessTimerElapsedEvent(TimerElapsedEvent timerElapsedEvent)
+    private async Task ProcessTimerElapsedEvent(TimerNote timerNote)
     {
-        Console.WriteLine($"{Username} - Process Timer Elapsed Event - {JsonSerializer.Serialize(timerElapsedEvent)}");
-
-        if (timerElapsedEvent.Note == null) return;
-        var timerNote = JsonSerializer.Deserialize<TimerNote>(timerElapsedEvent.Note);
-        if (timerNote == null) return;
-
+        Console.WriteLine($"{Username} - Process Timer Elapsed Event - {JsonSerializer.Serialize(timerNote)}");
+        
         var sourceEquipmentType = timerNote.EquipmentType;
         var sourceEquipmentNumber = timerNote.EquipmentNumber;
 
@@ -339,11 +345,13 @@ public class Chef : Cook
                 await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
             }
 
-            foreach (var location in preparedIngredients.Values)
+            foreach (var preparedIngredient in preparedIngredients)
             {
+                var location = preparedIngredient.Value;
                 await _theCodeKitchenClient.TakeFoodFromEquipment(location.Item1, location.Item2);
                 await LockOrUnlockEquipment(location.Item1, location.Item2, false);
                 await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
+                _preparedIngredientLocations.TryRemove(preparedIngredient.Key, out _);
             }
 
             foreach (var ingredient in ingredientsToBeTakenFromPantry)
