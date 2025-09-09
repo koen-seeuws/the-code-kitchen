@@ -67,7 +67,15 @@ public partial class Game(
             var gameGrain = clusterClient.GetGrain<IGameGrain>(GameId);
             var getKitchensResult = await gameGrain.GetKitchens();
             if (getKitchensResult.Succeeded)
-                Kitchens = mapper.Map<List<KitchenViewModel>>(getKitchensResult.Value);
+                Kitchens = getKitchensResult.Value
+                    .Select(k => new KitchenViewModel
+                    {
+                        Id = k.Id,
+                        Name = k.Name,
+                        Code = k.Code,
+                        Rating = k.OrderRatings.Values.DefaultIfEmpty(1.0).Average()
+                    })
+                    .ToList();
             else
                 KitchenErrorMessage = getKitchensResult.Error.Message;
         }

@@ -15,8 +15,6 @@ public sealed class KitchenMapping : Profile
         CreateMap<CreateKitchenResponse, KitchenTableRecordModel>();
         CreateMap<KitchenCreatedEvent, KitchenTableRecordModel>();
 
-        CreateMap<GetKitchenResponse, KitchenViewModel>();
-
         CreateMap<MessageDeliveredEvent, MessageViewModel>();
     }
 }

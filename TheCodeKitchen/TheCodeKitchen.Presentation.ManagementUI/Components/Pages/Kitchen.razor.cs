@@ -32,7 +32,16 @@ public partial class Kitchen(
             var kitchenGrain = clusterClient.GetGrain<IKitchenGrain>(KitchenId);
             var getKitchenResult = await kitchenGrain.GetKitchen();
             if (getKitchenResult.Succeeded)
-                KitchenViewModel = mapper.Map<KitchenViewModel>(getKitchenResult.Value);
+            {
+                var kitchen = getKitchenResult.Value;
+                KitchenViewModel = new KitchenViewModel
+                {
+                    Id = kitchen.Id,
+                    Name = kitchen.Name,
+                    Code = kitchen.Code,
+                    Rating = kitchen.OrderRatings.Values.DefaultIfEmpty(1.0).Average()
+                };
+            }
             else
                 ErrorMessage = getKitchenResult.Error.Message;
         }
