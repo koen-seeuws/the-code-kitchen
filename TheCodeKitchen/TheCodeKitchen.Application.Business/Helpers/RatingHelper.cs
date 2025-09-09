@@ -1,11 +1,11 @@
 using TheCodeKitchen.Application.Contracts.Models.Recipe;
 using TheCodeKitchen.Application.Contracts.Response.CookBook;
 
-namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
+namespace TheCodeKitchen.Application.Business.Helpers;
 
-public sealed partial class KitchenOrderGrain
+public static class RatingHelper
 {
-    private double RateFood(string food, ICollection<RecipeStep> executedSteps, ICollection<Food> ingredients,
+    public static double RateFood(string food, ICollection<RecipeStep> executedSteps, ICollection<Food> ingredients,
         ICollection<GetRecipeResponse> recipes)
     {
         var recipe = recipes.FirstOrDefault(r => r.Name.Equals(food, StringComparison.OrdinalIgnoreCase));
@@ -48,8 +48,8 @@ public sealed partial class KitchenOrderGrain
         ingredientRatings.Add(recipeRating);
         return ingredientRatings.Average();
     }
-
-    private double RateSteps(ICollection<RecipeStep> executedSteps, ICollection<RecipeStepDto> expectedSteps)
+    
+    public static double RateSteps(ICollection<RecipeStep> executedSteps, ICollection<RecipeStepDto> expectedSteps)
     {
         var executed = executedSteps.ToList();
         var expected = expectedSteps.ToList();

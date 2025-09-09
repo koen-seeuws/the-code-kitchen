@@ -1,4 +1,5 @@
 using TheCodeKitchen.Application.Business.Extensions;
+using TheCodeKitchen.Application.Business.Helpers;
 using TheCodeKitchen.Application.Contracts.Events.KitchenOrder;
 using TheCodeKitchen.Application.Contracts.Requests.KitchenOrder;
 
@@ -34,7 +35,7 @@ public sealed partial class KitchenOrderGrain
         
         var recipes = getRecipeResult.Value.ToList();
 
-        var qualityRating = RateFood(food.Name, food.Steps, food.Ingredients, recipes);
+        var qualityRating = RatingHelper.RateFood(food.Name, food.Steps, food.Ingredients, recipes);
 
         var foodDelivery = new KitchenOrderFoodDelivery(food, qualityRating);
         state.State.DeliveredFoods.Add(foodDelivery);
