@@ -48,10 +48,10 @@ public sealed partial class KitchenGrain
         
         if (!resetResult.Succeeded)
             return resetResult.Error;
-
-        state.State.Rating = 1.0;
+        
         state.State.Orders.Clear();
         state.State.OpenOrders.Clear();
+        state.State.OrderRatings.Clear();
         await state.WriteStateAsync();
         
         var @event = new KitchenResetEvent();

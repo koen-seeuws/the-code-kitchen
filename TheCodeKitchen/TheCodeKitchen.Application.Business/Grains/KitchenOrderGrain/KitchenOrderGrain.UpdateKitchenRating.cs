@@ -29,7 +29,7 @@ public sealed partial class KitchenOrderGrain
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
         var stream = streamProvider.GetStream<KitchenOrderRatingUpdatedEvent>(
             nameof(KitchenOrderRatingUpdatedEvent), state.State.Kitchen);
-        var kitchenOrderRatingUpdatedEvent = new KitchenOrderRatingUpdatedEvent(state.State.TotalRating);
+        var kitchenOrderRatingUpdatedEvent = new KitchenOrderRatingUpdatedEvent(state.State.Number, state.State.TotalRating);
         await stream.OnNextAsync(kitchenOrderRatingUpdatedEvent);
 
         return TheCodeKitchenUnit.Value;

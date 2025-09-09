@@ -7,14 +7,12 @@ public sealed partial class KitchenGrain
 {
     private Task OnNextMomentEvent(NextMomentEvent nextMomentEvent, StreamSequenceToken _)
     {
-        var offset = TimeSpan.FromMilliseconds(500);
-        
-        if(nextMomentEvent.NextMomentDelay.HasValue)
-            offset = nextMomentEvent.NextMomentDelay.Value / 2;
+        var offset = nextMomentEvent.TimePerMoment / 2;
         
         this.RegisterGrainTimer(async () =>
         {
-            var @event = new KitchenRatingUpdatedEvent(state.State.Rating);
+            var rating = state.State.OrderRatings.Values.DefaultIfEmpty(1.0).Average();
+            var @event = new KitchenRatingUpdatedEvent(rating);
             await realTimeKitchenService.SendKitchenRatingUpdatedEvent(state.State.Id, @event);
         }, offset, Timeout.InfiniteTimeSpan);
         

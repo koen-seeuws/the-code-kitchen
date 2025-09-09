@@ -12,6 +12,7 @@ public sealed partial class KitchenGrain
 
         var kitchenOrderGrain =
             GrainFactory.GetGrain<IKitchenOrderGrain>(orderGeneratedEvent.Number, state.State.Id.ToString());
+        
         var createKitchenOrderResult = await kitchenOrderGrain.Initialize(createKitchenOrderRequest);
 
         if (!createKitchenOrderResult.Succeeded)
