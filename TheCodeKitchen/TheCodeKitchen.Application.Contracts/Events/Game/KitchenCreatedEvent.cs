@@ -4,6 +4,5 @@ namespace TheCodeKitchen.Application.Contracts.Events.Game;
 public record KitchenCreatedEvent(
     Guid Id,
     string Name,
-    string Code,
-    double Rating
+    string Code
 );

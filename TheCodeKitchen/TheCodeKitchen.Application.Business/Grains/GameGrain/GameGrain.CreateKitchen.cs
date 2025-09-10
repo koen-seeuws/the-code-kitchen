@@ -25,7 +25,7 @@ public sealed partial class GameGrain
 
         var kitchen = result.Value;
         
-        var @event = new KitchenCreatedEvent(kitchen.Id, kitchen.Name, kitchen.Code, kitchen.Rating);
+        var @event = new KitchenCreatedEvent(kitchen.Id, kitchen.Name, kitchen.Code);
         await realTimeGameService.SendKitchenCreatedEvent(state.State.Id, @event);
         
         return result.Value;
