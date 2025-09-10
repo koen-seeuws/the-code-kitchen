@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Threading.Channels;
 using TheCodeKitchen.Cook.Client.Custom;
+using TheCodeKitchen.Cook.Contracts.Events.Order;
 using TheCodeKitchen.Cook.Contracts.Requests.Communication;
 
 namespace TheCodeKitchen.Cook.Client.Cooks;
@@ -8,48 +9,25 @@ namespace TheCodeKitchen.Cook.Client.Cooks;
 public class HeadChef : Cook
 {
     private readonly TheCodeKitchenClient _theCodeKitchenClient;
+    private readonly string _equipmentCoordinator;
     private readonly string[] _chefs;
     private int _chefLoadCounter;
     private readonly Channel<Message> _messages = Channel.CreateUnbounded<Message>();
 
-    public HeadChef(string[] chefs, string kitchenCode, string username, string password,
-        TheCodeKitchenClient theCodeKitchenClient) : base(theCodeKitchenClient)
+    public HeadChef(TheCodeKitchenClient theCodeKitchenClient, string kitchenCode,
+        string username, string password, string equipmentCoordinator, string[] chefs) : base(theCodeKitchenClient)
     {
-        _chefs = chefs;
         _theCodeKitchenClient = theCodeKitchenClient;
+
         Username = username;
         Password = password;
         KitchenCode = kitchenCode;
 
-        OnKitchenOrderCreatedEvent = async kitchenOrderCreatedEvent =>
-        {
-            Console.WriteLine(
-                $"{Username} - New Order Received - {JsonSerializer.Serialize(kitchenOrderCreatedEvent)}");
+        _equipmentCoordinator = equipmentCoordinator;
+        _chefs = chefs;
 
-            var cookFoodTasks = kitchenOrderCreatedEvent.RequestedFoods.Select(async (food, index) =>
-            {
-                // Spreading cooking load evenly among chefs
-                var to = _chefs[_chefLoadCounter++ % _chefs.Length];
+        OnKitchenOrderCreatedEvent = async kitchenOrderCreatedEvent => await SendCookCommand(kitchenOrderCreatedEvent);
 
-                // Sending the cook the order to cook the food
-                var messageContent = new MessageContent(
-                    MessageCodes.CookFood,
-                    kitchenOrderCreatedEvent.Number,
-                    food,
-                    null,
-                    null
-                );
-                var sendMessage = new SendMessageRequest(to, JsonSerializer.Serialize(messageContent));
-                await _theCodeKitchenClient.SendMessage(sendMessage);
-            });
-
-            await Task.WhenAll(cookFoodTasks);
-        };
-
-        OnTimerElapsedEvent = async timerElapsedEvent =>
-        {
-            // Head chef does not process timer events, since chefs handle cooking
-        };
 
         OnMessageReceivedEvent = async messageReceivedEvent =>
         {
@@ -85,6 +63,31 @@ public class HeadChef : Cook
         }, cancellationToken);
     }
 
+    private async Task SendCookCommand(KitchenOrderCreatedEvent kitchenOrderCreatedEvent)
+    {
+        Console.WriteLine(
+            $"{Username} - New Order Received - {JsonSerializer.Serialize(kitchenOrderCreatedEvent)}");
+
+        var cookFoodTasks = kitchenOrderCreatedEvent.RequestedFoods.Select(async (food, index) =>
+        {
+            // Spreading cooking load evenly among chefs
+            var to = _chefs[_chefLoadCounter++ % _chefs.Length];
+
+            // Sending the cook the order to cook the food
+            var messageContent = new MessageContent(
+                MessageCodes.CookFood,
+                kitchenOrderCreatedEvent.Number,
+                food,
+                null,
+                null
+            );
+            var sendMessage = new SendMessageRequest(to, JsonSerializer.Serialize(messageContent));
+            await _theCodeKitchenClient.SendMessage(sendMessage);
+        });
+
+        await Task.WhenAll(cookFoodTasks);
+    }
+
     private async Task ProcessMessage(Message message)
     {
         var confirmMessageRequest = new ConfirmMessageRequest(message.Number);
@@ -107,7 +110,7 @@ public class HeadChef : Cook
 
                 await _theCodeKitchenClient.TakeFoodFromEquipment(message.Content.EquipmentType!,
                     message.Content.EquipmentNumber!.Value);
-                await UnlockEquipment(message.Content.EquipmentType!, message.Content.EquipmentNumber!.Value);
+                await ReleaseEquipment(message.Content.EquipmentType!, message.Content.EquipmentNumber!.Value);
                 await _theCodeKitchenClient.DeliverFoodToOrder(message.Content.Order!.Value);
 
                 var deliveredGroups = order.DeliveredFoods
@@ -129,21 +132,12 @@ public class HeadChef : Cook
                 await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
                 break;
             }
-            case MessageCodes.LockEquipment or MessageCodes.UnlockEquipment:
-            {
-                // Equipment lock/unlock messages can be ignored by the head chef
-                await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
-                break;
-            }
         }
     }
 
-    private async Task UnlockEquipment(string equipmentType, int equipmentNumber)
+    private async Task ReleaseEquipment(string equipmentType, int number)
     {
-        var messageContent =
-            new MessageContent(MessageCodes.UnlockEquipment, null, null, equipmentType, equipmentNumber);
-        var messageContentJson = JsonSerializer.Serialize(messageContent);
-        var sendMessageRequest = new SendMessageRequest(null, messageContentJson);
-        await _theCodeKitchenClient.SendMessage(sendMessageRequest);
+        var release = new MessageContent(MessageCodes.ReleaseEquipment, null, null, equipmentType, number);
+        await _theCodeKitchenClient.SendMessage(new SendMessageRequest(_equipmentCoordinator, JsonSerializer.Serialize(release)));
     }
 }
