@@ -1,9 +1,7 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
-using System.Threading.Channels;
 using TheCodeKitchen.Cook.Client.Custom;
 using TheCodeKitchen.Cook.Contracts.Constants;
-using TheCodeKitchen.Cook.Contracts.Events.Timer;
 using TheCodeKitchen.Cook.Contracts.Reponses.CookBook;
 using TheCodeKitchen.Cook.Contracts.Reponses.Pantry;
 using TheCodeKitchen.Cook.Contracts.Requests.Communication;
@@ -17,16 +15,18 @@ public class Chef : Cook
     private readonly TheCodeKitchenClient _theCodeKitchenClient;
     private ICollection<GetIngredientResponse> _ingredients = new List<GetIngredientResponse>();
     private ICollection<GetRecipeResponse> _recipes = new List<GetRecipeResponse>();
-    
+
     private int _foodId = 1;
     private readonly ConcurrentDictionary<string, bool> _equipmentLocks = new(StringComparer.OrdinalIgnoreCase);
     private readonly ConcurrentBag<int> _timersProcessed = new();
     private readonly PriorityQueue<TimerNote, int> _timerEventQueue = new();
-    private readonly ConcurrentDictionary<string, Tuple<string, int>> _preparedIngredientLocations = new(StringComparer.OrdinalIgnoreCase);
+
+    private readonly ConcurrentDictionary<string, Tuple<string, int>> _preparedIngredientLocations =
+        new(StringComparer.OrdinalIgnoreCase);
 
     private readonly Dictionary<string, int> _equipments = new(StringComparer.OrdinalIgnoreCase)
     {
-        { EquipmentType.Bbq, 6 },
+        { EquipmentType.Bbq, 8 },
         { EquipmentType.Blender, 4 },
         { EquipmentType.Counter, 30 },
         { EquipmentType.CuttingBoard, 10 },
@@ -35,8 +35,8 @@ public class Chef : Cook
         { EquipmentType.Fryer, 6 },
         { EquipmentType.HotPlate, 15 },
         { EquipmentType.Mixer, 6 },
-        { EquipmentType.Oven, 4 },
-        { EquipmentType.Stove, 6 },
+        { EquipmentType.Oven, 6 },
+        { EquipmentType.Stove, 8 },
     };
 
     public Chef(string headChef, string kitchenCode, string username, string password,
@@ -97,26 +97,23 @@ public class Chef : Cook
         {
             while (!cancellationToken.IsCancellationRequested)
             {
-                TimerNote note = null;
+                TimerNote note;
                 lock (_timerEventQueue)
                 {
                     if (_timerEventQueue.Count == 0)
-                        continue; 
+                        continue;
                     note = _timerEventQueue.Dequeue();
                 }
+
                 try
                 {
-                    await ProcessTimerElapsedEvent(@note);
+                    await ProcessTimerElapsedEvent(note);
                 }
                 catch (Exception e)
                 {
                     Console.WriteLine(e);
                 }
             }
-            
-            
-            
-            
         }, cancellationToken);
     }
 
@@ -169,7 +166,15 @@ public class Chef : Cook
     private int FindAvailableEquipment(string equipmentType)
     {
         var equipmentCount = _equipments.GetValueOrDefault(equipmentType, 0);
-        for (var equipmentNumber = 1; equipmentNumber < equipmentCount; equipmentNumber++)
+        if (equipmentCount == 0)
+            return -1;
+
+        // Create a shuffled list of equipment numbers (to reduce chance of collisions)
+        var equipmentNumbers = Enumerable
+            .Range(0, equipmentCount)
+            .OrderBy(_ => Random.Shared.Next());
+
+        foreach (var equipmentNumber in equipmentNumbers)
         {
             if (!EquipmentIsLocked(equipmentType, equipmentNumber))
                 return equipmentNumber;
@@ -204,7 +209,8 @@ public class Chef : Cook
             if (isRecipe)
             {
                 // Ingredient is a recipe -> Recursively process it
-                await StartCookingIngredients(orderNumber, ingredient.Name, ingredientOfTree.Append(food).ToArray(), id);
+                await StartCookingIngredients(orderNumber, ingredient.Name, ingredientOfTree.Append(food).ToArray(),
+                    id);
             }
             else
             {
@@ -228,7 +234,7 @@ public class Chef : Cook
     private async Task ProcessTimerElapsedEvent(TimerNote timerNote)
     {
         Console.WriteLine($"{Username} - Process Timer Elapsed Event - {JsonSerializer.Serialize(timerNote)}");
-        
+
         var sourceEquipmentType = timerNote.EquipmentType;
         var sourceEquipmentNumber = timerNote.EquipmentNumber;
 
