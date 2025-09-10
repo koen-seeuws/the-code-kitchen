@@ -6,46 +6,43 @@ public static class RatingHelper
         ICollection<Recipe> recipes)
     {
         var recipe = recipes.FirstOrDefault(r => r.Name.Equals(food, StringComparison.OrdinalIgnoreCase));
-
+        
         if (recipe is null)
-            return 0.0; // If someone tries to rate a food that isn't a recipe, rate 0
+            return 0.0;
 
         var recipeRating = RateSteps(executedSteps, recipe.Steps);
 
-        // Create lookup: name -> list of recipe ingredients with that name
+        // Build a lookup for recipe names
+        var recipeNames = new HashSet<string>(recipes.Select(r => r.Name), StringComparer.OrdinalIgnoreCase);
+
+        // Group recipe ingredients by name and track occurrences
         var recipeIngredientGroups = recipe.Ingredients
             .GroupBy(i => i.Name, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(g => g.Key, g => g.ToList(), StringComparer.OrdinalIgnoreCase);
 
-        // Track occurrences of each ingredient name as we loop
         var nameCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-        var ingredientRatings = ingredients
-            .Select(f =>
-            {
-                var name = f.Name;
+        var ingredientRatings = ingredients.Select(ingredient =>
+        {
+            var name = ingredient.Name;
+            var occurrence = nameCounts.GetValueOrDefault(name);
+            nameCounts[name] = occurrence + 1;
 
-                // Track how many times we've seen this ingredient name
-                nameCounts.TryAdd(name, 0);
+            var recipeMatch = recipeIngredientGroups.TryGetValue(name, out var matches) && occurrence < matches.Count
+                ? matches[occurrence]
+                : null;
 
-                var occurrence = nameCounts[name];
-                nameCounts[name]++;
-
-                // Try to get the matching recipe ingredient by occurrence
-                var recipeMatch = recipeIngredientGroups.TryGetValue(name, out var matches) &&
-                                  occurrence < matches.Count
-                    ? matches[occurrence]
-                    : null;
-
-                var isRecipe = recipes.Any(i => i.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-
-                return isRecipe
-                    ? RateFood(name, f.Steps, f.Ingredients, recipes)
-                    : RateSteps(f.Steps, recipeMatch?.Steps ?? []);
-            });
+            if (recipeNames.Contains(name))
+                return RateFood(name, ingredient.Steps, ingredient.Ingredients, recipes);
+            
+            return recipeMatch != null
+                ? RateSteps(ingredient.Steps, recipeMatch.Steps)
+                : 0.0;
+        });
 
         return ingredientRatings.Append(recipeRating).Average();
     }
+
 
     public static double RateSteps(ICollection<RecipeStep> executedSteps, ICollection<RecipeStep> expectedSteps)
     {
