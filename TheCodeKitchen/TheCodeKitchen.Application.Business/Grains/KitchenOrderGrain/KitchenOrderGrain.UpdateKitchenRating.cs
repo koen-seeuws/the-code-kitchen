@@ -6,8 +6,6 @@ public sealed partial class KitchenOrderGrain
 {
     private async Task<Result<TheCodeKitchenUnit>> UpdateKitchenRating()
     {
-        var previousRating = state.State.TotalRating;
-
         var requestedFoodRating = state.State.RequestedFoods
             .Select(r => r.Rating)
             .DefaultIfEmpty(1.0)
@@ -20,14 +18,8 @@ public sealed partial class KitchenOrderGrain
 
         double[] ratings = [requestedFoodRating, deliveredFoodRating, state.State.CompletenessRating];
 
-        var newRating  = ratings.Average();
+        state.State.TotalRating = ratings.Average();
         
-        state.State.TotalRating = newRating;
-
-        if (Math.Abs(previousRating - newRating) <= RatingMargin.ToSendUpdate)
-            return TheCodeKitchenUnit.Value;
-
-        // Only update kitchen rating if rating changed significantly enough
         var streamProvider = this.GetStreamProvider(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider);
         var stream = streamProvider.GetStream<KitchenOrderRatingUpdatedEvent>(
             nameof(KitchenOrderRatingUpdatedEvent), state.State.Kitchen);
