@@ -26,7 +26,7 @@ public sealed partial class KitchenGrain
         // Equipment 
         var equipments = new Dictionary<string, int>
         {
-            { EquipmentType.Bbq, 6 },
+            { EquipmentType.Bbq, 8 },
             { EquipmentType.Blender, 4 },
             { EquipmentType.Counter, 30 },
             { EquipmentType.CuttingBoard, 10 },
@@ -35,8 +35,8 @@ public sealed partial class KitchenGrain
             { EquipmentType.Fryer, 6 },
             { EquipmentType.HotPlate, 15 },
             { EquipmentType.Mixer, 6 },
-            { EquipmentType.Oven, 4 },
-            { EquipmentType.Stove, 6 },
+            { EquipmentType.Oven, 6 },
+            { EquipmentType.Stove, 8 },
         };
 
         // State
