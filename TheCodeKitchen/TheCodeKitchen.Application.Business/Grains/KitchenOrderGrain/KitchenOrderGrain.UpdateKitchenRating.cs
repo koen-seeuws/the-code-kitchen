@@ -20,7 +20,9 @@ public sealed partial class KitchenOrderGrain
 
         double[] ratings = [requestedFoodRating, deliveredFoodRating, state.State.CompletenessRating];
 
-        var newRating = state.State.TotalRating = ratings.Average();
+        var newRating  = ratings.Average();
+        
+        state.State.TotalRating = newRating;
 
         if (Math.Abs(previousRating - newRating) <= RatingMargin.ToSendUpdate)
             return TheCodeKitchenUnit.Value;

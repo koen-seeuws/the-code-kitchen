@@ -12,6 +12,8 @@ public sealed class RecipeMapping : Profile
         CreateMap<RecipeIngredient, RecipeIngredientDto>();
         CreateMap<RecipeStep, RecipeStepDto>();
         
+        CreateMap<GetRecipeResponse, Recipe>();
+        CreateMap<RecipeIngredientDto, RecipeIngredient>();
         CreateMap<RecipeStepDto, RecipeStep>();
     }
 }

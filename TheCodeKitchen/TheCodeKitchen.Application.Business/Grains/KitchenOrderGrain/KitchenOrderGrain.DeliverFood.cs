@@ -33,7 +33,7 @@ public sealed partial class KitchenOrderGrain
         if (!getRecipeResult.Succeeded)
             return getRecipeResult.Error;
         
-        var recipes = getRecipeResult.Value.ToList();
+        var recipes = mapper.Map<List<Recipe>>(getRecipeResult.Value);
 
         var qualityRating = RatingHelper.RateFood(food.Name, food.Steps, food.Ingredients, recipes);
 
