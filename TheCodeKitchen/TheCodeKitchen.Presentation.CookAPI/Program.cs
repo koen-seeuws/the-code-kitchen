@@ -1,10 +1,12 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using TheCodeKitchen.Application.Validation;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Infrastructure.Logging.Serilog;
 using TheCodeKitchen.Infrastructure.Orleans.Client;
 using TheCodeKitchen.Infrastructure.Security.Configuration;
+using TheCodeKitchen.Presentation;
 using TheCodeKitchen.Presentation.API.Cook.Hubs;
 using TheCodeKitchen.Presentation.API.Cook.Validators;
 
@@ -25,8 +27,11 @@ builder.Services.AddPasswordHashingServices();
 builder.Services.AddAzureSignalRServices(builder.Configuration);
 
 // Presentation services
+builder.Services.AddHealthChecks().AddCheck<OrleansConnectionHealthCheck>(
+    "orleans_connection_health_check",
+    tags: ["orleans"]
+);
 builder.Services.AddHttpLogging();
-
 builder.Services.AddControllers();
 builder.Services.AddOpenApi(); // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddSwaggerGen(swagger =>
@@ -61,6 +66,12 @@ builder.Services.AddSwaggerGen(swagger =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.MapHealthChecks("/health/live");
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
+{
+    Predicate = healthCheck => healthCheck.Tags.Contains("orleans")
+});
+
 app.MapControllers();
 
 app.MapHub<CookHub>("/CookHub");

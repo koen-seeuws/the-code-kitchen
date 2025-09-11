@@ -1,9 +1,11 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using MudBlazor.Services;
 using TheCodeKitchen.Application.Validation;
 using TheCodeKitchen.Infrastructure.AzureSignalR;
 using TheCodeKitchen.Infrastructure.Logging.Serilog;
 using TheCodeKitchen.Infrastructure.Orleans.Client;
+using TheCodeKitchen.Presentation;
 using TheCodeKitchen.Presentation.ManagementUI.Components;
 using TheCodeKitchen.Presentation.ManagementUI.Hubs;
 using TheCodeKitchen.Presentation.ManagementUI.Mapping;
@@ -26,6 +28,10 @@ builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);
 builder.Services.AddAzureSignalRServices(builder.Configuration);
 
 // Presentation services
+builder.Services.AddHealthChecks().AddCheck<OrleansConnectionHealthCheck>(
+    "orleans_connection_health_check",
+    tags: ["orleans"]
+);
 builder.Services.AddMudServices();
 builder.Services.AddScoped<ClientTimeService>();
 builder.Services.AddScoped<ScrollService>();
@@ -51,6 +57,12 @@ app.UseHttpsRedirection();
 app.UseHttpLogging();
 
 app.UseAntiforgery();
+
+app.MapHealthChecks("/health/live");
+app.MapHealthChecks("/health/ready", new HealthCheckOptions
+{
+    Predicate = healthCheck => healthCheck.Tags.Contains("orleans")
+});
 
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
