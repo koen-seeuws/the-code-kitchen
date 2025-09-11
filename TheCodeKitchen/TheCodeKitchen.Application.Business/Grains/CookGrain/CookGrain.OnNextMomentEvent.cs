@@ -17,19 +17,23 @@ public sealed partial class CookGrain
             );
 
         var timerElapsedTasks = new List<Task>();
-        
+
         foreach (var timer in state.State.Timers)
         {
+            // Skip timers that are already at zero
+            if (timer.Time == TimeSpan.Zero) continue;
+    
             var previousTime = timer.Time;
             timer.Time -= nextMomentEvent.TimePerMoment;
-            
-            if (previousTime <= TimeSpan.Zero || timer.Time > TimeSpan.Zero) continue;
-            
-            // Only trigger if the timer crossed from positive to zero or negative
-            timer.Time = TimeSpan.Zero; // clamp at zero
-            var @event = new TimerElapsedEvent(timer.Number, timer.Note);
-            var timerElapsedTask = realTimeCookService.SendTimerElapsedEvent(state.State.Username, @event);
-            timerElapsedTasks.Add(timerElapsedTask);
+
+            // Fire event if it was positive and now is zero or negative
+            if (previousTime > TimeSpan.Zero && timer.Time <= TimeSpan.Zero)
+            {
+                timer.Time = TimeSpan.Zero; // clamp at zero
+                var @event = new TimerElapsedEvent(timer.Number, timer.Note);
+                var timerElapsedTask = realTimeCookService.SendTimerElapsedEvent(state.State.Username, @event);
+                timerElapsedTasks.Add(timerElapsedTask);
+            }
         }
 
         await Task.WhenAll(timerElapsedTasks);
