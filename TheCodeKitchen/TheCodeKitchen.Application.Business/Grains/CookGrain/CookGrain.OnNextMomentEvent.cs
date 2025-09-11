@@ -20,15 +20,16 @@ public sealed partial class CookGrain
         
         foreach (var timer in state.State.Timers)
         {
+            var previousTime = timer.Time;
             timer.Time -= nextMomentEvent.TimePerMoment;
             
-            if (timer.Time > TimeSpan.Zero) continue;
+            if (previousTime <= TimeSpan.Zero || timer.Time > TimeSpan.Zero) continue;
             
-            timer.Time = TimeSpan.Zero;
+            // Only trigger if the timer crossed from positive to zero or negative
+            timer.Time = TimeSpan.Zero; // clamp at zero
             var @event = new TimerElapsedEvent(timer.Number, timer.Note);
             var timerElapsedTask = realTimeCookService.SendTimerElapsedEvent(state.State.Username, @event);
             timerElapsedTasks.Add(timerElapsedTask);
-
         }
 
         await Task.WhenAll(timerElapsedTasks);
