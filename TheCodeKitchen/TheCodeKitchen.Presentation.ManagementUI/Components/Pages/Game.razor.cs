@@ -18,8 +18,8 @@ public partial class Game(
     IMapper mapper
 ) : ComponentBase, IAsyncDisposable
 {
-    [Parameter] public Guid GameId { get; set; }
     private HubConnection? _gameHubConnection;
+    [Parameter] public Guid GameId { get; set; }
     private GetGameResponse? GetGameResponse { get; set; }
     private string? GameErrorMessage { get; set; }
     private ICollection<KitchenViewModel>? Kitchens { get; set; }
@@ -27,6 +27,11 @@ public partial class Game(
     private bool? Paused { get; set; }
     private TimeSpan TimePassed { get; set; }
     public bool Busy { get; set; }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_gameHubConnection is not null) await _gameHubConnection.DisposeAsync();
+    }
 
 
     protected override async Task OnInitializedAsync()
@@ -230,10 +235,5 @@ public partial class Game(
         {
             Busy = false;
         }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_gameHubConnection is not null) await _gameHubConnection.DisposeAsync();
     }
 }

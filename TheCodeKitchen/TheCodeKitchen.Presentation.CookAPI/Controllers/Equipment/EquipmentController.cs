@@ -23,7 +23,7 @@ public abstract class EquipmentController(IClusterClient clusterClient, string e
         var result = await grain.AddFood(addFoodRequest);
         return this.MatchActionResult(result);
     }
-    
+
     [HttpPost("{number:int}/[action]")]
     public async Task<IActionResult> TakeFood(int number)
     {

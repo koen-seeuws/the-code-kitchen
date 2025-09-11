@@ -10,7 +10,7 @@ public interface IKitchenGrain : IGrainWithGuidKey
 {
     Task<Result<CreateKitchenResponse>> Initialize(CreateKitchenRequest request, int count);
     Task<Result<TheCodeKitchenUnit>> InitializeEquipment();
-    Task<Result<GetKitchenResponse>> GetKitchen();    
+    Task<Result<GetKitchenResponse>> GetKitchen();
     Task<Result<IEnumerable<GetCookResponse>>> GetCooks(GetCookRequest request);
     Task<Result<TheCodeKitchenUnit>> ReleaseJoinCode();
     Task<Result<CreateCookResponse>> CreateCook(CreateCookRequest request);
@@ -18,6 +18,7 @@ public interface IKitchenGrain : IGrainWithGuidKey
     Task<Result<TheCodeKitchenUnit>> CloseOrder(CloseOrderRequest request);
     Task<Result<IEnumerable<GetOpenOrderResponse>>> GetOpenOrders();
     Task<Result<TheCodeKitchenUnit>> DeliverMessage(DeliverMessageRequest request);
+
     [ResponseTimeout("00:05:00")]
     Task<Result<TheCodeKitchenUnit>> ResetKitchen();
 }

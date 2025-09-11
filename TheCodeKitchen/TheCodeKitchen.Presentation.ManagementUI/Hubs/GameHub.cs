@@ -6,7 +6,7 @@ namespace TheCodeKitchen.Presentation.ManagementUI.Hubs;
 public sealed class GameHub : Hub
 {
     private const string GameIdQueryParameterKey = "gameId";
-    
+
     public override async Task OnConnectedAsync()
     {
         var gameIdQueryParameterValue = Context.GetHttpContext()?.Request.Query[GameIdQueryParameterKey];

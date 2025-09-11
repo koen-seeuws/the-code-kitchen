@@ -5,7 +5,7 @@ namespace TheCodeKitchen.Application.Business.Grains.KitchenOrderGrain;
 public sealed partial class KitchenOrderGrain
 {
     private int _nextMomentCounter;
-    
+
     private async Task OnNextMomentEvent(NextMomentEvent nextMomentEvent, StreamSequenceToken _)
     {
         if (state.State.Completed)

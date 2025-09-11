@@ -7,7 +7,7 @@ public record BusinessError : Error
     {
         
     }
-    
+
     public BusinessError(string message) : base(message)
     {
     }

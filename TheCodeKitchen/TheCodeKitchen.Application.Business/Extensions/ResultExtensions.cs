@@ -12,7 +12,7 @@ public static class ResultExtensions
             return result.Error;
         return await next(result.Value);
     }
-    
+
     public static Result<IEnumerable<T>> Combine<T>(this IEnumerable<Result<T>> results)
     {
         return Result<T>.Combine(results);

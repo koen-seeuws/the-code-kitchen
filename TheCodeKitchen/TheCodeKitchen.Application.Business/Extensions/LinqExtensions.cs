@@ -6,7 +6,7 @@ public static class LinqExtensions
     {
         return new TimeSpan(source.Sum(item => func(item).Ticks));
     }
-    
+
     public static IEnumerable<TSource> MultiExcept<TSource>(
         this IEnumerable<TSource> source,
         IEnumerable<TSource> toRemove,
@@ -30,7 +30,7 @@ public static class LinqExtensions
             }
         }
     }
-    
+
     public static IEnumerable<TSource> MultiIntersect<TSource>(
         this IEnumerable<TSource> first,
         IEnumerable<TSource> second,
@@ -51,5 +51,4 @@ public static class LinqExtensions
             }
         }
     }
-
 }

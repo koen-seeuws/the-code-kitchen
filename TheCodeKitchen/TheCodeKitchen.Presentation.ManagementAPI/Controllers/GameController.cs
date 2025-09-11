@@ -71,7 +71,7 @@ public sealed class GameController(
         var result = await gameGrain.NextMoment();
         return this.MatchActionResult(result);
     }
-    
+
     [HttpPost("{gameId}/[action]")]
     public async Task<IActionResult> Reset(Guid gameId)
     {

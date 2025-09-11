@@ -16,7 +16,7 @@ public static class ScaledObjectRefExtensions
 
         throw new InvalidOperationException($"ScaledObjectRef is missing required metadata key {OrleansScalerConstants.AverageGrainCountPerSiloMetadataKey}");
     }
-    
+
     public static string GetSiloNameFilter(this ScaledObjectRef scaledObjectRef)
     {
         if (scaledObjectRef.ScalerMetadata != null &&

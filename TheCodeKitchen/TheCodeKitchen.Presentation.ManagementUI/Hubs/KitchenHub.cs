@@ -6,7 +6,7 @@ namespace TheCodeKitchen.Presentation.ManagementUI.Hubs;
 public sealed class KitchenHub : Hub
 {
     private const string KitchenIdQueryParameterKey = "kitchenId";
-    
+
     public override async Task OnConnectedAsync()
     {
         var kitchenIdQueryParameterValue = Context.GetHttpContext()?.Request.Query[KitchenIdQueryParameterKey];

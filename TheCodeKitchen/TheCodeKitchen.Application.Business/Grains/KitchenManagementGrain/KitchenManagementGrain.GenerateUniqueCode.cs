@@ -3,7 +3,7 @@ namespace TheCodeKitchen.Application.Business.Grains.KitchenManagementGrain;
 public sealed partial class KitchenManagementGrain
 {
     private const int MaxAttempts = 10;
-    
+
     public async Task<Result<string>> GenerateUniqueCode(Guid kitchenId, int length, string characters)
     {
         var validCharacters = characters.ToCharArray();
