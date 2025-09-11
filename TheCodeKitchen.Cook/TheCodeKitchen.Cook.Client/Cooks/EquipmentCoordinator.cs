@@ -46,7 +46,7 @@ public class EquipmentCoordinator : Cook
                     break;
 
                 case MessageCodes.ReleaseEquipment:
-                    await HandleRelease(messageContent.EquipmentType!, messageContent.EquipmentNumber!.Value);
+                    await HandleRelease(message.From, messageContent.EquipmentType!, messageContent.EquipmentNumber!.Value);
                     break;
             }
             
@@ -57,7 +57,7 @@ public class EquipmentCoordinator : Cook
 
     private async Task HandleRequest(string requester, string equipmentType)
     {
-        Console.WriteLine($"{Username} - Handling equipment request for type: {equipmentType}");
+        Console.WriteLine($"{Username} - Handling equipment request for user {requester} for type {equipmentType}");
         
         var equipmentNumber = -1;
 
@@ -87,12 +87,14 @@ public class EquipmentCoordinator : Cook
             equipmentNumber
         );
 
+        Console.WriteLine($"{Username} - Granting equipment {equipmentType} {equipmentNumber} to user {requester}");
+        
         await _client.SendMessage(new SendMessageRequest(requester, JsonSerializer.Serialize(grant)));
     }
     
-    private async Task HandleRelease(string equipmentType, int equipmentNumber)
+    private async Task HandleRelease(string releaser, string equipmentType, int equipmentNumber)
     {
-        Console.WriteLine($"{Username} - Handling equipment release for type: {equipmentType}");
+        Console.WriteLine($"{Username} - Handling equipment release {equipmentType} {equipmentNumber} from {releaser}");
         if (_lockedEquipment.TryGetValue(equipmentType, out var locked))
             locked.TryRemove(equipmentNumber, out _);
     }
