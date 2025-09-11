@@ -1,4 +1,3 @@
-using TheCodeKitchen.Application.Contracts.Requests.Equipment;
 using TheCodeKitchen.Application.Contracts.Requests.Kitchen;
 using TheCodeKitchen.Application.Contracts.Response.Kitchen;
 

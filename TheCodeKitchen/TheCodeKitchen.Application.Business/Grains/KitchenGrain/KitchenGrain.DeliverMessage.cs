@@ -18,8 +18,6 @@ public sealed partial class KitchenGrain
             cooks = [cook];
         }
 
-
-
         var tasks = cooks
             .Where(cook => !cook.Equals(request.From, StringComparison.OrdinalIgnoreCase))
             .Select(cook =>

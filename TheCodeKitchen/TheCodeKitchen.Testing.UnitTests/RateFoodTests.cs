@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using FluentAssertions;
 using TheCodeKitchen.Application.Business.Helpers;
 using TheCodeKitchen.Core.Domain;
-using Xunit;
 
 public class RateFoodTests
 {
