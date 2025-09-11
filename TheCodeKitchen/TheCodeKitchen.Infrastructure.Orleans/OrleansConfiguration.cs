@@ -37,4 +37,3 @@ public sealed class StreamingEventHubConfigurationValidator : AbstractValidator<
         RuleFor(x => x.ConsumerGroup).NotEmpty();
     }
 }
-

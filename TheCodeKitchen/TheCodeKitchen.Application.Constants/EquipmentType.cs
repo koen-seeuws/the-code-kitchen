@@ -13,7 +13,7 @@ public static class EquipmentType
     public const string HotPlate = "Hot Plate";
     public const string Mixer = "Mixer";
     public const string Oven = "Oven";
-    
+
     public static readonly string[] All =
     [
         Bbq,
@@ -28,7 +28,7 @@ public static class EquipmentType
         Oven,
         Stove
     ];
-    
+
     public static readonly string[] Steppable =
     [
         Bbq,

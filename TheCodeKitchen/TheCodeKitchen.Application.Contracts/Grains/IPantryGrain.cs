@@ -6,7 +6,7 @@ namespace TheCodeKitchen.Application.Contracts.Grains;
 
 public interface IPantryGrain : IGrainWithGuidKey
 {
-     Task<Result<IEnumerable<GetIngredientResponse>>> GetIngredients();
-     Task<Result<CreateIngredientResponse>> CreateIngredient(CreateIngredientRequest request);
-     Task<Result<TakeFoodResponse>> TakeFood(TakeFoodFromPantryRequest request);
+    Task<Result<IEnumerable<GetIngredientResponse>>> GetIngredients();
+    Task<Result<CreateIngredientResponse>> CreateIngredient(CreateIngredientRequest request);
+    Task<Result<TakeFoodResponse>> TakeFood(TakeFoodFromPantryRequest request);
 }

@@ -19,4 +19,3 @@ public sealed partial class CookGrain
         return TheCodeKitchenUnit.Value;
     }
 }
-    

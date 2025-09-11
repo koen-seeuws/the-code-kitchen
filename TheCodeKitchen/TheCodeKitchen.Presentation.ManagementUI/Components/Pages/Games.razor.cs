@@ -24,6 +24,11 @@ public partial class Games(
     private ICollection<GameTableRecordModel>? GameRecords { get; set; }
     private string? ErrorMessage { get; set; }
 
+    public async ValueTask DisposeAsync()
+    {
+        if (_gameManagementHubConnection is not null) await _gameManagementHubConnection.DisposeAsync();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         await LoadGames();
@@ -90,10 +95,5 @@ public partial class Games(
 
         if (dialogResult is { Canceled: false, Data: CreateGameResponse createGameResponse })
             NavigateToGame(createGameResponse.Id, false);
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_gameManagementHubConnection is not null) await _gameManagementHubConnection.DisposeAsync();
     }
 }

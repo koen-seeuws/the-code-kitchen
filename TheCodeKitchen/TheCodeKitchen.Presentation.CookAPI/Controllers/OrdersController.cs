@@ -19,7 +19,7 @@ public sealed class OrdersController(IClusterClient clusterClient) : ControllerB
         var result = await kitchenGrain.GetOpenOrders();
         return this.MatchActionResult(result);
     }
-    
+
     [HttpPost("{orderNumber:long}/[action]")]
     public async Task<IActionResult> Deliver([FromRoute] long orderNumber)
     {
@@ -30,7 +30,7 @@ public sealed class OrdersController(IClusterClient clusterClient) : ControllerB
         var result = await kitchenOrderGrain.DeliverFood(deliverFoodRequest);
         return this.MatchActionResult(result);
     }
-    
+
     [HttpPost("{orderNumber:long}/[action]")]
     public async Task<IActionResult> Complete([FromRoute] long orderNumber)
     {

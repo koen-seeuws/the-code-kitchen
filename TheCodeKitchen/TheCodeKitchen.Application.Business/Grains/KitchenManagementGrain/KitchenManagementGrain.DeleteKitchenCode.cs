@@ -1,5 +1,3 @@
-
-
 namespace TheCodeKitchen.Application.Business.Grains.KitchenManagementGrain;
 
 public sealed partial class KitchenManagementGrain

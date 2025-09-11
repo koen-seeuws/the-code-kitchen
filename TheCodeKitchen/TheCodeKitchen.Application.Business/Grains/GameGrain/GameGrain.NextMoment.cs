@@ -4,8 +4,8 @@ namespace TheCodeKitchen.Application.Business.Grains.GameGrain;
 
 public sealed partial class GameGrain
 {
-    private IGrainTimer? _nextMomentTimer;
     private TimeSpan? _nextMomentDelay;
+    private IGrainTimer? _nextMomentTimer;
     private TimeSpan _timeUntilNewOrder = TimeSpan.Zero;
 
     public async Task<Result<TheCodeKitchenUnit>> NextMoment()

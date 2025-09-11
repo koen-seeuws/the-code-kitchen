@@ -61,7 +61,7 @@ public partial class Recipes(
             ErrorMessage = "An error occurred while retrieving the ingredients.";
         }
     }
-    
+
     private async Task CreateRecipe()
     {
         var dialogParameters = new DialogParameters

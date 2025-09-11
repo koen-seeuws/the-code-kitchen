@@ -16,9 +16,9 @@ public sealed partial class KitchenOrderGrain
 
         if (streamHandles.State.NextMomentStreamSubscriptionHandle is not null)
         {
-                await streamHandles.State.NextMomentStreamSubscriptionHandle.UnsubscribeAsync();
-                streamHandles.State.NextMomentStreamSubscriptionHandle = null;
-                await streamHandles.WriteStateAsync();
+            await streamHandles.State.NextMomentStreamSubscriptionHandle.UnsubscribeAsync();
+            streamHandles.State.NextMomentStreamSubscriptionHandle = null;
+            await streamHandles.WriteStateAsync();
         }
 
         var kitchen = GrainFactory.GetGrain<IKitchenGrain>(state.State.Kitchen);

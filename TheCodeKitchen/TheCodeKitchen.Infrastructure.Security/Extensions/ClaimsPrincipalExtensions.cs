@@ -15,7 +15,7 @@ public static class ClaimsPrincipalExtensions
         
         return claim.Value;
     }
-    
+
     public static Guid GetGuidClaim(this ClaimsPrincipal principal, string claimType)
     {
         var claimValue = GetClaim(principal, claimType);

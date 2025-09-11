@@ -21,13 +21,18 @@ public partial class PreGameLobby(
     IMapper mapper
 ) : ComponentBase, IAsyncDisposable
 {
-    [Parameter] public Guid GameId { get; set; }
     private HubConnection? _gameHubConnection;
+    [Parameter] public Guid GameId { get; set; }
     private GetGameResponse? GetGameResponse { get; set; }
     private ICollection<KitchenTableRecordModel>? KitchenRecords { get; set; }
     private IDictionary<Guid, List<CookTableRecordModel>>? CookRecordsPerKitchen { get; set; }
     private string? ErrorMessage { get; set; }
     public bool Busy { get; set; }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_gameHubConnection is not null) await _gameHubConnection.DisposeAsync();
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -202,10 +207,5 @@ public partial class PreGameLobby(
         {
             Busy = false;
         }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_gameHubConnection is not null) await _gameHubConnection.DisposeAsync();
     }
 }

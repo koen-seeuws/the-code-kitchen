@@ -14,7 +14,7 @@ public sealed class RealTimeKitchenOrderService(HubContextProvider hubContextPro
         var kitchenHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.KitchenOrderHub); // UI
         await kitchenHubContext.Clients.Group(kitchenGroup).SendAsync(nameof(KitchenOrderCreatedEvent), @event);
     }
-    
+
     public async Task SendKitchenOrderFoodDeliveredEvent(Guid kitchenId, KitchenOrderFoodDeliveredEvent @event)
     {
         var kitchenHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.KitchenOrderHub);

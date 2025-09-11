@@ -19,16 +19,21 @@ public partial class KitchenComponent(
     ScrollService scrollService
 ) : ComponentBase, IAsyncDisposable
 {
-    [Parameter] public KitchenViewModel Kitchen { get; set; } = null!;
-
     private HubConnection? _kitchenHubConnection;
     private HubConnection? _kitchenOrderHubConnection;
+    [Parameter] public KitchenViewModel Kitchen { get; set; } = null!;
 
     private ICollection<MessageViewModel> Messages { get; set; } = new List<MessageViewModel>();
     private string? KitchenConnectionErrorMessage { get; set; }
 
     private ICollection<KitchenOrderViewModel>? KitchenOrders { get; set; }
     private string? KitchenOrdersErrorMessage { get; set; }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_kitchenHubConnection is not null) await _kitchenHubConnection.DisposeAsync();
+        if (_kitchenOrderHubConnection is not null) await _kitchenOrderHubConnection.DisposeAsync();
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -125,18 +130,18 @@ public partial class KitchenComponent(
         });
 
         _kitchenOrderHubConnection.On(nameof(KitchenOrderFoodDeliveredEvent), async (KitchenOrderFoodDeliveredEvent @event) =>
+        {
+            var kitchenOrder = KitchenOrders?.FirstOrDefault(o => o.Number == @event.Number);
+            if (kitchenOrder is not null)
             {
-                var kitchenOrder = KitchenOrders?.FirstOrDefault(o => o.Number == @event.Number);
-                if (kitchenOrder is not null)
-                {
-                    kitchenOrder.DeliveredFoods = kitchenOrder.DeliveredFoods
-                        .Append(@event.Food)
-                        .Order()
-                        .ToList();
-                }
+                kitchenOrder.DeliveredFoods = kitchenOrder.DeliveredFoods
+                    .Append(@event.Food)
+                    .Order()
+                    .ToList();
+            }
 
-                await InvokeAsync(StateHasChanged);
-            });
+            await InvokeAsync(StateHasChanged);
+        });
 
         _kitchenOrderHubConnection.On(nameof(KitchenOrderCompletedEvent), async (KitchenOrderCompletedEvent @event) =>
         {
@@ -154,11 +159,5 @@ public partial class KitchenComponent(
         {
             snackbar.Add("Failed to start listening to kitchen events", Severity.Error);
         }
-    }
-
-    public async ValueTask DisposeAsync()
-    {
-        if (_kitchenHubConnection is not null) await _kitchenHubConnection.DisposeAsync();
-        if (_kitchenOrderHubConnection is not null) await _kitchenOrderHubConnection.DisposeAsync();
     }
 }

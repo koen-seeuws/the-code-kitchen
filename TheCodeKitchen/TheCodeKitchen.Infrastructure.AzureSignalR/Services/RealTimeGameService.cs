@@ -11,14 +11,14 @@ public sealed class RealTimeGameService(HubContextProvider hubContextProvider) :
         var gameHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.GameHub);
         await gameHubContext.Clients.Group(gameGroup).SendAsync(nameof(KitchenCreatedEvent), @event);
     }
-    
+
     public async Task SendCookJoinedEvent(Guid gameId, CookJoinedEvent @event)
     {
         var gameHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.GameHub);
         var gameGroup = GroupConstants.GetGameGroup(gameId);
         await gameHubContext.Clients.Group(gameGroup).SendAsync(nameof(CookJoinedEvent), @event);
     }
-    
+
     public async Task SendGamePausedOrResumedEvent(Guid gameId, GamePausedOrResumedEvent @event)
     {
         var gameHubContext = await hubContextProvider.GetHubContextAsync(HubConstants.GameHub);
