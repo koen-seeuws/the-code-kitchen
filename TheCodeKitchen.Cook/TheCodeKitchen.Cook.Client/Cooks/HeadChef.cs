@@ -28,7 +28,6 @@ public class HeadChef : Cook
 
         OnKitchenOrderCreatedEvent = async kitchenOrderCreatedEvent => await SendCookCommand(kitchenOrderCreatedEvent);
 
-
         OnMessageReceivedEvent = async messageReceivedEvent =>
         {
             var message = new Message(
@@ -71,29 +70,31 @@ public class HeadChef : Cook
         {
             case MessageCodes.FoodReady:
             {
-                Console.WriteLine($"{Username} - Received Food ready - Order: {message.Content.Order}, {message.Content.Food} - Equipment {message.Content.EquipmentType} {message.Content.EquipmentNumber}");
-                
+                Console.WriteLine(
+                    $"{Username} - Received Food ready - Order: {message.Content.Order}, {message.Content.Food} - Equipment {message.Content.EquipmentType} {message.Content.EquipmentNumber}");
+
                 var orders = await _theCodeKitchenClient.ViewOpenOrders();
                 var order = orders.FirstOrDefault(o => o.Number == message.Content.Order!.Value);
 
-                if (order == null)
-                {
-                    //Order was closed by someone else
-                    break;
-                }
-                
                 await _holdFoodSemaphore.WaitAsync();
                 try
                 {
                     await _theCodeKitchenClient.TakeFoodFromEquipment(message.Content.EquipmentType!,
                         message.Content.EquipmentNumber!.Value);
+                    if (order != null)
+                        await _theCodeKitchenClient.DeliverFoodToOrder(message.Content.Order!.Value);
+                    else
+                        await _theCodeKitchenClient.ThrowFoodAway(); // Order completed already
+
                     await ReleaseEquipment(message.Content.EquipmentType!, message.Content.EquipmentNumber!.Value);
-                    await _theCodeKitchenClient.DeliverFoodToOrder(message.Content.Order!.Value);
                 }
                 finally
                 {
                     _holdFoodSemaphore.Release();
                 }
+                
+                if(order == null)
+                    break; // Order completed already
 
                 var deliveredGroups = order.DeliveredFoods
                     .Append(message.Content.Food)
@@ -110,10 +111,11 @@ public class HeadChef : Cook
                     Console.WriteLine($"{Username} - Completing order {message.Content.Order!.Value}");
                     await _theCodeKitchenClient.CompleteOrder(message.Content.Order!.Value);
                 }
-                
+
                 break;
             }
         }
+
         var confirmMessageRequest = new ConfirmMessageRequest(message.Number);
         await _theCodeKitchenClient.ConfirmMessage(confirmMessageRequest);
     }
@@ -121,6 +123,7 @@ public class HeadChef : Cook
     private async Task ReleaseEquipment(string equipmentType, int number)
     {
         var release = new MessageContent(MessageCodes.ReleaseEquipment, null, null, equipmentType, number);
-        await _theCodeKitchenClient.SendMessage(new SendMessageRequest(_equipmentCoordinator, JsonSerializer.Serialize(release)));
+        await _theCodeKitchenClient.SendMessage(new SendMessageRequest(_equipmentCoordinator,
+            JsonSerializer.Serialize(release)));
     }
 }

@@ -67,7 +67,9 @@ public class Chef : Cook
             {
                 Console.WriteLine(
                     $"{Username} - Error processing timer elapsed event {JsonSerializer.Serialize(timer)}: {ex}");
-                throw;
+                Console.WriteLine($"{Username} - Completing order {timer.Note.Order}");
+                await _theCodeKitchenClient
+                    .CompleteOrder(timer.Note.Order); // In case something goes wrong with food in this order, just skip it
             }
         };
 
@@ -88,7 +90,12 @@ public class Chef : Cook
             {
                 Console.WriteLine(
                     $"{Username} - Error processing message {JsonSerializer.Serialize(message)}: {ex}");
-                throw;
+                if (message.Content.Order.HasValue)
+                {
+                    Console.WriteLine($"{Username} - Completing order {message.Content.Order!.Value}");
+                    await _theCodeKitchenClient.CompleteOrder(message.Content.Order
+                        .Value); // In case something goes wrong with food in this order, just skip it
+                }
             }
         };
     }
