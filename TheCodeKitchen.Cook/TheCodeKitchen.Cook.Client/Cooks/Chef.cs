@@ -7,6 +7,7 @@ using TheCodeKitchen.Cook.Contracts.Reponses.CookBook;
 using TheCodeKitchen.Cook.Contracts.Reponses.Pantry;
 using TheCodeKitchen.Cook.Contracts.Requests.Communication;
 using TheCodeKitchen.Cook.Contracts.Requests.Timer;
+using Timer = TheCodeKitchen.Cook.Client.Custom.Timer;
 
 namespace TheCodeKitchen.Cook.Client.Cooks;
 
@@ -23,16 +24,15 @@ public class Chef : Cook
     private ICollection<GetRecipeResponse> _recipes = new List<GetRecipeResponse>();
 
     // Equipment Locking
-    private TaskCompletionSource<MessageContent>? _pendingGrant;
+    private readonly ConcurrentQueue<TaskCompletionSource<MessageContent>> _pendingGrants = new();
 
     // Food Processing
     private int _foodId = 1;
     private readonly SemaphoreSlim _holdFoodSemaphore = new(1, 1);
-    
-    private readonly ConcurrentDictionary<string, bool> _inProgressFoods = new();
-    
-    
-    
+
+    // Food Tracking
+    private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, bool>> _preparedIngredients =
+        new(StringComparer.OrdinalIgnoreCase);
 
     private readonly ConcurrentDictionary<string, Tuple<string, int>> _preparedIngredientLocations =
         new(StringComparer.OrdinalIgnoreCase);
@@ -54,20 +54,19 @@ public class Chef : Cook
 
         OnTimerElapsedEvent = async timerElapsedEvent =>
         {
-            // Immediately stop the timer, it keeps firing each moment until stopped, we will set new timer if needed
-            var stopTimerRequest = new StopTimerRequest(timerElapsedEvent.Number);
-            await _theCodeKitchenClient.StopTimer(stopTimerRequest);
-
-            var note = JsonSerializer.Deserialize<TimerNote>(timerElapsedEvent.Note!);
+            var timer = new Timer(
+                timerElapsedEvent.Number,
+                JsonSerializer.Deserialize<TimerNote>(timerElapsedEvent.Note!)
+            );
 
             try
             {
-                await ProcessTimerElapsedEvent(note!);
+                await ProcessTimerElapsedEvent(timer);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(
-                    $"{Username} - Error processing timer elapsed event {JsonSerializer.Serialize(timerElapsedEvent)}: {ex}");
+                    $"{Username} - Error processing timer elapsed event {JsonSerializer.Serialize(timer)}: {ex}");
                 throw;
             }
         };
@@ -88,7 +87,7 @@ public class Chef : Cook
             catch (Exception ex)
             {
                 Console.WriteLine(
-                    $"{Username} - Error processing message {JsonSerializer.Serialize(messageReceivedEvent)}: {ex}");
+                    $"{Username} - Error processing message {JsonSerializer.Serialize(message)}: {ex}");
                 throw;
             }
         };
@@ -110,7 +109,16 @@ public class Chef : Cook
             {
                 Console.WriteLine(
                     $"{Username} - Process Message - Granted Equipment - {message.Content.EquipmentType} {message.Content.EquipmentNumber}");
-                _pendingGrant?.SetResult(message.Content);
+                
+                if (_pendingGrants.TryDequeue(out var pendingGrant))
+                {
+                    pendingGrant.SetResult(message.Content);
+                }
+                else
+                {
+                    Console.WriteLine($"{Username} - WARNING: Received grant but no pending request!");
+                }
+                
                 break;
             }
             case MessageCodes.CookFood:
@@ -137,16 +145,16 @@ public class Chef : Cook
 
     private async Task<int> RequestEquipment(string equipmentType)
     {
-        _pendingGrant = new TaskCompletionSource<MessageContent>();
+        var pendingGrant = new TaskCompletionSource<MessageContent>();
+    
+        // Add to queue before sending request
+        _pendingGrants.Enqueue(pendingGrant);
 
         var request = new MessageContent(MessageCodes.RequestEquipment, null, null, equipmentType, null);
-        await _theCodeKitchenClient.SendMessage(new SendMessageRequest(_equipmentCoordinator,
-            JsonSerializer.Serialize(request)));
+        await _theCodeKitchenClient.SendMessage(new SendMessageRequest(_equipmentCoordinator, JsonSerializer.Serialize(request)));
 
         // Wait for GrantEquipment for this chef (wait until coordinator responds)
-        var grant = await _pendingGrant.Task;
-
-        _pendingGrant = null;
+        var grant = await pendingGrant.Task;
 
         return grant.EquipmentNumber!.Value;
     }
@@ -170,8 +178,6 @@ public class Chef : Cook
 
     private async Task StartCookingIngredients(long orderNumber, string food, string[] ingredientOfTree, int id)
     {
-        
-        
         var recipe = _recipes.First(r => r.Name.Equals(food, StringComparison.OrdinalIgnoreCase));
 
         foreach (var ingredient in recipe.Ingredients)
@@ -217,17 +223,16 @@ public class Chef : Cook
                 if (sourceEquipmentType != null && sourceEquipmentNumber.HasValue)
                 {
                     // Food is in equipment -> Take from there
-                    await _theCodeKitchenClient.TakeFoodFromEquipment(sourceEquipmentType, sourceEquipmentNumber.Value);
+                    await TakeFoodFromEquipment(sourceEquipmentType, sourceEquipmentNumber.Value);
+                    await AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
                     await ReleaseEquipment(sourceEquipmentType, sourceEquipmentNumber.Value);
                 }
                 else
                 {
                     // Food is in pantry -> Take from there
-                    await _theCodeKitchenClient.TakeFoodFromPantry(food);
+                    await TakeFoodFromPantry(food);
+                    await AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
                 }
-
-                // Add food to destination equipment, set timer for next step, update note for next step
-                await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
             }
             finally
             {
@@ -263,28 +268,61 @@ public class Chef : Cook
             return;
         }
 
-        // All steps are done, but is part of recipe -> Find the recipe and merge it if all ingredients are ready
+        // All steps are done, but is part of recipe
         var recipeName = recipeTree.Last();
         var recipe = _recipes.First(r => r.Name.Equals(recipeName, StringComparison.OrdinalIgnoreCase));
 
         var recipeKey = $"{id}_{string.Join('_', recipeTree)}".ToUpper();
 
-        var ingredientsToBePrepared = recipe.Ingredients.Where(i => i.Steps.Count > 0).ToList();
-        var ingredientsToBeTakenFromPantry = recipe.Ingredients.Where(i =>
-                i.Steps.Count <= 0 && _ingredients.Select(pi => pi.Name)
-                    .Contains(i.Name, StringComparer.OrdinalIgnoreCase))
-            .ToList();
+        var preparedIngredients =
+            _preparedIngredients.GetOrAdd(recipeKey, _ => new ConcurrentDictionary<string, bool>());
 
-        var preparedIngredients = _preparedIngredientLocations
-            .Where(kv => kv.Key.StartsWith(recipeKey))
-            .ToDictionary();
+        // Tracking prepared ingredients
+        preparedIngredients.TryAdd(food, true);
 
-        var isToBePrepared = ingredientsToBePrepared
-            .Select(i => i.Name)
-            .Contains(food, StringComparer.OrdinalIgnoreCase);
+        // Tracking prepared ingredient locations (in case they have steps)
+        var ingredientsToBePreparedWithSteps = recipe.Ingredients.Where(i => i.Steps.Count > 0).ToList();
+        if (ingredientsToBePreparedWithSteps.Select(i => i.Name).Contains(food, StringComparer.OrdinalIgnoreCase))
+        {
+            // Current ingredient is one of the ingredients with steps, move it onto counter or hot plate and track the prepared ingredient
+            var destinationEquipmentType = EquipmentType.Counter;
+            var destinationEquipmentNumber = await RequestEquipment(destinationEquipmentType);
 
-        if ((!isToBePrepared && ingredientsToBePrepared.Count == preparedIngredients.Count) ||
-            (isToBePrepared && ingredientsToBePrepared.Count == preparedIngredients.Count + 1))
+            if (destinationEquipmentNumber < 0)
+            {
+                destinationEquipmentType = EquipmentType.HotPlate;
+                destinationEquipmentNumber = await RequestEquipment(destinationEquipmentType);
+            }
+
+            if (destinationEquipmentNumber < 0)
+            {
+                // No Counter or Hot Plate available -> Try again in 2 minutes
+                await SetTimer(orderNumber, food, recipeTree, stepsToDo, id, sourceEquipmentType, sourceEquipmentNumber,
+                    TimeSpan.FromMinutes(2));
+                return;
+            }
+
+            // Lock destination equipment, take food, unlock source equipment, add food to destination equipment
+            await _holdFoodSemaphore.WaitAsync();
+            try
+            {
+                await TakeFoodFromEquipment(sourceEquipmentType!, sourceEquipmentNumber!.Value);
+                await AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
+                await ReleaseEquipment(sourceEquipmentType!, sourceEquipmentNumber.Value);
+            }
+            finally
+            {
+                _holdFoodSemaphore.Release();
+            }
+
+            // Track the prepared ingredient
+            var location = new Tuple<string, int>(destinationEquipmentType, destinationEquipmentNumber);
+            var locationKey = $"{recipeKey}_{food}".ToUpper();
+            _preparedIngredientLocations[locationKey] = location;
+        }
+
+        // Merging into recipe
+        if (recipe.Ingredients.Count == preparedIngredients.Count)
         {
             // All ingredients with steps are ready, take the prepared ingredients, take the ingredients without steps from pantry and merge into recipe
             var firstRecipeStep = recipe.Steps.FirstOrDefault();
@@ -313,33 +351,33 @@ public class Chef : Cook
                 return;
             }
 
+            // NOW it's safe to remove from tracking, as we have the equipment
+            if (!_preparedIngredients.TryRemove(recipeKey, out var ingredientsToMerge))
+            {
+                // Another thread already handled this recipe merge
+                await ReleaseEquipment(destinationEquipmentType, destinationEquipmentNumber);
+                return;
+            }
+
             await _holdFoodSemaphore.WaitAsync();
             try
             {
-                if (isToBePrepared)
+                foreach (var preparedIngredient in ingredientsToMerge)
                 {
-                    await _theCodeKitchenClient.TakeFoodFromEquipment(sourceEquipmentType!,
-                        sourceEquipmentNumber!.Value);
-                    await ReleaseEquipment(sourceEquipmentType!, sourceEquipmentNumber.Value);
-                    await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType,
-                        destinationEquipmentNumber);
-                }
-
-                foreach (var preparedIngredient in preparedIngredients)
-                {
-                    var location = preparedIngredient.Value;
-                    await _theCodeKitchenClient.TakeFoodFromEquipment(location.Item1, location.Item2);
-                    await ReleaseEquipment(location.Item1, location.Item2);
-                    await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType,
-                        destinationEquipmentNumber);
-                    _preparedIngredientLocations.TryRemove(preparedIngredient.Key, out _);
-                }
-
-                foreach (var ingredient in ingredientsToBeTakenFromPantry)
-                {
-                    await _theCodeKitchenClient.TakeFoodFromPantry(ingredient.Name);
-                    await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType,
-                        destinationEquipmentNumber);
+                    var locationKey = $"{recipeKey}_{preparedIngredient.Key}".ToUpper();
+                    var locationExists = _preparedIngredientLocations.TryGetValue(locationKey, out var location);
+                    if (locationExists)
+                    {
+                        await TakeFoodFromEquipment(location!.Item1, location.Item2);
+                        await AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
+                        await ReleaseEquipment(location.Item1, location.Item2);
+                        _preparedIngredientLocations.TryRemove(locationKey, out _);
+                    }
+                    else
+                    {
+                        await TakeFoodFromPantry(preparedIngredient.Key);
+                        await AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
+                    }
                 }
             }
             finally
@@ -347,7 +385,6 @@ public class Chef : Cook
                 _holdFoodSemaphore.Release();
             }
 
-            //Why this?
             if (firstRecipeStep != null)
             {
                 await SetTimer(
@@ -374,50 +411,33 @@ public class Chef : Cook
                 );
             }
         }
-        else if (ingredientsToBePrepared.Select(i => i.Name).Contains(food, StringComparer.OrdinalIgnoreCase))
-        {
-            // Current ingredient is one of the ingredients with steps, move it onto counter or hot plate and track the prepared ingredient
-            var destinationEquipmentType = EquipmentType.Counter;
-            var destinationEquipmentNumber = await RequestEquipment(destinationEquipmentType);
-
-            if (destinationEquipmentNumber < 0)
-            {
-                destinationEquipmentType = EquipmentType.HotPlate;
-                destinationEquipmentNumber = await RequestEquipment(destinationEquipmentType);
-            }
-
-            if (destinationEquipmentNumber < 0)
-            {
-                // No Counter or Hot Plate available -> Try again in 2 minutes
-                await SetTimer(orderNumber, food, recipeTree, stepsToDo, id, sourceEquipmentType, sourceEquipmentNumber,
-                    TimeSpan.FromMinutes(2));
-                return;
-            }
-
-            // Lock destination equipment, take food, unlock source equipment, add food to destination equipment
-            await _holdFoodSemaphore.WaitAsync();
-            try
-            {
-                await _theCodeKitchenClient.TakeFoodFromEquipment(sourceEquipmentType!, sourceEquipmentNumber!.Value);
-                await ReleaseEquipment(sourceEquipmentType!, sourceEquipmentNumber.Value);
-                await _theCodeKitchenClient.AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
-            }
-            finally
-            {
-                _holdFoodSemaphore.Release();
-            }
-
-            // Track the prepared ingredient
-            var location = new Tuple<string, int>(destinationEquipmentType, destinationEquipmentNumber);
-            var orderRecipeIngredientKey = $"{recipeKey}_{food}".ToUpper();
-            _preparedIngredientLocations[orderRecipeIngredientKey] = location;
-        }
     }
 
-    private async Task ProcessTimerElapsedEvent(TimerNote timerNote)
+    private async Task ProcessTimerElapsedEvent(Timer timer)
     {
-        Console.WriteLine($"{Username} - Process Timer Elapsed Event - {JsonSerializer.Serialize(timerNote)}");
+        Console.WriteLine($"{Username} - Process Timer Elapsed Event - {JsonSerializer.Serialize(timer)}");
+        var timerNote = timer.Note;
         await CookFood(timerNote.Order, timerNote.Food, timerNote.RecipeTree, timerNote.StepsToDo, timerNote.Id,
             timerNote.EquipmentType, timerNote.EquipmentNumber);
+        var stopTimerRequest = new StopTimerRequest(timer.Number);
+        await _theCodeKitchenClient.StopTimer(stopTimerRequest);
+    }
+
+    private async Task TakeFoodFromPantry(string ingredient)
+    {
+        Console.WriteLine($"{Username} - Take Food From Pantry - {ingredient}");
+        await _theCodeKitchenClient.TakeFoodFromPantry(ingredient);
+    }
+
+    private async Task TakeFoodFromEquipment(string equipmentType, int number)
+    {
+        Console.WriteLine($"{Username} - Take Food From Equipment - {equipmentType} {number}");
+        await _theCodeKitchenClient.TakeFoodFromEquipment(equipmentType, number);
+    }
+
+    private async Task AddFoodToEquipment(string equipmentType, int number)
+    {
+        Console.WriteLine($"{Username} - Add Food To Equipment - {equipmentType} {number}");
+        await _theCodeKitchenClient.AddFoodToEquipment(equipmentType, number);
     }
 }
