@@ -109,7 +109,7 @@ public class Chef : Cook
             {
                 Console.WriteLine(
                     $"{Username} - Process Message - Granted Equipment - {message.Content.EquipmentType} {message.Content.EquipmentNumber}");
-                
+
                 if (_pendingGrants.TryDequeue(out var pendingGrant))
                 {
                     pendingGrant.SetResult(message.Content);
@@ -118,7 +118,7 @@ public class Chef : Cook
                 {
                     Console.WriteLine($"{Username} - WARNING: Received grant but no pending request!");
                 }
-                
+
                 break;
             }
             case MessageCodes.CookFood:
@@ -146,12 +146,13 @@ public class Chef : Cook
     private async Task<int> RequestEquipment(string equipmentType)
     {
         var pendingGrant = new TaskCompletionSource<MessageContent>();
-    
+
         // Add to queue before sending request
         _pendingGrants.Enqueue(pendingGrant);
 
         var request = new MessageContent(MessageCodes.RequestEquipment, null, null, equipmentType, null);
-        await _theCodeKitchenClient.SendMessage(new SendMessageRequest(_equipmentCoordinator, JsonSerializer.Serialize(request)));
+        await _theCodeKitchenClient.SendMessage(new SendMessageRequest(_equipmentCoordinator,
+            JsonSerializer.Serialize(request)));
 
         // Wait for GrantEquipment for this chef (wait until coordinator responds)
         var grant = await pendingGrant.Task;
@@ -280,45 +281,53 @@ public class Chef : Cook
         // Tracking prepared ingredients
         preparedIngredients.TryAdd(food, true);
 
-        // Tracking prepared ingredient locations (in case they have steps)
-        var ingredientsToBePreparedWithSteps = recipe.Ingredients.Where(i => i.Steps.Count > 0).ToList();
-        if (ingredientsToBePreparedWithSteps.Select(i => i.Name).Contains(food, StringComparer.OrdinalIgnoreCase))
+        // Track location for ANY ingredient that has equipment (either has steps OR is a sub-recipe)
+        if (sourceEquipmentType != null && sourceEquipmentNumber.HasValue)
         {
-            // Current ingredient is one of the ingredients with steps, move it onto counter or hot plate and track the prepared ingredient
-            var destinationEquipmentType = EquipmentType.Counter;
-            var destinationEquipmentNumber = await RequestEquipment(destinationEquipmentType);
+            // This ingredient/recipe is currently in equipment, we need to track its location
+            var ingredientsToBePreparedWithSteps = recipe.Ingredients.Where(i =>
+                i.Steps.Count > 0 || _recipes.Any(r => r.Name.Equals(i.Name, StringComparison.OrdinalIgnoreCase))
+            ).ToList();
 
-            if (destinationEquipmentNumber < 0)
+            if (ingredientsToBePreparedWithSteps.Select(i => i.Name).Contains(food, StringComparer.OrdinalIgnoreCase))
             {
-                destinationEquipmentType = EquipmentType.HotPlate;
-                destinationEquipmentNumber = await RequestEquipment(destinationEquipmentType);
-            }
+                // Current ingredient/recipe needs to be held for later merging
+                var destinationEquipmentType = EquipmentType.Counter;
+                var destinationEquipmentNumber = await RequestEquipment(destinationEquipmentType);
 
-            if (destinationEquipmentNumber < 0)
-            {
-                // No Counter or Hot Plate available -> Try again in 2 minutes
-                await SetTimer(orderNumber, food, recipeTree, stepsToDo, id, sourceEquipmentType, sourceEquipmentNumber,
-                    TimeSpan.FromMinutes(2));
-                return;
-            }
+                if (destinationEquipmentNumber < 0)
+                {
+                    destinationEquipmentType = EquipmentType.HotPlate;
+                    destinationEquipmentNumber = await RequestEquipment(destinationEquipmentType);
+                }
 
-            // Lock destination equipment, take food, unlock source equipment, add food to destination equipment
-            await _holdFoodSemaphore.WaitAsync();
-            try
-            {
-                await TakeFoodFromEquipment(sourceEquipmentType!, sourceEquipmentNumber!.Value);
-                await AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
-                await ReleaseEquipment(sourceEquipmentType!, sourceEquipmentNumber.Value);
-            }
-            finally
-            {
-                _holdFoodSemaphore.Release();
-            }
+                if (destinationEquipmentNumber < 0)
+                {
+                    // No Counter or Hot Plate available -> Try again in 2 minutes
+                    await SetTimer(orderNumber, food, recipeTree, stepsToDo, id, sourceEquipmentType,
+                        sourceEquipmentNumber,
+                        TimeSpan.FromMinutes(2));
+                    return;
+                }
 
-            // Track the prepared ingredient
-            var location = new Tuple<string, int>(destinationEquipmentType, destinationEquipmentNumber);
-            var locationKey = $"{recipeKey}_{food}".ToUpper();
-            _preparedIngredientLocations[locationKey] = location;
+                // Lock destination equipment, take food, unlock source equipment, add food to destination equipment
+                await _holdFoodSemaphore.WaitAsync();
+                try
+                {
+                    await TakeFoodFromEquipment(sourceEquipmentType, sourceEquipmentNumber!.Value);
+                    await AddFoodToEquipment(destinationEquipmentType, destinationEquipmentNumber);
+                    await ReleaseEquipment(sourceEquipmentType, sourceEquipmentNumber.Value);
+                }
+                finally
+                {
+                    _holdFoodSemaphore.Release();
+                }
+
+                // Track the prepared ingredient/recipe location
+                var location = new Tuple<string, int>(destinationEquipmentType, destinationEquipmentNumber);
+                var locationKey = $"{recipeKey}_{food}".ToUpper();
+                _preparedIngredientLocations[locationKey] = location;
+            }
         }
 
         // Merging into recipe
