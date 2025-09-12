@@ -35,8 +35,8 @@ public sealed partial class KitchenOrderGrain
             foodRating.Rating = Math.Max(0.0, 1.0 - penaltyPercent); // Rating cannot go below 0
         }
 
-        // Update kitchen rating every 10 moments
-        if (nonDeliveredRequestedFoodRatings.Count > 0 && ++_nextMomentCounter % 10 == 0)
+        // Update kitchen rating every 100 moments
+        if (nonDeliveredRequestedFoodRatings.Count > 0 && ++_nextMomentCounter % 100 == 0)
         {
             await UpdateKitchenRating();
             _nextMomentCounter = 0;
