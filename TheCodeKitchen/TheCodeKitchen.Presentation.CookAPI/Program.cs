@@ -25,6 +25,7 @@ builder.Services.AddTheCodeKitchenOrleansClient(builder.Configuration);
 builder.Services.AddJwtSecurityServices(builder.Configuration);
 builder.Services.AddPasswordHashingServices();
 builder.Services.AddAzureSignalRServices(builder.Configuration);
+builder.Services.AddMemoryCache();
 
 // Presentation services
 builder.Services.AddHealthChecks().AddCheck<OrleansConnectionHealthCheck>(

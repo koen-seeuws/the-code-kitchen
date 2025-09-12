@@ -89,8 +89,6 @@ builder.UseOrleans(silo =>
         .AddStreaming()
         .AddEventHubStreams(TheCodeKitchenStreams.DefaultTheCodeKitchenProvider, eventHubConfigurator =>
         {
-            
-            
             eventHubConfigurator.ConfigureEventHub(eventHubBuilder =>
             {
                 eventHubBuilder.Configure(options =>

@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using TheCodeKitchen.Application.Contracts.Grains;
 using TheCodeKitchen.Application.Contracts.Requests.Pantry;
+using TheCodeKitchen.Application.Contracts.Response.Pantry;
+using TheCodeKitchen.Application.Contracts.Results;
 using TheCodeKitchen.Application.Validation;
 using TheCodeKitchen.Application.Validation.Pantry;
 using TheCodeKitchen.Infrastructure.Security.Extensions;
@@ -13,14 +16,28 @@ namespace TheCodeKitchen.Presentation.API.Cook.Controllers;
 [Authorize]
 public sealed class PantryController(
     IClusterClient clusterClient,
+    IMemoryCache memoryCache,
     TakeFoodFromPantryValidator foodFromPantryValidator
 ) : ControllerBase
 {
     [HttpGet("[action]")]
     public async Task<IActionResult> Inventory()
     {
-        var pantryGrain = clusterClient.GetGrain<IPantryGrain>(Guid.Empty);
+        var id = Guid.Empty;
+        var cacheId = $"ingredients-{id}";
+        
+        if (memoryCache.TryGetValue<Result<IEnumerable<GetIngredientResponse>>>(cacheId, out var cachedResult))
+            return this.MatchActionResult(cachedResult!);
+        
+        var pantryGrain = clusterClient.GetGrain<IPantryGrain>(id);
         var result = await pantryGrain.GetIngredients();
+        
+        if (result.Succeeded)
+        {
+            var cacheEntryOptions = new MemoryCacheEntryOptions { SlidingExpiration = TimeSpan.FromMinutes(5) };
+            memoryCache.Set(cacheId, result, cacheEntryOptions);
+        }
+        
         return this.MatchActionResult(result);
     }
 
