@@ -6,4 +6,14 @@ In the game, cooks (players) are divided into multiple kitchens (teams). Each ki
 
 Cooks can set timers for which they will later on receive an event when the timers elapses. Cooks can also communicate with each other by sending messages.
 
-The kitchens are rated by how complete the order is (no lissing items?), how well they followed all the required steps for a recipe and whether they delivered the dished in time.
+The kitchens are rated by how complete the order is (no missing items?), how well they followed all the required steps for a recipe and whether they delivered the dished in time.
+
+## Folder/Solution structure
+* TheCodeKitchen: Contains all the server side code
+    * TheCodeKitchen.Infrastructure.Orleans.Silo: The project that needs to be built to run the Orleans Cluster.
+    * TheCodeKitchen.Presentation.CookAPI: The API with which the Cooks communicate.
+    * TheCodeKitchen.Presentation.ManagementAPI: An API that can be used to manage games.
+    * TheCodeKitchen.Presentation.ManagementUI: A Blazor server application to manage games and show the gameplay.
+* TheCodeKitchen.Azure: Contains resource templates for Azure, some screenshots and a backup of the CookBook (recipes) & Pantry (ingredients) Blobs.
+* TheCodeKitchen.Cook: Contains my own solution for the game (based on TheCodeKitchen.CookTemplate).
+* TheCodeKitchen.CookTemplate: Contains a .NET solution which can be provided to the players. Also available as a public repository here: https://github.com/koen-seeuws/the-code-kitchen-cook-template.
