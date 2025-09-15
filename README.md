@@ -8,7 +8,7 @@ Cooks can set timers for which they will later on receive an event when a timer 
 
 The kitchens are rated by how complete the order is (no missing items?), how well they followed all the required steps for a recipe and whether they delivered the dishes in time.
 
-## Folder/Solution structure
+## Solution/Folder structure
 * TheCodeKitchen: Contains all the server side code
     * TheCodeKitchen.Infrastructure.Orleans.Silo: The project that needs to be built to run the Orleans Cluster.
     * TheCodeKitchen.Presentation.CookAPI: The API with which the Cooks communicate.
