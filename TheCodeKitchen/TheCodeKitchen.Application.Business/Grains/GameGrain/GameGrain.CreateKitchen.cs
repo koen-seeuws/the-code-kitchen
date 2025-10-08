@@ -17,6 +17,7 @@ public sealed partial class GameGrain
         var id = Guid.CreateVersion7();
         state.State.Kitchens.Add(id);
         await state.WriteStateAsync();
+        
         var kitchenGrain = GrainFactory.GetGrain<IKitchenGrain>(id);
         var result = await kitchenGrain.Initialize(request, state.State.Kitchens.Count);
 

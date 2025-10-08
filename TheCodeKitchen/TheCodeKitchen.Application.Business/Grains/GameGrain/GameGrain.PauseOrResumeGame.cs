@@ -10,12 +10,14 @@ public sealed partial class GameGrain
         if (!state.RecordExists)
             return new NotFoundError($"The game with id {this.GetPrimaryKey()} has not been initialized");
         
-        var result = _nextMomentTimer is null ? await ResumeGame() : await PauseGame();
+        var paused = _nextMomentTimer is null;
+        
+        var result = paused ? await ResumeGame() : await PauseGame();
 
         if (!result.Succeeded)
             return result.Error;
         
-        var paused = _nextMomentTimer is null;
+        paused = _nextMomentTimer is null;
         
         var @event = new GamePausedOrResumedEvent(paused);
         await realTimeGameService.SendGamePausedOrResumedEvent(state.State.Id, @event);

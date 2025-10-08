@@ -2,7 +2,7 @@ namespace TheCodeKitchen.Application.Business.Grains.GameManagementGrain;
 
 public sealed partial class GameManagementGrain
 {
-    public sealed override async Task OnActivateAsync(CancellationToken cancellationToken)
+    public override async Task OnActivateAsync(CancellationToken cancellationToken)
     {
         if (!state.RecordExists)
         {

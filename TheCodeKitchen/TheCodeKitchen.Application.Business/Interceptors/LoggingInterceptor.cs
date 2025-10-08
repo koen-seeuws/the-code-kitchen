@@ -35,7 +35,7 @@ public sealed class LoggingInterceptor(ILogger<LoggingInterceptor> logger) : IIn
         }
         else
         {
-            // nNot our application namespace, just proceed
+            // Not our application namespace, just proceed
             await context.Invoke();
         }
     }

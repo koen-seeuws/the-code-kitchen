@@ -12,7 +12,6 @@ public interface IKitchenGrain : IGrainWithGuidKey
     Task<Result<TheCodeKitchenUnit>> InitializeEquipment();
     Task<Result<GetKitchenResponse>> GetKitchen();
     Task<Result<IEnumerable<GetCookResponse>>> GetCooks(GetCookRequest request);
-    Task<Result<TheCodeKitchenUnit>> ReleaseJoinCode();
     Task<Result<CreateCookResponse>> CreateCook(CreateCookRequest request);
     Task<Result<JoinKitchenResponse>> JoinKitchen(JoinKitchenRequest request);
     Task<Result<TheCodeKitchenUnit>> CloseOrder(CloseOrderRequest request);

@@ -11,6 +11,7 @@ public sealed partial class GameManagementGrain
         var id = Guid.CreateVersion7();
         state.State.Games.Add(id);
         await state.WriteStateAsync();
+        
         var gameGrain = GrainFactory.GetGrain<IGameGrain>(id);
         var result = await gameGrain.Initialize(request, state.State.Games.Count);
 
