@@ -17,7 +17,7 @@ public sealed partial class GameGrain
             
         _nextMomentTimer = this.RegisterGrainTimer(NextMoment, TimeSpan.Zero, _nextMomentDelay.Value);
             
-        await this.RegisterOrUpdateReminder(nameof(ResumeGame), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+        await this.RegisterOrUpdateReminder(nameof(ResumeGame), TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
         
         return TheCodeKitchenUnit.Value;
     }
