@@ -3,12 +3,12 @@ using TheCodeKitchen.Cook.Client.Cooks;
 
 const string apiUrl = "https://ca-tck-cook-api.proudbeach-fbb36fdd.westeurope.azurecontainerapps.io/";
 
-const string kitchenCode = "TXM0";
+const string kitchenCode = "FEVP";
 const string password = "P@ssw0rd";
 
-var headChefUsername = $"{kitchenCode} Head";
-var equipmentCoordinatorUsername = $"{kitchenCode} EQ CO";
-string[] chefUsernames = [$"{kitchenCode} Chef 1", $"{kitchenCode} Chef 2", $"{kitchenCode} Chef 3"];
+var headChefUsername = $"Head Chef";
+var equipmentCoordinatorUsername = $"EQ Manager";
+string[] chefUsernames = [$"Chef 1", $"Chef 2", $"Chef 3"];
 
 var headChefClient = new TheCodeKitchenClient(apiUrl);
 var headChef = new HeadChef(headChefClient, kitchenCode, headChefUsername, password, equipmentCoordinatorUsername, chefUsernames);
