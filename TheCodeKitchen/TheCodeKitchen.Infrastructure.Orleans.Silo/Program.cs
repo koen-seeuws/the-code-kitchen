@@ -37,10 +37,12 @@ var blobClient = new BlobServiceClient(azureStorageConnectionString);
 
 #if DEBUG
 // TODO: REMOVE, this is only for development purposes to ensure a clean state.
+/*
 foreach (var storage in TheCodeKitchenAzureTableConstants.All)
 {
     tableClient.DeleteTable(storage);
 }
+*/
 
 //await blobClient.DeleteBlobContainerAsync(siloConfiguration.StateBlobContainer);
 //await blobClient.CreateBlobContainerAsync(siloConfiguration.StateBlobContainer);
@@ -56,19 +58,13 @@ builder.UseOrleans(silo =>
         options.ServiceId = siloConfiguration.ServiceId;
     });
 
-    silo.AddIncomingGrainCallFilter<LoggingInterceptor>();
-
     silo.UseAzureStorageClustering(options =>
     {
         options.TableServiceClient = tableClient;
         options.TableName = TheCodeKitchenAzureTableConstants.Clustering;
     });
     
-    silo.UseAzureTableReminderService(options =>
-    {
-        options.TableServiceClient = tableClient;
-        options.TableName = TheCodeKitchenAzureTableConstants.Reminders;
-    });
+    silo.AddIncomingGrainCallFilter<LoggingInterceptor>();
 
     foreach (var storage in TheCodeKitchenState.All)
     {
@@ -78,6 +74,12 @@ builder.UseOrleans(silo =>
             options.ContainerName = siloConfiguration.StateBlobContainer;
         });
     }
+    
+    silo.UseAzureTableReminderService(options =>
+    {
+        options.TableServiceClient = tableClient;
+        options.TableName = TheCodeKitchenAzureTableConstants.Reminders;
+    });
 
     silo.AddAzureTableGrainStorage(TheCodeKitchenAzureTableConstants.PubSubStore, options =>
     {
